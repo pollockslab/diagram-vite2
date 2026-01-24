@@ -1,0 +1,61 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-size: 16px;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  overscroll-behavior: none; /* 터치시 주소창, 상하 끝에서 튕기는 효과 제거 */
+}
+#app {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100vw;
+  height: 100vh;
+  margin: 0 auto;
+  touch-action: none;
+  overflow: hidden;
+}
+
+#controller {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+}
+
+#remocon {
+  position: absolute;
+  width: 116px;
+  height: 500px;
+  top: 30px;
+  left: 10px;
+  background-color: rgb(50, 50, 50);
+  border-radius: 10px;
+  z-index: 2000;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}

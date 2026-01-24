@@ -1,24 +1,48 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+import './main.css'
+import {_MAIN as _PAGE_STORAGE} from './storage/storage'
+import {_MAIN as _PAGE_VIEW} from './view/view'
+import {_MAIN as _PAGE_CONTROLLER} from './view/controller'
+import {_MAIN as _PAGE_REMOCON} from './remocon/remocon'
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+interface PageConstructor<T> {
+    new (options: { parentNode: HTMLDivElement }): T;
+}
+
+const divApp = document.querySelector<HTMLDivElement>('#app') as HTMLDivElement;
+
+export const _STOR = new _PAGE_STORAGE();
+
+export const _VIEW = LoadPage(_PAGE_VIEW, "view");
+export const _CTRL = LoadPage(_PAGE_CONTROLLER, "controller");
+export const _REMO = LoadPage(_PAGE_REMOCON, "remocon");
+
+const Init = async (): Promise<void> => {
+    
+    const setting = await _STOR.Call('loadSetting', {});
+    console.log(setting)
+    // if (setting?.openTabID) {
+    //     await _VIEW.LoadDiagrams(setting.openTabID);
+    // }
+};
+
+Init();
+
+
+/**
+ * 페이지 객체 생성 (Generic 적용)
+ * @param pageClass 생성할 클래스
+ * @param id DOM에 부여할 ID
+ */
+function LoadPage<T>(pageClass: PageConstructor<T>, id: string): T {
+    const div = document.createElement('div');
+    div.id = id;
+    
+    // divApp이 null일 경우를 대비한 안전장치
+    divApp?.appendChild(div);
+    
+    // 클래스 인스턴스 생성 및 반환
+    const pageObject = new pageClass({ parentNode: div });
+    
+    return pageObject;
+}
