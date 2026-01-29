@@ -13,9 +13,10 @@ export async function newDiagram(db: IDBDatabase, _payload: any): Promise<string
     // tab 조회
     await IDBLib.Put<IDiagram>(store.diagram, {
         id: id,
-        ui: {},
+        type: 'none',
         parentID: null,
         tabID: null,
+        zIndex: null,
     });
 
     return id;

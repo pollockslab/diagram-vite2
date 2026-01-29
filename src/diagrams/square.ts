@@ -1,6 +1,5 @@
 
 import { _MAIN as _AXIS } from './axis'
-import { type IDiagram } from '../storage/schema'
 import { _STOR } from '../main'
 
 
@@ -10,7 +9,7 @@ export class _MAIN extends _AXIS
 
     constructor(args: Record<string, any>) 
     {
-        super(args);
+        super();
 
         // 추가 데이터 변경
         this.type = 'square';

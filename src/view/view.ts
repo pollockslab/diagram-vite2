@@ -12,10 +12,6 @@ interface ChildrenStructure {
     line: IDiagram[];
     button: IDiagram[];
 }
-interface Layer {
-    cav: HTMLCanvasElement;
-    ctx: CanvasRenderingContext2D;
-}
 
 
 export class _MAIN 
@@ -47,7 +43,7 @@ export class _MAIN
 
         this.InitLayers();
 
-        window.addEventListener('resize', (e) => { this.Resize(); });
+        window.addEventListener('resize', () => { this.Resize(); });
         this.Resize();
 
         this.Loop();
@@ -109,6 +105,7 @@ export class _MAIN
 
     async LoadMap(id:string)
     {
+        console.log(id)
         this.children = {
             none: [],
             point: [],

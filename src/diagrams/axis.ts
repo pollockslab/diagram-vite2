@@ -18,12 +18,10 @@ export class _MAIN
     };
     
 
-    constructor(args: Partial<any> = {}) {
+    constructor() {
         const cav = document.createElement('canvas');
         const ctx = cav.getContext('2d') as CanvasRenderingContext2D;
         this._capture = { cav, ctx };
-
-
     }
 
     SetData(args: Partial<any> = {}) {
