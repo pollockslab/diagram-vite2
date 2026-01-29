@@ -20,7 +20,8 @@ export class _MAIN
     scope = {
         min:0.5, max:2, zoom:1, w:0, h:0,
         dpr: Math.round(window.devicePixelRatio) || 1,
-        backgroundTileStep: 100,
+        bgStep: 100,
+        bgPattern: null as CanvasPattern | null,
     };
     x=0;
     y=0;
@@ -72,8 +73,7 @@ export class _MAIN
 
     InitLayers()
     {
-        // ['background', 'board', 'effect'].forEach(name => {
-        ['background'].forEach(name => {
+        ['background', 'board', 'effect'].forEach(name => {
             const cav = document.createElement('canvas');
             const ctx = cav.getContext('2d')!; // !는 "무조건 있어"라는 뜻
             cav.style = 'position:absolute; width:100%; height:100%;';
@@ -115,8 +115,8 @@ export class _MAIN
         };
 
         // 생성순서가 있으니 순서대로 하는게 맞을거같아
-        // this.AddChild({type:'square', x:0, y: 0, w:200, h:300, bgColor:'blue'});
-        // this.AddChild({type:'square', x:-100, y: -400, w:300, h:300, bgColor:'orange'});
+        this.AddChild({type:'square', x:0, y: 0, w:200, h:300, bgColor:'blue'});
+        this.AddChild({type:'square', x:-100, y: -400, w:300, h:300, bgColor:'orange'});
 
         this.isResizing = true;
     }
@@ -182,79 +182,90 @@ export class _MAIN
         });
     }
 
-    DrawBackground()
+    DrawBackground() 
     {
-        if(!this.layers.background) return;
-        if(this.scope.zoom < 0.5) return;
+        if (!this.layers.background) return;
         const ctx = this.layers.background.ctx;
-        const step = this.scope.backgroundTileStep;
-        const w = this.SpaceLine(this.scope.w);
-        const h = this.SpaceLine(this.scope.h);
-        const line = (w>h)? w:h;
-        const x = this.x - line/2 - this.x%step;
-        const y = this.y - line/2 - this.y%step;
-        
-        ctx.save();
-        ctx.strokeStyle = 'rgb(54,63,63)';
-        ctx.beginPath();
+        const step = this.scope.bgStep;
+        const { w, h, dpr, zoom } = this.scope;
 
-        const addr = step;
-
-        // 중앙->우
-        for(let i=x-addr; i<line+x+addr; i+=step) 
-        {
-            ctx.moveTo(i-addr       , y-addr);
-            ctx.lineTo(i+addr+line  , y+addr+line);
-
-            ctx.moveTo(i-addr       , y+addr+line);
-            ctx.lineTo(i+addr+line  , y-addr     );
+        if (!this.scope.bgPattern) {
+            const pCav = document.createElement('canvas');
+            pCav.width = step; 
+            pCav.height = step;
+            const pCtx = pCav.getContext('2d')!;
+            pCtx.strokeStyle = 'rgb(54,63,63)';
+            pCtx.beginPath();
+            pCtx.moveTo(0, 0); pCtx.lineTo(step, step);
+            pCtx.moveTo(step, 0); pCtx.lineTo(0, step);
+            pCtx.stroke();
+            this.scope.bgPattern = ctx.createPattern(pCav, 'repeat');
         }
 
-        // 중앙->좌
-        for(let i=x+addr; i>-line+x-addr; i-=step) 
-        {
-            ctx.moveTo(i-addr       , y-addr);
-            ctx.lineTo(i+addr+line  , y+addr+line);
+        if (this.scope.bgPattern) {
 
-            ctx.moveTo(i-addr       , y+addr+line);
-            ctx.lineTo(i+addr+line  , y-addr     );
+            ctx.save();
+            
+            // 1. 먼저 배경 캔버스도 다른 캔버스와 똑같이 dpr을 세팅합니다.
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, w, h);
+
+            // 2. 패턴 매트릭스에는 오직 가상 좌표와 줌만 계산합니다. (dpr 제외)
+            const matrix = new DOMMatrix();
+            matrix.translateSelf(w / 2, h / 2); // 물리 dpr 곱하지 않음
+            matrix.scaleSelf(zoom, zoom);
+            matrix.translateSelf(-this.x, -this.y);
+            
+            this.scope.bgPattern.setTransform(matrix);
+
+            // 3. 칠하기
+            ctx.fillStyle = this.scope.bgPattern as CanvasPattern;
+            ctx.fillRect(0, 0, w, h); 
+            
+            ctx.restore();
         }
-        
-        ctx.stroke();
-        ctx.restore();
     }
-    // DrawBackground() {
-    //     if (!this.layers.background) return;
+
+    // DrawBackground()
+    // {
+    //     if(!this.layers.background) return;
+    //     if(this.scope.zoom < 0.5) return;
     //     const ctx = this.layers.background.ctx;
     //     const step = this.scope.backgroundTileStep;
+    //     const w = this.SpaceLine(this.scope.w);
+    //     const h = this.SpaceLine(this.scope.h);
+    //     const line = (w>h)? w:h;
+    //     const x = this.x - line/2 - this.x%step;
+    //     const y = this.y - line/2 - this.y%step;
         
-    //     // 현재 화면의 가시 영역 계산
-    //     const w = this.scope.w / this.zoom;
-    //     const h = this.scope.h / this.zoom;
-        
-    //     // 시작점과 끝점 계산 (화면 밖으로 조금 더 여유있게)
-    //     const startX = this.x - w / 2 - (this.x % step) - step;
-    //     const endX = this.x + w / 2 + step;
-    //     const startY = this.y - h / 2 - (this.y % step) - step;
-    //     const endY = this.y + h / 2 + step;
-
     //     ctx.save();
     //     ctx.strokeStyle = 'rgb(54,63,63)';
     //     ctx.beginPath();
 
-    //     // 격자무늬(Grid) 형태로 그리는 것이 훨씬 빠릅니다.
-    //     // 세로선
-    //     for (let i = startX; i < endX; i += step) {
-    //         ctx.moveTo(i, startY);
-    //         ctx.lineTo(i, endY);
-    //     }
-    //     // 가로선
-    //     for (let j = startY; j < endY; j += step) {
-    //         ctx.moveTo(startX, j);
-    //         ctx.lineTo(endX, j);
+    //     const addr = step;
+
+    //     // 중앙->우
+    //     for(let i=x-addr; i<line+x+addr; i+=step) 
+    //     {
+    //         ctx.moveTo(i-addr       , y-addr);
+    //         ctx.lineTo(i+addr+line  , y+addr+line);
+
+    //         ctx.moveTo(i-addr       , y+addr+line);
+    //         ctx.lineTo(i+addr+line  , y-addr     );
     //     }
 
+    //     // 중앙->좌
+    //     for(let i=x+addr; i>-line+x-addr; i-=step) 
+    //     {
+    //         ctx.moveTo(i-addr       , y-addr);
+    //         ctx.lineTo(i+addr+line  , y+addr+line);
+
+    //         ctx.moveTo(i-addr       , y+addr+line);
+    //         ctx.lineTo(i+addr+line  , y-addr     );
+    //     }
+        
     //     ctx.stroke();
     //     ctx.restore();
     // }
+    
 }
