@@ -1,24 +1,11 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// diagrams
+import {_MAIN as _AXIS} from './diagrams/axis'
+import {_MAIN as _SQUARE} from './diagrams/square'
+export const _DIAGRAM = {
+  axis: _AXIS,
+  square: _SQUARE,
+}
 
 export function generateUUID() 
 {

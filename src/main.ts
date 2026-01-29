@@ -16,6 +16,15 @@ export const _STOR = new _PAGE_STORAGE();
 export const _VIEW = LoadPage(_PAGE_VIEW, "view");
 export const _CTRL = LoadPage(_PAGE_CONTROLLER, "controller");
 export const _REMO = LoadPage(_PAGE_REMOCON, "remocon");
+const btnRemoPos = document.createElement("div");
+btnRemoPos.id = 'remocon_reset_pos';
+divApp?.appendChild(btnRemoPos);
+btnRemoPos.onclick = () =>
+{
+    _REMO.parentNode.style.left = '10px';
+    _REMO.parentNode.style.top = '30px';
+};
+
 
 const Init = async (): Promise<void> => {
     
@@ -24,6 +33,7 @@ const Init = async (): Promise<void> => {
     // if (setting?.openTabID) {
     //     await _VIEW.LoadDiagrams(setting.openTabID);
     // }
+    await _VIEW.LoadMap('test1');
 };
 
 Init();

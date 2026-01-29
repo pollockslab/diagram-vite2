@@ -12,10 +12,16 @@ export interface ITab {
 }
 
 export interface IDiagram {
+
+    /** 필수 컬럼 */
     id: string;
-    ui: any; 
+    type: string;
     parentID: string | null;
     tabID: string | null;
+    zIndex: number | null;
+
+    /** 확장 컬럼(다수) */
+    [key: string]: any;
 }
 
 export interface ILog {

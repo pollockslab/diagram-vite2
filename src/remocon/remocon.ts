@@ -1,5 +1,11 @@
 import './remocon.css'
 import imgSquare from './square.png'
+import imgPointer from './remocon-pointer.png'
+import imgfavorate from './favorite.png'
+import imgSetting from './setting.png'
+import imgPicture from './picture.png'
+import imgRemove from './remove.png'
+import imgImageDownload from './imageDownload.png'
 
 interface IRemoteState {
     btn: HTMLDivElement|null;
@@ -24,15 +30,34 @@ export class _MAIN
     {
         this.parentNode = args.parentNode || document.body;
  
-         this.display = new _DISPLAY({parentNode: this.parentNode});
+        this.display = new _DISPLAY({parentNode: this.parentNode});
+        
+        this.AddButton('pointer', 'toggle',"포인터", imgPointer);
 
-         this.AddButton('square', 'toggle',"도형1", imgSquare);
+        // 여기에 라인을 추가해서 넣자
+        this.AddLine();
+        this.AddButton('square', 'toggle',"도형1", imgSquare);
+        this.AddButton('picture', 'toggle',"그림도형", imgPicture);
+
+        this.AddLine();
+        
+        this.AddButton('favorate', 'action',"즐겨찾기", imgfavorate);
+        this.AddButton('setting', 'action',"환경설정", imgSetting);
+        this.AddButton('remove', 'toggle',"도형삭제", imgRemove);
+        this.AddButton('imagedownload', 'action',"화면캡처", imgImageDownload);
     }
 
-    AddButton(id:string, type:string, title:string, url:string)
+    AddLine()
+    {
+        const line = document.createElement("hr");
+        line.classList.add('line');
+        this.parentNode.appendChild(line);
+    }
+
+    AddButton(id:string, type:string, title:string, url:string|null)
     {
         const btn = document.createElement("div");
-        btn.textContent = title;
+        // btn.textContent = title;
         btn.classList.add('button');
         btn.classList.add(type);
         
@@ -43,22 +68,18 @@ export class _MAIN
         this.parentNode.appendChild(btn);
 
         btn.addEventListener("click", () => {
-            if(this.remote.id !== null) {
-                if(this.remote.type === 'toggle' && this.remote.id === id) 
-                {
-                    // 같은걸 연속 두번 눌렀어서 초기화
-                    this.End();
-                }
-                else {
-                    // 다른 버튼을 눌렀다
-                    this.End();
+           if (this.remote.id !== null) {
+                if (this.remote.type === 'toggle' && this.remote.id === id) {
+                    this.End(); // 같은 토글 버튼 -> 취소
+                } else {
+                    this.End(); // 다른 버튼 -> 이전 상태 초기화
                     this.Start(btn, id, type, title);
-                } 
-            }
-            else { // 처음 누른다 설정하자
+                    if (type === 'action') this.Action(); // 액션은 즉시 실행
+                }
+            } else {
                 this.Start(btn, id, type, title);
+                if (type === 'action') this.Action(); // 액션은 즉시 실행
             }
-            
         });
     }
 
@@ -73,13 +94,39 @@ export class _MAIN
         
     }
 
+    Action(args: {x?: number, y?: number} = {})
+    {
+        // 선택된 버튼이 없으면 리턴
+        if(!this.remote.id) return;
+
+        switch(this.remote.id)
+        {
+            case 'square':
+                console.log(`[설치] 좌표 (${args.x}, ${args.y}) 에 사각형 생성`);
+                // 여기서 실제 _VIEW에 사각형을 추가하는 로직 호출
+                break;
+            case 'favorate':
+                console.log('즐겨찾기 실행');
+                break;
+            case 'imagedownload':
+                console.log('화면 캡처 시작');
+                break;
+            default:
+                console.log('실행:', this.remote.id);
+        }
+
+        // 작업 완료 후 UI를 원래대로 (버튼 올라옴)
+        this.End();
+    }
+
     // 작업도중이라도 호출되면 종료
     End()
     {
+        // 선택된 버튼이 없으면 리턴
         if(!this.remote.btn) return;
 
+        // 초기화
         this.remote.btn.classList.remove('menu_select');
-
         this.display.text = '\n';
         this.remote.btn = null;
         this.remote.id = null;
@@ -103,9 +150,7 @@ class _DISPLAY
         div.classList.add('display');
         div.innerText = '\n';
         this.parentNode.appendChild(div);
-
         
-
         div.addEventListener("pointerdown", e => {
             div.setPointerCapture(e.pointerId);
             this.down = {x: e.offsetX, y: e.offsetY};
@@ -133,5 +178,4 @@ class _DISPLAY
     {
         this.div.innerText = txt;
     }
-
 }

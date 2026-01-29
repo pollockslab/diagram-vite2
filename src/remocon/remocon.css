@@ -10,7 +10,7 @@
     cursor: pointer;
     user-select: none;
     margin: 4px;
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgb(44,44,44);
 
     background-size: contain;    /* 이미지가 잘리지 않게 div 안에 맞춤 */
     background-position: center; /* 가운데 정렬 */
