@@ -7,6 +7,8 @@ import imgPicture from './picture.png'
 import imgRemove from './remove.png'
 import imgImageDownload from './imageDownload.png'
 
+import { _VIEW } from '../main'
+
 interface IRemoteState {
     btn: HTMLDivElement|null;
     id: string|null;
@@ -32,15 +34,17 @@ export class _MAIN
  
         this.display = new _DISPLAY({parentNode: this.parentNode});
         
+        this.AddText('Pointer');
         this.AddButton('pointer', 'toggle',"포인터", imgPointer);
 
         // 여기에 라인을 추가해서 넣자
         this.AddLine();
+        this.AddText('Add Diagram');
         this.AddButton('square', 'toggle',"도형1", imgSquare);
         this.AddButton('picture', 'toggle',"그림도형", imgPicture);
 
         this.AddLine();
-        
+        this.AddText('Files & System');
         this.AddButton('favorate', 'action',"즐겨찾기", imgfavorate);
         this.AddButton('setting', 'action',"환경설정", imgSetting);
         this.AddButton('remove', 'toggle',"도형삭제", imgRemove);
@@ -52,6 +56,14 @@ export class _MAIN
         const line = document.createElement("hr");
         line.classList.add('line');
         this.parentNode.appendChild(line);
+    }
+
+    AddText(text:string)
+    {
+        const small = document.createElement("small");
+        small.classList.add('small');
+        small.innerText = text;
+        this.parentNode.appendChild(small);
     }
 
     AddButton(id:string, type:string, title:string, url:string|null)
@@ -104,6 +116,8 @@ export class _MAIN
             case 'square':
                 console.log(`[설치] 좌표 (${args.x}, ${args.y}) 에 사각형 생성`);
                 // 여기서 실제 _VIEW에 사각형을 추가하는 로직 호출
+                _VIEW.AddChild({type:'square', x:args.x, y:args.y, w:100, h:100, bgColor:'red'});
+                _VIEW.isResizing = true;
                 break;
             case 'favorate':
                 console.log('즐겨찾기 실행');

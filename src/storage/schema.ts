@@ -14,7 +14,7 @@ export interface ITab {
 export interface IDiagram {
 
     /** 필수 컬럼 */
-    id: string;
+    id: string | null;
     type: string;
     parentID: string | null;
     tabID: string | null;

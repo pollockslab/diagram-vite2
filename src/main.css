@@ -65,6 +65,14 @@ body {
   background: linear-gradient(135deg, red 50%, transparent 50%);
 }
 
+
+#editor_text {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border: 1px solid salmon;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

@@ -1,20 +1,8 @@
 import { _DIAGRAM } from '../imports'
-
-interface IDiagram {
-    type: string,
-    [key: string]: any
-}
-
-interface ChildrenStructure {
-    none: IDiagram[];
-    point: IDiagram[];
-    square: IDiagram[];
-    line: IDiagram[];
-    button: IDiagram[];
-}
+// import { _CTRL } from '../main'
 
 
-export class _MAIN 
+export class _MAIN extends _DIAGRAM.axis
 {
     parentNode: HTMLElement;
     scope = {
@@ -23,23 +11,22 @@ export class _MAIN
         bgStep: 100,
         bgPattern: null as CanvasPattern | null,
     };
-    x=0;
-    y=0;
-    // 초기값 할당 및 타입 지정
-    children: ChildrenStructure = {
-        none: [],
-        point: [],
-        square: [],
-        line: [],
-        button: [],
-    };
+  
     isDragging = false;
     isResizing = false;
+    isHover = false;
 
+    // 배경타일, 다이어그램, 선택표시 그릴 캔버스 레이어들
     layers: { [key: string]: { cav: HTMLCanvasElement, ctx: CanvasRenderingContext2D } } = {};
+
+    status = {
+        hover: null as Record<string, any> | null,
+        select: [] as Record<string, any>[],
+    }
     
     constructor(args: Partial<_MAIN> = {})
     {
+        super();
         this.parentNode = args.parentNode || document.body;
 
         this.InitLayers();
@@ -61,12 +48,15 @@ export class _MAIN
         }
     }
 
+
+
     Loop = () =>
     {
-        if(this.isDragging || this.isResizing) {
+        if(this.isDragging || this.isResizing || this.isHover) {
             this.Draw();
             this.isDragging = false;
             this.isResizing = false;
+            this.isHover = false;
         }
         requestAnimationFrame(this.Loop);
     }
@@ -97,9 +87,26 @@ export class _MAIN
         this.isResizing = true;
     }
 
-    SpaceLine(pixel:number)
+    SpaceX(screenX: number): number 
     {
-        return pixel / this.zoom;
+        const w = this.scope.w;
+        const zoom = this.scope.zoom;
+        
+        // 계산 후 통째로 반올림
+        const worldX = (screenX - (w / 2)) / zoom + this.x;
+        return Math.round(worldX);
+    }
+    SpaceY(screenY: number): number 
+    {
+        const h = this.scope.h;
+        const zoom = this.scope.zoom;
+        
+        const worldY = (screenY - (h / 2)) / zoom + this.y;
+        return Math.round(worldY);
+    }
+    SpaceLine(pixel:number): number
+    {
+        return Math.round(pixel / this.zoom);
     }
 
 
@@ -121,31 +128,7 @@ export class _MAIN
         this.isResizing = true;
     }
 
-    AddChild(args:IDiagram)
-    {
-        if(typeof args.type !== 'string') {return;}
-        
-        let diagram;
-        switch(args.type) 
-        {
-            case 'square':
-                diagram = new _DIAGRAM.square(args);
-                this.children.square.push(diagram);
-                break;
-        }
-    }
 
-    FindByID(diagramID: string): IDiagram | null 
-    {
-        // key를 꺼내서 접근할 때 TS 에러를 피하려면 Object.keys 대신 values가 속 편합니다.
-        const allLists = Object.values(this.children);
-
-        for (const list of allLists) {
-            const found = list.find((item:IDiagram) => item.id === diagramID);
-            if (found) return found;
-        }
-        return null;
-    }
 
     Draw()
     {
@@ -180,6 +163,11 @@ export class _MAIN
                 diagram.Draw(this.layers.board.ctx);
             }
         });
+
+        const hover = this.status.hover;
+        if(hover !== null) {
+            hover.DrawHover(this.layers.effect.ctx);
+        }
     }
 
     DrawBackground() 

@@ -4,6 +4,7 @@ import {_MAIN as _PAGE_STORAGE} from './storage/storage'
 import {_MAIN as _PAGE_VIEW} from './view/view'
 import {_MAIN as _PAGE_CONTROLLER} from './view/controller'
 import {_MAIN as _PAGE_REMOCON} from './remocon/remocon'
+// import {_MAIN as _PAGE_EDITOR_TEXT} from './editor/texteditor'
 
 interface PageConstructor<T> {
     new (options: { parentNode: HTMLDivElement }): T;
@@ -16,6 +17,9 @@ export const _STOR = new _PAGE_STORAGE();
 export const _VIEW = LoadPage(_PAGE_VIEW, "view");
 export const _CTRL = LoadPage(_PAGE_CONTROLLER, "controller");
 export const _REMO = LoadPage(_PAGE_REMOCON, "remocon");
+
+// export const _TEDI = new _PAGE_EDITOR_TEXT();
+
 const btnRemoPos = document.createElement("div");
 btnRemoPos.id = 'remocon_reset_pos';
 divApp?.appendChild(btnRemoPos);
@@ -26,8 +30,9 @@ btnRemoPos.onclick = () =>
 };
 
 
-const Init = async (): Promise<void> => {
-    
+const Init = async (): Promise<void> => 
+{ 
+
     const setting = await _STOR.Call('loadSetting', {});
     console.log(setting)
     // if (setting?.openTabID) {

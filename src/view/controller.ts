@@ -1,15 +1,17 @@
 // 메인 앱의 _VIEW 인스턴스 타입이 필요합니다. 임시로 any 처리하거나 타입을 가져오세요.
-import { _VIEW, _REMO } from '../main.js';
+import { _VIEW, _REMO } from '../main';
+import { _MAIN as _AXIS } from '../diagrams/axis'
 
 const WHEEL_ZOOM_FACTOR = 0.001;
 const PINCH_ZOOM_FACTOR = 0.002;
 
 // 인터페이스 정의
 interface PanState {
+    target: Record<string, any>;
     offsetX: number;
     offsetY: number;
-    xView: number;
-    yView: number;
+    x: number;
+    y: number;
     timeStamp: number;
 }
 
@@ -24,6 +26,7 @@ export class _MAIN {
     private down: PanState | null = null;
     private pinch: PinchState | null = null;
     private touchMode: TouchMode = null;
+   
 
     constructor(args: { parentNode: HTMLDivElement }) {
         const div = args.parentNode;
@@ -130,28 +133,56 @@ export class _MAIN {
 
     private PanStart(screenX: number, screenY: number, timeStamp: number): void 
     {
+        const spaceX = _VIEW.SpaceX(screenX);
+        const spaceY = _VIEW.SpaceY(screenY);
+        const dCollision = _VIEW.GetCollisionChildPoint(spaceX, spaceY);
+        const dTarget = (dCollision)? dCollision : _VIEW;
+
         this.down = {
+            target: dTarget,
             offsetX: screenX,
             offsetY: screenY,
-            xView: _VIEW.x,
-            yView: _VIEW.y,
+            x: dTarget.x, // 마우스 다운시 x위치 기록
+            y: dTarget.y, // 마우스 다운시 y위치 기록
             timeStamp: timeStamp,
         };
         _VIEW.isDragging = true;
     }
 
+    // private mousePos = { x: 0, y: 0 };
+    // private needsHoverCheck = false;
     private PanMove(screenX: number, screenY: number): void 
     {
+        const spaceX = _VIEW.SpaceX(screenX);
+        const spaceY = _VIEW.SpaceY(screenY);
+
+        const oldHover = _VIEW.status.hover;
+        const nowHover = _VIEW.GetCollisionChildPoint(spaceX, spaceY);
+        
+        // hover 대상이 변경되었을 경우만 처리
+        if( nowHover !== oldHover)
+        {
+            _VIEW.status.hover = nowHover;
+            _VIEW.isHover = true;
+        }
+
         if (!this.down) return;
 
         const remocon = _REMO.remote.id;
-        if(remocon === null) {
+        if(remocon === null || remocon === 'pointer') {
             // SpaceLine이 _VIEW에 정의되어 있어야 함
             const xRange = _VIEW.SpaceLine(screenX - this.down.offsetX);
             const yRange = _VIEW.SpaceLine(screenY - this.down.offsetY);
 
-            _VIEW.x = this.down.xView - xRange;
-            _VIEW.y = this.down.yView - yRange;
+            const dTarget = this.down.target;
+            if(dTarget === _VIEW) {
+                dTarget.x = this.down.x - xRange;
+                dTarget.y = this.down.y - yRange;
+            }
+            else {
+                dTarget.x = this.down.x + xRange;
+                dTarget.y = this.down.y + yRange;
+            }
 
             _VIEW.isDragging = true;
         }
@@ -164,7 +195,10 @@ export class _MAIN {
         const remocon = _REMO.remote.id;
 
         if(isClick && remocon !== null) {
-            _REMO.Action({x:screenX, y:screenY});
+            const x = _VIEW.SpaceX(screenX);
+            const y = _VIEW.SpaceY(screenY);
+
+            _REMO.Action({x, y});
         }
         
         this.down = null;
@@ -172,4 +206,6 @@ export class _MAIN {
         // 추가 저장 로직 (리모콘 위치 저장 등) 작성 가능
         
     }
+
+    
 }
