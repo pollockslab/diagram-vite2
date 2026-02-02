@@ -138,8 +138,17 @@ export class _MAIN
 
     Draw(ctxView:CanvasRenderingContext2D)
     {
+        // 다이어그램 크기키울때 시각적으로 마우스가 조금 밖에있어도 동작하도록 패딩추가
+        const padding = 6; 
+
         const cavCapture = this._capture.cav;
-        ctxView.drawImage(cavCapture, this.x, this.y, this.w, this.h);
+        ctxView.drawImage(
+            cavCapture, 
+            this.x+padding, 
+            this.y+padding, 
+            this.w-padding*2, 
+            this.h-padding*2
+        );
     }
 
     DrawHover(ctxView:CanvasRenderingContext2D)
@@ -147,7 +156,7 @@ export class _MAIN
         ctxView.save();
         ctxView.strokeStyle = 'skyblue';
         ctxView.lineWidth = 5;
-        ctxView.strokeRect(this.x-6, this.y-6, this.w+12, this.h+12);
+        ctxView.strokeRect(this.x, this.y, this.w, this.h);
         ctxView.restore();
     }
 
@@ -155,6 +164,7 @@ export class _MAIN
     {
         ctxView.save();
         ctxView.strokeStyle = 'green';
+        ctxView.lineWidth = 5;
         ctxView.strokeRect(this.x, this.y, this.w, this.h);
         ctxView.restore();
     }

@@ -85,17 +85,17 @@ export class _MAIN
                     this.End(); // 같은 토글 버튼 -> 취소
                 } else {
                     this.End(); // 다른 버튼 -> 이전 상태 초기화
-                    this.Start(btn, id, type, title);
+                    this.Start(btn, id, type, title, url);
                     if (type === 'action') this.Action(); // 액션은 즉시 실행
                 }
             } else {
-                this.Start(btn, id, type, title);
+                this.Start(btn, id, type, title, url);
                 if (type === 'action') this.Action(); // 액션은 즉시 실행
             }
         });
     }
 
-    Start(btn:HTMLDivElement, id:string, type:string, title:string)
+    Start(btn:HTMLDivElement, id:string, type:string, title:string, url:string|null)
     {
         btn.classList.add('menu_select');
 
@@ -103,6 +103,9 @@ export class _MAIN
         this.remote.btn = btn;
         this.remote.id = id;
         this.remote.type = type;
+
+        // 전역에 스타일을 강제 고정하는 전문가적 자바스크립트 한 줄
+        document.body.style.setProperty('cursor', `url(${url}), auto`, 'important');
         
     }
 
@@ -145,6 +148,8 @@ export class _MAIN
         this.remote.btn = null;
         this.remote.id = null;
         this.remote.type = null;
+
+        document.body.style.removeProperty('cursor');
     }
 }
 
