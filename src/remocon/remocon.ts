@@ -6,6 +6,8 @@ import imgSetting from './setting.png'
 import imgPicture from './picture.png'
 import imgRemove from './remove.png'
 import imgImageDownload from './imageDownload.png'
+import imgMultiSelect from './remocon-multiselect.png'
+import imgEditorText from './remocon-editortext.png'
 
 import { _VIEW } from '../main'
 
@@ -36,6 +38,8 @@ export class _MAIN
         
         this.AddText('Pointer');
         this.AddButton('pointer', 'toggle',"포인터", imgPointer);
+        this.AddButton('multiselect', 'toggle',"그룹선택", imgMultiSelect);
+        this.AddButton('editortext', 'toggle',"텍스트편집", imgEditorText);
 
         // 여기에 라인을 추가해서 넣자
         this.AddLine();

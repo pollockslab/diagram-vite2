@@ -11,8 +11,10 @@ interface IChildrenStructure {
     button: TDiagram[];
 }
 
+export const EDGE_TYPES = ['e', 'w', 's', 'n', 'es', 'en', 'ws', 'wn', null] as const;
+export type TEdgeType = (typeof EDGE_TYPES)[number];
 
-const _DPR = Math.round(window.devicePixelRatio) || 1;
+const _DPR = 1;// Math.round(window.devicePixelRatio) || 1;
 
 export class _MAIN 
 {
@@ -25,8 +27,8 @@ export class _MAIN
 
     x:          number = 0;
     y:          number = 0;
-    w:          number = 0;
-    h:          number = 0;
+    _w:         number = 100;
+    _h:         number = 100;
     _capture: {
         cav:    HTMLCanvasElement;
         ctx:    CanvasRenderingContext2D;
@@ -51,17 +53,36 @@ export class _MAIN
         this._capture = { cav, ctx };
     }
 
+    get w()
+    {
+        return this._w;
+    }
+    set w(size)
+    {
+        if(100 <= size && size <= 1000) this._w = size;
+    }
+
+    get h()
+    {
+        return this._h;
+    }
+    set h(size)
+    {
+        if(100 <= size && size <= 1000) this._h = size;
+    }
+
     SetData(args: Partial<any> = {}) {
         Object.assign(this, args);
+    }
 
-        if(args.w || args.h) {
-            const cavCapture = this._capture.cav;
-            const ctxCapture = this._capture.ctx;
-            cavCapture.width = args.w * _DPR;
-            cavCapture.height = args.h * _DPR;
-            ctxCapture.setTransform(1, 0, 0, 1, 0, 0);
-            ctxCapture.scale(_DPR, _DPR);
-        }
+    InitCapture()
+    {
+        const cavCapture = this._capture.cav;
+        const ctxCapture = this._capture.ctx;
+        cavCapture.width = this.w * _DPR;
+        cavCapture.height = this.h * _DPR;
+        ctxCapture.setTransform(1, 0, 0, 1, 0, 0);
+        ctxCapture.scale(_DPR, _DPR);
     }
 
     private GetChildrenByType(type: string): TDiagram[] {
@@ -117,9 +138,9 @@ export class _MAIN
         );
     }
    
-    // GetCollisionChildRect(x:number, y:number, w:number, h:number)
+    // GetCollisionChildRect(x:number, y:number, w:number, h:number): TDiagram[] | []
     // {
-
+    //     return [];
     // }
 
     // 1. 자신, 2.직전자식까지, 3.전체 subChild까지
@@ -135,37 +156,73 @@ export class _MAIN
         return null;
     }
 
+    GetCollisionEdge(x:number, y:number):TEdgeType
+    {
+        if(!this.IsCollisionPoint(x, y)) {return null;}
+        
+        const lw = 10; // lineWidth
+
+        const left = this.x;
+        const right = this.x + this.w;
+        const top = this.y;
+        const bottom = this.y + this.h;
+        
+        let arrow = '';
+
+        if      (Math.abs(x - right)  <= lw) arrow += 'e';
+        else if (Math.abs(x - left)   <= lw) arrow += 'w';
+        if      (Math.abs(y - bottom) <= lw) arrow += 's';
+        else if (Math.abs(y - top)    <= lw) arrow += 'n';
+
+        if ((EDGE_TYPES as readonly string[]).includes(arrow)) {
+            return arrow as TEdgeType;
+        }
+        return null;
+    }
+
+    Render() {} // 각 다이어그램에서 초기화 필요.
 
     Draw(ctxView:CanvasRenderingContext2D)
     {
-        // 다이어그램 크기키울때 시각적으로 마우스가 조금 밖에있어도 동작하도록 패딩추가
-        const padding = 6; 
-
         const cavCapture = this._capture.cav;
         ctxView.drawImage(
             cavCapture, 
-            this.x+padding, 
-            this.y+padding, 
-            this.w-padding*2, 
-            this.h-padding*2
+            this.x, 
+            this.y, 
+            this.w, 
+            this.h
         );
     }
 
     DrawHover(ctxView:CanvasRenderingContext2D)
     {
+        const padding = 3; 
+
         ctxView.save();
         ctxView.strokeStyle = 'skyblue';
-        ctxView.lineWidth = 5;
-        ctxView.strokeRect(this.x, this.y, this.w, this.h);
+        ctxView.lineWidth = 6;
+        ctxView.strokeRect(
+            this.x+padding, 
+            this.y+padding, 
+            this.w-padding*2, 
+            this.h-padding*2
+        );
         ctxView.restore();
     }
 
     DrawSelect(ctxView:CanvasRenderingContext2D)
     {
+        const padding = 3; 
+
         ctxView.save();
         ctxView.strokeStyle = 'green';
-        ctxView.lineWidth = 5;
-        ctxView.strokeRect(this.x, this.y, this.w, this.h);
+        ctxView.lineWidth = 6;
+        ctxView.strokeRect(
+            this.x+padding, 
+            this.y+padding, 
+            this.w-padding*2, 
+            this.h-padding*2
+        );
         ctxView.restore();
     }
 

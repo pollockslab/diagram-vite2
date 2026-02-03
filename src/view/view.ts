@@ -214,45 +214,18 @@ export class _MAIN extends _DIAGRAM.axis
         }
     }
 
-    // DrawBackground()
+    // DrawRect(x:number, y:number, w1:number, h1:number, color:string)
     // {
-    //     if(!this.layers.background) return;
-    //     if(this.scope.zoom < 0.5) return;
-    //     const ctx = this.layers.background.ctx;
-    //     const step = this.scope.backgroundTileStep;
-    //     const w = this.SpaceLine(this.scope.w);
-    //     const h = this.SpaceLine(this.scope.h);
-    //     const line = (w>h)? w:h;
-    //     const x = this.x - line/2 - this.x%step;
-    //     const y = this.y - line/2 - this.y%step;
-        
+    //     if (!this.layers.effect) return;
+    //     const ctx = this.layers.effect.ctx;
+    //     const { w, h, dpr } = this.scope;
+    //     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    //     ctx.clearRect(0, 0, w, h);
+
+
     //     ctx.save();
-    //     ctx.strokeStyle = 'rgb(54,63,63)';
-    //     ctx.beginPath();
-
-    //     const addr = step;
-
-    //     // 중앙->우
-    //     for(let i=x-addr; i<line+x+addr; i+=step) 
-    //     {
-    //         ctx.moveTo(i-addr       , y-addr);
-    //         ctx.lineTo(i+addr+line  , y+addr+line);
-
-    //         ctx.moveTo(i-addr       , y+addr+line);
-    //         ctx.lineTo(i+addr+line  , y-addr     );
-    //     }
-
-    //     // 중앙->좌
-    //     for(let i=x+addr; i>-line+x-addr; i-=step) 
-    //     {
-    //         ctx.moveTo(i-addr       , y-addr);
-    //         ctx.lineTo(i+addr+line  , y+addr+line);
-
-    //         ctx.moveTo(i-addr       , y+addr+line);
-    //         ctx.lineTo(i+addr+line  , y-addr     );
-    //     }
-        
-    //     ctx.stroke();
+    //     ctx.fillStyle = color;
+    //     ctx.fillRect(x, y, w1, h1);
     //     ctx.restore();
     // }
     

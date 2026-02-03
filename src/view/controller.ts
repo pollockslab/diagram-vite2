@@ -1,6 +1,6 @@
 // 메인 앱의 _VIEW 인스턴스 타입이 필요합니다. 임시로 any 처리하거나 타입을 가져오세요.
 import { _VIEW, _REMO } from '../main';
-import { _MAIN as _AXIS } from '../diagrams/axis'
+import { _MAIN as _AXIS, type TEdgeType } from '../diagrams/axis'
 
 
 // 인터페이스 정의
@@ -10,7 +10,10 @@ interface IDown {
     offsetY: number;
     x: number;
     y: number;
+    w: number;
+    h: number;
     timeStamp: number;
+    edge: TEdgeType | null;
 }
 interface IMove {
     x: number;
@@ -28,9 +31,11 @@ export class _MAIN
     private down : IDown  | null = null;
     private move : IMove         = { x: 0, y: 0, isLoop: false };
     private pinch: IPinch | null = null;
+    parentNode:HTMLDivElement;
 
     constructor(args: { parentNode: HTMLDivElement }) {
         const div = args.parentNode;
+        this.parentNode = div;
 
         const GetDistance = (): number => {
             if(!this.pinch || this.pinch.targets.size < 2) return 0;
@@ -137,6 +142,8 @@ export class _MAIN
 
 
         const dTarget = (dCollision)? dCollision : _VIEW;
+        const dEdge = (dCollision)? 
+            dCollision.GetCollisionEdge(spaceX, spaceY) : null;
 
         this.down = {
             target: dTarget,
@@ -144,7 +151,10 @@ export class _MAIN
             offsetY: screenY,
             x: dTarget.x, // 마우스 다운시 x위치 기록
             y: dTarget.y, // 마우스 다운시 y위치 기록
+            w: dTarget.w,
+            h: dTarget.h,
             timeStamp: timeStamp,
+            edge: dEdge,
         };
         _VIEW.isDragging = true;
     }
@@ -154,7 +164,8 @@ export class _MAIN
         if (this.down === null) return;
 
         const remocon = _REMO.remote.id;
-        if(remocon === null || remocon === 'pointer') {
+        if(remocon === null || remocon === 'pointer') 
+        {
             // SpaceLine이 _VIEW에 정의되어 있어야 함
             const xRange = _VIEW.SpaceLine(screenX - this.down.offsetX);
             const yRange = _VIEW.SpaceLine(screenY - this.down.offsetY);
@@ -165,12 +176,83 @@ export class _MAIN
                 dTarget.y = this.down.y - yRange;
             }
             else {
-                dTarget.x = this.down.x + xRange;
-                dTarget.y = this.down.y + yRange;
+                // 
+                if(this.down.edge === null) {
+                    dTarget.x = this.down.x + xRange;
+                    dTarget.y = this.down.y + yRange;
+                }
+                else {
+                    
+                    const size = new Map<string, number>();
+                    // w, h 가 100 이하면 반려하자
+                    switch (this.down.edge) 
+                    {
+                        case 'e': 
+                            size.set('w', this.down.w + xRange);
+                            break;
+                        case 'w':
+                            size.set('x', this.down.x + xRange);
+                            size.set('w', this.down.w - xRange);
+                            break;
+                        case 's': 
+                            size.set('h', this.down.h + yRange);
+                            break;
+                        case 'n':
+                            size.set('y', this.down.y + yRange);
+                            size.set('h', this.down.h - yRange);
+                            break;
+                        case 'es':
+                            size.set('w', this.down.w + xRange);
+                            size.set('h', this.down.h + yRange);
+                            break; 
+                        case 'wn':
+                            size.set('x', this.down.x + xRange);
+                            size.set('w', this.down.w - xRange);
+
+                            size.set('y', this.down.y + yRange);
+                            size.set('h', this.down.h - yRange);
+                            break;
+                        case 'en':
+                            size.set('w', this.down.w + xRange);
+
+                            size.set('y', this.down.y + yRange);
+                            size.set('h', this.down.h - yRange);
+                            break; 
+                        case 'ws':
+                            size.set('x', this.down.x + xRange);
+                            size.set('w', this.down.w - xRange);
+
+                            size.set('h', this.down.h + yRange);
+                            break;
+                    }
+
+                    
+                    const sizeObj = Object.fromEntries(size);
+                    if(sizeObj.w !== undefined && sizeObj.w <= 100) return;
+                    if(sizeObj.h !== undefined && sizeObj.h <= 100) return;
+                    if(sizeObj.w !== undefined && sizeObj.w >= 1000) return;
+                    if(sizeObj.h !== undefined && sizeObj.h >= 1000) return;
+                    dTarget.SetData(sizeObj);
+                    dTarget.Render();
+                }
             }
 
             _VIEW.isDragging = true;
         }
+        // else if(remocon === 'multiselect')
+        // {
+        //     const x = _VIEW.SpaceX(this.down.x);
+        //     const y = _VIEW.SpaceY(this.down.y);
+        //     // const w = _VIEW.SpaceX(screenX);
+        //     // const h = _VIEW.SpaceY(screenY);
+        //     // const x = this.down.x;
+        //     // const y = this.down.y;
+        //     //  const x = 400;
+        //     // const y = 400;
+        //     const w = screenX;
+        //     const h = screenY;
+        //     // _VIEW.DrawRect(x,y,w,h,'rgba(50,250,250,0.5)');
+        // }
     }
 
     private PanHover(screenX: number, screenY: number): void 
@@ -193,11 +275,38 @@ export class _MAIN
                 const nowHover = _VIEW.GetCollisionChildPoint(spaceX, spaceY);
                 
                 // hover 대상이 변경되었을 경우만 처리
-                if( nowHover !== oldHover)
-                {
+                if( nowHover !== oldHover ) {
                     _VIEW.status.hover = nowHover;
                     _VIEW.isHover = true;
                 }
+
+                let cursorStyle = 'default';
+                if( nowHover !== null ) {
+                    const edge = nowHover.GetCollisionEdge(spaceX, spaceY);
+                    switch (edge) 
+                    {
+                        case 'e': 
+                        case 'w':
+                            cursorStyle = 'ew-resize';
+                            break;
+                        case 's': 
+                        case 'n':
+                            cursorStyle = 'ns-resize';
+                            break;
+                        case 'es': 
+                        case 'wn':
+                            cursorStyle = 'nwse-resize';
+                            break;
+                        case 'en': 
+                        case 'ws':
+                            cursorStyle = 'nesw-resize';
+                            break;
+                        default:
+                            cursorStyle = 'move';
+                            break;
+                    }
+                }
+                this.parentNode.style.setProperty('cursor', cursorStyle, 'important');
             });
         }
     }
@@ -214,6 +323,16 @@ export class _MAIN
 
             _REMO.Action({x, y});
         }
+        // 원래 위에서 모든 리모콘을 해결하려 했지만 멀티셀렉트는 범위인걸?
+        // else if(this.down !== null && remocon === 'multiselect') {
+
+        //     const x = _VIEW.SpaceX(this.down.x);
+        //     const y = _VIEW.SpaceY(this.down.y);
+        //     const w = _VIEW.SpaceX(screenX);
+        //     const h = _VIEW.SpaceY(screenY);
+        //     const gets = _VIEW.GetCollisionChildRect(x,y,w,h);
+        //     console.log(gets);
+        // }
         
         this.down = null;
         _VIEW.isDragging = true;

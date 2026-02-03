@@ -41,10 +41,14 @@ export class _MAIN extends _AXIS
 
         // 2. 거래호출
     }
+    private a2 = 1;
+   
 
     // 현재모습 캡처cav에 복사하기
     Render()
     {
+        this.InitCapture();
+
         const cav = this._capture.cav;
         const ctx = this._capture.ctx;
         
@@ -62,7 +66,7 @@ export class _MAIN extends _AXIS
         ctx.textBaseline = 'top'; // 좌표 잡기 편하게 베이스라인 설정
         
         // 20, 20 위치에 그리되 DPR 반영
-        ctx.fillText('안녕하세요', 20, 20);
+        ctx.fillText(`안녕하세요${this.a2++}`, 20, 20);
         
 
     }
