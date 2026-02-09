@@ -1,5 +1,5 @@
 import { _DIAGRAM } from '../imports'
-// import { _CTRL } from '../main'
+import { _CTRL } from '../main'
 
 
 export class _MAIN extends _DIAGRAM.axis
@@ -11,10 +11,6 @@ export class _MAIN extends _DIAGRAM.axis
         bgStep: 100,
         bgPattern: null as CanvasPattern | null,
     };
-  
-    isDragging = false;
-    isResizing = false;
-    isHover = false;
 
     // 배경타일, 다이어그램, 선택표시 그릴 캔버스 레이어들
     layers: { [key: string]: { cav: HTMLCanvasElement, ctx: CanvasRenderingContext2D } } = {};
@@ -30,11 +26,6 @@ export class _MAIN extends _DIAGRAM.axis
         this.parentNode = args.parentNode || document.body;
 
         this.InitLayers();
-
-        window.addEventListener('resize', () => { this.Resize(); });
-        this.Resize();
-
-        this.Loop();
     }
     
     get zoom()
@@ -46,19 +37,6 @@ export class _MAIN extends _DIAGRAM.axis
         if(size >= this.scope.min && size <= this.scope.max) {
             this.scope.zoom = size;
         }
-    }
-
-
-
-    Loop = () =>
-    {
-        if(this.isDragging || this.isResizing || this.isHover) {
-            this.Draw();
-            this.isDragging = false;
-            this.isResizing = false;
-            this.isHover = false;
-        }
-        requestAnimationFrame(this.Loop);
     }
 
     InitLayers()
@@ -73,19 +51,6 @@ export class _MAIN extends _DIAGRAM.axis
         });
     }
 
-    Resize()
-    {
-        this.scope.w = window.innerWidth;
-        this.scope.h = window.innerHeight;
-
-        Object.values(this.layers).forEach(layer => 
-        {
-            layer.cav.width = this.scope.w * this.scope.dpr;
-            layer.cav.height = this.scope.h * this.scope.dpr;
-        });
-        
-        this.isResizing = true;
-    }
 
     SpaceX(screenX: number): number 
     {
@@ -112,7 +77,6 @@ export class _MAIN extends _DIAGRAM.axis
 
     async LoadMap(id:string)
     {
-        console.log(id)
         this.children = {
             none: [],
             point: [],
@@ -122,13 +86,12 @@ export class _MAIN extends _DIAGRAM.axis
         };
 
         // 생성순서가 있으니 순서대로 하는게 맞을거같아
-        this.AddChild({type:'square', x:0, y: 0, w:200, h:300, bgColor:'blue'});
+        this.AddChild({type:'square', x:0, y: 0, w:200, h:300, bgColor:'blue', id:id});
         this.AddChild({type:'square', x:-100, y: -400, w:300, h:300, bgColor:'orange'});
 
-        this.isResizing = true;
+        _CTRL.loop.isDraw = true;
+        _CTRL.Loop();
     }
-
-
 
     Draw()
     {
@@ -213,20 +176,5 @@ export class _MAIN extends _DIAGRAM.axis
             ctx.restore();
         }
     }
-
-    // DrawRect(x:number, y:number, w1:number, h1:number, color:string)
-    // {
-    //     if (!this.layers.effect) return;
-    //     const ctx = this.layers.effect.ctx;
-    //     const { w, h, dpr } = this.scope;
-    //     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    //     ctx.clearRect(0, 0, w, h);
-
-
-    //     ctx.save();
-    //     ctx.fillStyle = color;
-    //     ctx.fillRect(x, y, w1, h1);
-    //     ctx.restore();
-    // }
     
 }

@@ -17,6 +17,10 @@ interface IRemoteState {
     type: string|null;
     data: string|null;
 }
+// toggle: 화면 클릭으로 액션실행 | active: 즉시실행후 pointer | passive: 연속실행
+// 이라고 했는데 active면 굳이 뭔갈 바꿀필욘 없나
+
+// type TButtonType = 'toggle' | 'active' | 'passive'; // default:pointer
 
 export class _MAIN 
 {
@@ -116,7 +120,7 @@ export class _MAIN
     Action(args: {x?: number, y?: number} = {})
     {
         // 선택된 버튼이 없으면 리턴
-        if(!this.remote.id) return;
+        // if(!this.remote.id) return;
 
         switch(this.remote.id)
         {
@@ -124,7 +128,6 @@ export class _MAIN
                 console.log(`[설치] 좌표 (${args.x}, ${args.y}) 에 사각형 생성`);
                 // 여기서 실제 _VIEW에 사각형을 추가하는 로직 호출
                 _VIEW.AddChild({type:'square', x:args.x, y:args.y, w:100, h:100, bgColor:'red'});
-                _VIEW.isResizing = true;
                 break;
             case 'favorate':
                 console.log('즐겨찾기 실행');
@@ -132,8 +135,13 @@ export class _MAIN
             case 'imagedownload':
                 console.log('화면 캡처 시작');
                 break;
+            case 'editortext':
+                break;
+            case 'pointer':
             default:
                 console.log('실행:', this.remote.id);
+
+                break;
         }
 
         // 작업 완료 후 UI를 원래대로 (버튼 올라옴)
@@ -143,7 +151,7 @@ export class _MAIN
     // 작업도중이라도 호출되면 종료
     End()
     {
-        // 선택된 버튼이 없으면 리턴
+        // // 선택된 버튼이 없으면 리턴
         if(!this.remote.btn) return;
 
         // 초기화

@@ -32,11 +32,20 @@ export class _MAIN
     private move : IMove         = { x: 0, y: 0, isLoop: false };
     private pinch: IPinch | null = null;
     parentNode:HTMLDivElement;
+    loop = {
+        isLoop: false,
+        isHover: false,
+        isEdge: false,
+        isDraw: false,
+        isResize: false,
+    }
 
     constructor(args: { parentNode: HTMLDivElement }) {
         const div = args.parentNode;
         this.parentNode = div;
+        this.Resize();
 
+        // --- ▽▽▽ Event ▽▽▽ ---
         const GetDistance = (): number => {
             if(!this.pinch || this.pinch.targets.size < 2) return 0;
             const p = Array.from(this.pinch.targets.values());
@@ -64,6 +73,11 @@ export class _MAIN
             }
         }
 
+        // --- Window Resize ---
+        window.addEventListener('resize', () => { 
+            this.Resize(); 
+        });
+
         // --- Mouse Event ---
         div.addEventListener('contextmenu', (e: MouseEvent) => {
             e.preventDefault();
@@ -72,8 +86,7 @@ export class _MAIN
         div.addEventListener('wheel', (e: WheelEvent) => {
             // zoom 수치 업데이트
             const WHEEL_ZOOM_FACTOR = 0.001;
-            _VIEW.zoom -= e.deltaY * WHEEL_ZOOM_FACTOR;
-            _VIEW.isDragging = true;
+            this.PanZoom(-e.deltaY * WHEEL_ZOOM_FACTOR);
         }, { passive: true });
 
         // --- Pan Event ---
@@ -116,8 +129,7 @@ export class _MAIN
                     if(this.pinch && this.pinch.distance > 0) {
                         const delta = this.pinch.distance - nowDistance;
                         const PINCH_ZOOM_FACTOR = 0.002;
-                        _VIEW.zoom -= delta * PINCH_ZOOM_FACTOR;
-                        _VIEW.isDragging = true;
+                        this.PanZoom(-delta * PINCH_ZOOM_FACTOR);
                     }
                     if(this.pinch) this.pinch.distance = nowDistance;
                     break;
@@ -126,6 +138,22 @@ export class _MAIN
         
         div.addEventListener('pointerup', DeletePointerEvent);
         div.addEventListener('pointercancel', DeletePointerEvent);
+    }
+
+    Resize()
+    {
+        _VIEW.scope.w = window.innerWidth;
+        _VIEW.scope.h = window.innerHeight;
+
+        this.loop.isResize = true;
+        this.Loop();
+    }
+
+    private PanZoom(size: number)
+    {
+        _VIEW.zoom += size;
+        this.loop.isDraw = true;
+        this.Loop();
     }
      
     private PanStart(screenX: number, screenY: number, timeStamp: number): void 
@@ -156,7 +184,8 @@ export class _MAIN
             timeStamp: timeStamp,
             edge: dEdge,
         };
-        _VIEW.isDragging = true;
+        this.loop.isDraw = true;
+        this.Loop();
     }
 
     private PanMove(screenX: number, screenY: number): void 
@@ -237,22 +266,9 @@ export class _MAIN
                 }
             }
 
-            _VIEW.isDragging = true;
+            this.loop.isDraw = true;
+            this.Loop();
         }
-        // else if(remocon === 'multiselect')
-        // {
-        //     const x = _VIEW.SpaceX(this.down.x);
-        //     const y = _VIEW.SpaceY(this.down.y);
-        //     // const w = _VIEW.SpaceX(screenX);
-        //     // const h = _VIEW.SpaceY(screenY);
-        //     // const x = this.down.x;
-        //     // const y = this.down.y;
-        //     //  const x = 400;
-        //     // const y = 400;
-        //     const w = screenX;
-        //     const h = screenY;
-        //     // _VIEW.DrawRect(x,y,w,h,'rgba(50,250,250,0.5)');
-        // }
     }
 
     private PanHover(screenX: number, screenY: number): void 
@@ -262,53 +278,8 @@ export class _MAIN
         this.move.x = screenX;
         this.move.y = screenY;
         
-        if(this.move.isLoop === false) {
-            
-            this.move.isLoop = true;
-
-            requestAnimationFrame(() => {
-                this.move.isLoop = false;
-
-                const spaceX = _VIEW.SpaceX(this.move.x);
-                const spaceY = _VIEW.SpaceY(this.move.y);
-                const oldHover = _VIEW.status.hover;
-                const nowHover = _VIEW.GetCollisionChildPoint(spaceX, spaceY);
-                
-                // hover 대상이 변경되었을 경우만 처리
-                if( nowHover !== oldHover ) {
-                    _VIEW.status.hover = nowHover;
-                    _VIEW.isHover = true;
-                }
-
-                let cursorStyle = 'default';
-                if( nowHover !== null ) {
-                    const edge = nowHover.GetCollisionEdge(spaceX, spaceY);
-                    switch (edge) 
-                    {
-                        case 'e': 
-                        case 'w':
-                            cursorStyle = 'ew-resize';
-                            break;
-                        case 's': 
-                        case 'n':
-                            cursorStyle = 'ns-resize';
-                            break;
-                        case 'es': 
-                        case 'wn':
-                            cursorStyle = 'nwse-resize';
-                            break;
-                        case 'en': 
-                        case 'ws':
-                            cursorStyle = 'nesw-resize';
-                            break;
-                        default:
-                            cursorStyle = 'move';
-                            break;
-                    }
-                }
-                this.parentNode.style.setProperty('cursor', cursorStyle, 'important');
-            });
-        }
+        this.loop.isHover = true;
+        this.Loop();
     }
 
     private async PanEnd(screenX: number, screenY: number, timeStamp: number): Promise<void> 
@@ -323,21 +294,87 @@ export class _MAIN
 
             _REMO.Action({x, y});
         }
-        // 원래 위에서 모든 리모콘을 해결하려 했지만 멀티셀렉트는 범위인걸?
-        // else if(this.down !== null && remocon === 'multiselect') {
-
-        //     const x = _VIEW.SpaceX(this.down.x);
-        //     const y = _VIEW.SpaceY(this.down.y);
-        //     const w = _VIEW.SpaceX(screenX);
-        //     const h = _VIEW.SpaceY(screenY);
-        //     const gets = _VIEW.GetCollisionChildRect(x,y,w,h);
-        //     console.log(gets);
-        // }
         
         this.down = null;
-        _VIEW.isDragging = true;
-        // 추가 저장 로직 (리모콘 위치 저장 등) 작성 가능
+        this.loop.isDraw = true;
+        this.Loop();
     }
 
-    
+    // 공통 리퀘스트 애니메이션
+    Loop()
+    {
+        if(this.loop.isLoop === false) {
+            this.loop.isLoop = true;
+
+            requestAnimationFrame(() => {
+                this.loop.isLoop = false;
+                
+                if(this.loop.isEdge === true) {
+                    this.loop.isEdge = false;
+                }
+                if(this.loop.isHover === true) {
+                    this.loop.isHover = false;
+                    this.CheckCollisionEdge();
+                }
+                if(this.loop.isDraw === true) {
+                    this.loop.isDraw = false;
+                    _VIEW.Draw();
+                }
+                if(this.loop.isResize === true) {
+                    this.loop.isResize = false;
+                    
+                    Object.values(_VIEW.layers).forEach(layer => 
+                    {
+                        layer.cav.width = _VIEW.scope.w * _VIEW.scope.dpr;
+                        layer.cav.height = _VIEW.scope.h * _VIEW.scope.dpr;
+                    });
+                    _VIEW.Draw();
+                }
+
+            });
+        }
+    }
+
+    CheckCollisionEdge()
+    {
+        const spaceX = _VIEW.SpaceX(this.move.x);
+        const spaceY = _VIEW.SpaceY(this.move.y);
+        const oldHover = _VIEW.status.hover;
+        const nowHover = _VIEW.GetCollisionChildPoint(spaceX, spaceY);
+        
+        // hover 대상이 변경되었을 경우만 처리
+        if( nowHover !== oldHover ) {
+            _VIEW.status.hover = nowHover;
+            this.loop.isDraw = true;
+            this.Loop();
+        }
+
+        let cursorStyle = 'default';
+        if( nowHover !== null ) {
+            const edge = nowHover.GetCollisionEdge(spaceX, spaceY);
+            switch (edge) 
+            {
+                case 'e': 
+                case 'w':
+                    cursorStyle = 'ew-resize';
+                    break;
+                case 's': 
+                case 'n':
+                    cursorStyle = 'ns-resize';
+                    break;
+                case 'es': 
+                case 'wn':
+                    cursorStyle = 'nwse-resize';
+                    break;
+                case 'en': 
+                case 'ws':
+                    cursorStyle = 'nesw-resize';
+                    break;
+                default:
+                    cursorStyle = 'move';
+                    break;
+            }
+        }
+        this.parentNode.style.setProperty('cursor', cursorStyle, 'important');
+    }
 }

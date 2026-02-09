@@ -55,6 +55,8 @@ export class _MAIN extends _AXIS
         // 캔버스 초기화
         ctx.clearRect(0, 0, cav.width, cav.height);
         
+        // 그림자 설정
+
         // 배경 그리기
         ctx.fillStyle = this.bgColor;
         ctx.fillRect(0, 0, cav.width, cav.height);
