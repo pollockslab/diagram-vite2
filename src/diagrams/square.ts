@@ -23,7 +23,7 @@ export class _MAIN extends _AXIS
         // axis 에 안넣고 각자 필요시 넣는거? 불편해. 
 
         // console.log(this.children)
-        this.Render();
+        // this.Render();
     }
 
     Save()
@@ -47,19 +47,19 @@ export class _MAIN extends _AXIS
     // 현재모습 캡처cav에 복사하기
     Render()
     {
-        this.InitCapture();
-
-        const cav = this._capture.cav;
         const ctx = this._capture.ctx;
+        const x = this._capture.x;
+        const y = this._capture.y;
         
+        ctx.save();
         // 캔버스 초기화
-        ctx.clearRect(0, 0, cav.width, cav.height);
+        ctx.clearRect(x, y, this.w, this.h);
         
         // 그림자 설정
 
         // 배경 그리기
         ctx.fillStyle = this.bgColor;
-        ctx.fillRect(0, 0, cav.width, cav.height);
+        ctx.fillRect(x, y, this.w, this.h);
 
         // 1. dpr 안한거
         const fontSize = 16;
@@ -68,9 +68,9 @@ export class _MAIN extends _AXIS
         ctx.textBaseline = 'top'; // 좌표 잡기 편하게 베이스라인 설정
         
         // 20, 20 위치에 그리되 DPR 반영
-        ctx.fillText(`안녕하세요${this.a2++}`, 20, 20);
+        ctx.fillText(`안녕하세요${this.a2++}`, x+20, y+20);
         
-
+        ctx.restore();
     }
 
 }

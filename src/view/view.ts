@@ -1,5 +1,5 @@
 import { _DIAGRAM } from '../imports'
-import { _CTRL } from '../main'
+import { _CTRL, _ATLA } from '../main'
 
 
 export class _MAIN extends _DIAGRAM.axis
@@ -77,6 +77,7 @@ export class _MAIN extends _DIAGRAM.axis
 
     async LoadMap(id:string)
     {
+        console.log(id);        
         this.children = {
             none: [],
             point: [],
@@ -86,8 +87,12 @@ export class _MAIN extends _DIAGRAM.axis
         };
 
         // 생성순서가 있으니 순서대로 하는게 맞을거같아
-        this.AddChild({type:'square', x:0, y: 0, w:200, h:300, bgColor:'blue', id:id});
-        this.AddChild({type:'square', x:-100, y: -400, w:300, h:300, bgColor:'orange'});
+        this.AddChild({type:'square', x:-400, y: 0, w:700, h:300, bgColor:'blue', id:'blue'});
+        this.AddChild({type:'square', x:-200, y: 0, w:300, h:300, bgColor:'orange', id:'orange'});
+        this.AddChild({type:'square', x:0, y: 0, w:100, h:200, bgColor:'red',id:'red'});
+        this.AddChild({type:'square', x:200, y: 0, w:300, h:300, bgColor:'green', id:'green'});
+
+        _ATLA.LinkDiagrams(); // TEST: 260209) 나중에 디렉토리창에서 로딩함수 만들고 옮기자
 
         _CTRL.loop.isDraw = true;
         _CTRL.Loop();

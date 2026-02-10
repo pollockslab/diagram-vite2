@@ -4,6 +4,7 @@ import {_MAIN as _PAGE_STORAGE} from './storage/storage'
 import {_MAIN as _PAGE_EDITOR_TEXT} from './editor/texteditor'
 import {_MAIN as _PAGE_VIEW} from './view/view'
 import {_MAIN as _PAGE_CONTROLLER} from './view/controller'
+import {_MAIN as _PAGE_ATLAS} from './view/atlas'
 import {_MAIN as _PAGE_REMOCON} from './remocon/remocon'
 
 
@@ -15,6 +16,7 @@ const divApp = document.querySelector<HTMLDivElement>('#app') as HTMLDivElement;
 
 export const _STOR = new _PAGE_STORAGE();
 export const _TEDI = LoadPage(_PAGE_EDITOR_TEXT, "tedi");
+export const _ATLA = new _PAGE_ATLAS();
 export const _VIEW = LoadPage(_PAGE_VIEW, "view");
 export const _CTRL = LoadPage(_PAGE_CONTROLLER, "controller");
 export const _REMO = LoadPage(_PAGE_REMOCON, "remocon");
@@ -39,6 +41,7 @@ const Init = async (): Promise<void> =>
     //     await _VIEW.LoadDiagrams(setting.openTabID);
     // }
     await _VIEW.LoadMap('test1');
+    
 };
 
 Init();

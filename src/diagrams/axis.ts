@@ -1,7 +1,6 @@
 import { _DIAGRAM } from '../imports'
-// import { type IDiagram } from '../storage/schema'
 
-type TDiagram = _MAIN & { [key: string]: any };
+export type TDiagram = _MAIN & { [key: string]: any };
 
 interface IChildrenStructure {
     none: TDiagram[];
@@ -10,11 +9,17 @@ interface IChildrenStructure {
     line: TDiagram[];
     button: TDiagram[];
 }
+interface ICapture {
+    cav:    HTMLCanvasElement,
+    ctx:    CanvasRenderingContext2D,
+    x: number, 
+    y: number,
+}
 
 export const EDGE_TYPES = ['e', 'w', 's', 'n', 'es', 'en', 'ws', 'wn', null] as const;
 export type TEdgeType = (typeof EDGE_TYPES)[number];
 
-const _DPR = 1;// Math.round(window.devicePixelRatio) || 1;
+const _DPR = Math.round(window.devicePixelRatio) || 1;
 
 export class _MAIN 
 {
@@ -29,10 +34,7 @@ export class _MAIN
     y:          number = 0;
     _w:         number = 100;
     _h:         number = 100;
-    _capture: {
-        cav:    HTMLCanvasElement;
-        ctx:    CanvasRenderingContext2D;
-    };
+    _capture!: ICapture;
 
     children: IChildrenStructure = {
         none: [],
@@ -41,16 +43,12 @@ export class _MAIN
         line: [],
         button: [],
     };
-    // 상속때마다 생성을 막기위해 static으로 선언
+    
     static readonly children_order = ['none','point','square','line','button'] as const;
     static readonly children_order_reverse = [..._MAIN.children_order].reverse();
 
-   
-
     constructor() {
-        const cav = document.createElement('canvas');
-        const ctx = cav.getContext('2d') as CanvasRenderingContext2D;
-        this._capture = { cav, ctx };
+        
     }
 
     get w()
@@ -75,14 +73,10 @@ export class _MAIN
         Object.assign(this, args);
     }
 
-    InitCapture()
+    SetCapture(capture:ICapture)
     {
-        const cavCapture = this._capture.cav;
-        const ctxCapture = this._capture.ctx;
-        cavCapture.width = this.w * _DPR;
-        cavCapture.height = this.h * _DPR;
-        ctxCapture.setTransform(1, 0, 0, 1, 0, 0);
-        ctxCapture.scale(_DPR, _DPR);
+        this._capture = capture;
+        this.Render();
     }
 
     private GetChildrenByType(type: string): TDiagram[] {
@@ -99,10 +93,11 @@ export class _MAIN
     {
         const dClass = (_DIAGRAM as any)[args.type];
         if (!dClass) return;
-
+        
         const instance = new dClass(args);
         const list = this.GetChildrenByType(args.type);
         list.push(instance);
+
     }
 
     SetOrderChild(dChild:TDiagram)
@@ -117,7 +112,7 @@ export class _MAIN
 
     FindByID(diagramID: string): TDiagram | null 
     {
-        // key를 꺼내서 접근할 때 TS 에러를 피하려면 Object.keys 대신 values가 속 편합니다.
+        
         const allLists = Object.values(this.children);
 
         for (const list of allLists) {
@@ -127,7 +122,27 @@ export class _MAIN
         return null;
     }
 
-    // 자신 체크
+    FindByIDAndType(diagramID: string, diagramType: string): TDiagram | null 
+    {
+        const list = this.GetChildrenByType(diagramType);
+        const found = list.find((item:TDiagram) => item.id === diagramID);
+        if (found) return found;
+    
+        return null;
+    }
+
+    GetAllChildren(): Array<TDiagram>
+    {
+        const temps:Array<TDiagram> = [];
+        const allLists = Object.values(this.children);
+        for (const list of allLists) {
+            for(const diagram of list) {
+                temps.push(diagram);
+            }
+        }
+        return temps;
+    }
+
     IsCollisionPoint(x:number, y:number): boolean
     {
         return (
@@ -180,13 +195,16 @@ export class _MAIN
         return null;
     }
 
-    Render() {} // 각 다이어그램에서 초기화 필요.
+    Render() {} // 각 다이어그램에서 초기화 필요
 
     Draw(ctxView:CanvasRenderingContext2D)
     {
-        const cavCapture = this._capture.cav;
         ctxView.drawImage(
-            cavCapture, 
+            this._capture.cav,
+            this._capture.x* _DPR,
+            this._capture.y* _DPR,
+            this.w * _DPR, 
+            this.h * _DPR,
             this.x, 
             this.y, 
             this.w, 
