@@ -9,7 +9,7 @@ import imgImageDownload from './imageDownload.png'
 import imgMultiSelect from './remocon-multiselect.png'
 import imgEditorText from './remocon-editortext.png'
 
-import { _VIEW } from '../main'
+import { _VIEW, _ATLA } from '../main'
 
 interface IRemoteState {
     btn: HTMLDivElement|null;
@@ -127,7 +127,10 @@ export class _MAIN
             case 'square':
                 console.log(`[설치] 좌표 (${args.x}, ${args.y}) 에 사각형 생성`);
                 // 여기서 실제 _VIEW에 사각형을 추가하는 로직 호출
-                _VIEW.AddChild({type:'square', x:args.x, y:args.y, w:100, h:100, bgColor:'red'});
+                const dSquare = _VIEW.AddChild({type:'square', x:args.x, y:args.y, w:100, h:100, bgColor:'red', id:crypto.randomUUID()});
+                if(dSquare !== null) {
+                    _ATLA.InsertSlot(dSquare);
+                }
                 break;
             case 'favorate':
                 console.log('즐겨찾기 실행');

@@ -55,7 +55,11 @@ export class _MAIN
     {
         // 1. 슬롯분배 초기화
         ['large', 'small'].forEach(type => {
-            this.maps[type as 'large'|'small'].forEach(map => {map.slots = [];});
+            this.maps[type as 'large'|'small'].forEach(map => {
+                const info = this.info[map.type];
+                map.slots = new Array(info.slotCount).fill(null);
+                console.log(map.slots)
+            });
         });
         
         // 2. 다이어그램 가져오기
@@ -108,13 +112,14 @@ export class _MAIN
         const y:number = row*info.slotSize;
         const mapOrder = Math.trunc(count / info.slotCount); // 몇 번째 맵인지 계산
         const map = this.maps[type][mapOrder];
-        console.log(map, x, y)
+        
         const capture = {
             cav: map.cav,
             ctx: map.ctx,
             x: x,
             y: y
         };
+        console.log(x, y, count)
         diagram.SetCapture(capture);
     }
 
@@ -131,7 +136,9 @@ export class _MAIN
 
         // 해당 맵에 슬롯 뭉치 전달
         const mapTarget = this.maps[type][mapOrder - 1];
-        mapTarget.slots = slots;                     
+        for(let i=0; i<slots.length; i++) {
+            mapTarget.slots[i] = slots[i];
+        }              
     }
 
     CheckMapType(diagram: TDiagram): 'large'|'small'
@@ -147,15 +154,22 @@ export class _MAIN
             for(let i=0; i<map.slots.length; i++) {
                 if(map.slots[i] === null) {
                     map.slots[i] = diagram.id;
+                    // 다이어그램에 슬롯정보 전달
+                    this.SendSlotDiagram(diagram, mapType, i);
                     return;
                 }
+                
             }
         }
+        console.log('dusss')
 
         // 슬롯이 꽉 찼으니 맵 추가후 슬롯에 id 추가
         const map = this.CreateMap(mapType);
         map.slots[0] = diagram.id;
-        this.maps[mapType].push(map);
+        const iPush = this.maps[mapType].push(map) -1;
+        const info = this.info[mapType];
+        const iSend = info.slotCount*iPush;
+        this.SendSlotDiagram(diagram, mapType, iSend);
     }
     
     private CreateMap(type:TSlot): IAtlasMap

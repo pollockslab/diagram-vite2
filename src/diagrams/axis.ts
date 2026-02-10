@@ -89,15 +89,15 @@ export class _MAIN
         return _MAIN.children_order_reverse;
     }
     
-    AddChild(args: any)
+    AddChild(args: any): TDiagram|null
     {
         const dClass = (_DIAGRAM as any)[args.type];
-        if (!dClass) return;
+        if (!dClass) return null;
         
         const instance = new dClass(args);
         const list = this.GetChildrenByType(args.type);
         list.push(instance);
-
+        return instance;
     }
 
     SetOrderChild(dChild:TDiagram)
