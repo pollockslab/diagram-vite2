@@ -1,8 +1,9 @@
-import { _DIAGRAM } from '../imports'
-import { _CTRL, _ATLA } from '../main'
+
+import { _DC } from '../diagrams/diagrams.type'
+import { _CTRL } from '../main'
 
 
-export class _MAIN extends _DIAGRAM.axis
+export class _MAIN extends _DC.CLASS.axis
 {
     parentNode: HTMLElement;
     scope = {
@@ -92,10 +93,8 @@ export class _MAIN extends _DIAGRAM.axis
         this.AddChild({type:'square', x:0, y: 0, w:100, h:200, bgColor:'red',id:'red'});
         this.AddChild({type:'square', x:200, y: 0, w:300, h:300, bgColor:'green', id:'green'});
 
-        _ATLA.LinkDiagrams(); // TEST: 260209) 나중에 디렉토리창에서 로딩함수 만들고 옮기자
-
         _CTRL.loop.isDraw = true;
-        _CTRL.Loop();
+        _CTRL.Loop(null);
     }
 
     Draw()

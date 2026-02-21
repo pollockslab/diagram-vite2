@@ -1,7 +1,6 @@
 
 import { _MAIN as _AXIS } from './axis'
 import { _STOR } from '../main'
-
 // const _DPR = Math.round(window.devicePixelRatio) || 1;
 
 export class _MAIN extends _AXIS
@@ -48,8 +47,8 @@ export class _MAIN extends _AXIS
     Render()
     {
         const ctx = this._capture.ctx;
-        const x = this._capture.x;
-        const y = this._capture.y;
+        const x = 0;
+        const y = 0;
         
         ctx.save();
         // 캔버스 초기화

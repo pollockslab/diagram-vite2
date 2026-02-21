@@ -9,7 +9,10 @@ import imgImageDownload from './imageDownload.png'
 import imgMultiSelect from './remocon-multiselect.png'
 import imgEditorText from './remocon-editortext.png'
 
-import { _VIEW, _ATLA } from '../main'
+import imgUndo from './remocon-undo.png'
+import imgRedo from './remocon-redo.png'
+
+import { _VIEW } from '../main'
 
 interface IRemoteState {
     btn: HTMLDivElement|null;
@@ -57,6 +60,11 @@ export class _MAIN
         this.AddButton('setting', 'action',"환경설정", imgSetting);
         this.AddButton('remove', 'toggle',"도형삭제", imgRemove);
         this.AddButton('imagedownload', 'action',"화면캡처", imgImageDownload);
+
+        this.AddLine();
+        this.AddText('Undo & Redo');
+        this.AddButton('undo', 'action',"작업 복원하기(뒤)", imgUndo);
+        this.AddButton('redo', 'action',"작업 복원하기(앞)", imgRedo);
     }
 
     AddLine()
@@ -127,10 +135,7 @@ export class _MAIN
             case 'square':
                 console.log(`[설치] 좌표 (${args.x}, ${args.y}) 에 사각형 생성`);
                 // 여기서 실제 _VIEW에 사각형을 추가하는 로직 호출
-                const dSquare = _VIEW.AddChild({type:'square', x:args.x, y:args.y, w:100, h:100, bgColor:'red', id:crypto.randomUUID()});
-                if(dSquare !== null) {
-                    _ATLA.InsertSlot(dSquare);
-                }
+                // const dSquare = _VIEW.AddChild({type:'square', x:args.x, y:args.y, w:100, h:100, bgColor:'red', id:crypto.randomUUID()});
                 break;
             case 'favorate':
                 console.log('즐겨찾기 실행');

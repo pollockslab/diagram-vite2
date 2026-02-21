@@ -1,11 +1,11 @@
 // 메인 앱의 _VIEW 인스턴스 타입이 필요합니다. 임시로 any 처리하거나 타입을 가져오세요.
 import { _VIEW, _REMO } from '../main';
-import { _MAIN as _AXIS, type TEdgeType } from '../diagrams/axis'
+import { type _DT } from '../diagrams/diagrams.type'
 
 
 // 인터페이스 정의
 interface IDown {
-    target: _AXIS;
+    target: _DT.CHILD_OBJECT;
     offsetX: number;
     offsetY: number;
     x: number;
@@ -13,7 +13,7 @@ interface IDown {
     w: number;
     h: number;
     timeStamp: number;
-    edge: TEdgeType | null;
+    edge: _DT.EDGE_NAME | null;
 }
 interface IMove {
     x: number;
@@ -38,6 +38,9 @@ export class _MAIN
         isEdge: false,
         isDraw: false,
         isResize: false,
+        isRender: false,
+        isCaptureCompact: false,
+        isCaptureExpand: false,
     }
 
     constructor(args: { parentNode: HTMLDivElement }) {
@@ -146,14 +149,14 @@ export class _MAIN
         _VIEW.scope.h = window.innerHeight;
 
         this.loop.isResize = true;
-        this.Loop();
+        this.Loop(null);
     }
 
     private PanZoom(size: number)
     {
         _VIEW.zoom += size;
         this.loop.isDraw = true;
-        this.Loop();
+        this.Loop(null);
     }
      
     private PanStart(screenX: number, screenY: number, timeStamp: number): void 
@@ -184,8 +187,13 @@ export class _MAIN
             timeStamp: timeStamp,
             edge: dEdge,
         };
+
+        // 모서리 클릭시 다이어그램 사이즈 조절 시작
+        if(this.down.edge !== null) {
+            this.loop.isCaptureExpand = true;
+        }
         this.loop.isDraw = true;
-        this.Loop();
+        this.Loop(null);
     }
 
     private PanMove(screenX: number, screenY: number): void 
@@ -201,73 +209,24 @@ export class _MAIN
 
             const dTarget = this.down.target;
             if(dTarget === _VIEW) {
+                // 맵 이동
                 dTarget.x = this.down.x - xRange;
                 dTarget.y = this.down.y - yRange;
             }
             else {
-                // 
                 if(this.down.edge === null) {
+                    // 다이어그램 이동
                     dTarget.x = this.down.x + xRange;
                     dTarget.y = this.down.y + yRange;
                 }
                 else {
-                    
-                    const size = new Map<string, number>();
-                    // w, h 가 100 이하면 반려하자
-                    switch (this.down.edge) 
-                    {
-                        case 'e': 
-                            size.set('w', this.down.w + xRange);
-                            break;
-                        case 'w':
-                            size.set('x', this.down.x + xRange);
-                            size.set('w', this.down.w - xRange);
-                            break;
-                        case 's': 
-                            size.set('h', this.down.h + yRange);
-                            break;
-                        case 'n':
-                            size.set('y', this.down.y + yRange);
-                            size.set('h', this.down.h - yRange);
-                            break;
-                        case 'es':
-                            size.set('w', this.down.w + xRange);
-                            size.set('h', this.down.h + yRange);
-                            break; 
-                        case 'wn':
-                            size.set('x', this.down.x + xRange);
-                            size.set('w', this.down.w - xRange);
-
-                            size.set('y', this.down.y + yRange);
-                            size.set('h', this.down.h - yRange);
-                            break;
-                        case 'en':
-                            size.set('w', this.down.w + xRange);
-
-                            size.set('y', this.down.y + yRange);
-                            size.set('h', this.down.h - yRange);
-                            break; 
-                        case 'ws':
-                            size.set('x', this.down.x + xRange);
-                            size.set('w', this.down.w - xRange);
-
-                            size.set('h', this.down.h + yRange);
-                            break;
-                    }
-
-                    
-                    const sizeObj = Object.fromEntries(size);
-                    if(sizeObj.w !== undefined && sizeObj.w <= 100) return;
-                    if(sizeObj.h !== undefined && sizeObj.h <= 100) return;
-                    if(sizeObj.w !== undefined && sizeObj.w >= 1000) return;
-                    if(sizeObj.h !== undefined && sizeObj.h >= 1000) return;
-                    dTarget.SetData(sizeObj);
-                    dTarget.Render();
+                    // 다이어그램 리사이즈
+                    this.ResizeDiagram(xRange, yRange);
                 }
             }
 
             this.loop.isDraw = true;
-            this.Loop();
+            this.Loop(null);
         }
     }
 
@@ -279,7 +238,7 @@ export class _MAIN
         this.move.y = screenY;
         
         this.loop.isHover = true;
-        this.Loop();
+        this.Loop(null);
     }
 
     private async PanEnd(screenX: number, screenY: number, timeStamp: number): Promise<void> 
@@ -295,14 +254,36 @@ export class _MAIN
             _REMO.Action({x, y});
         }
         
-        this.down = null;
+        const loopArgs = new Map<string, any>();
+        // 모서리 클릭시 다이어그램 사이즈 조절 종료
+        if(this.down?.edge !== null) {
+            this.loop.isCaptureCompact = true;
+            loopArgs.set('target', this.down?.target);
+        }
         this.loop.isDraw = true;
-        this.Loop();
+        this.Loop(loopArgs);
+
+        // (마무리) down 정보 초기화
+        this.down = null;
     }
 
-    // 공통 리퀘스트 애니메이션
-    Loop()
+    /**
+     * 공통 리퀘스트 애니메이션
+     * @param args 
+     */
+    Loop(args: null|Record<string, any>)
     {
+        // 루프에서 하는일
+        // 그림그리기
+        // 작업 스케줄에서 꺼내서 처리한다?
+        // 우선순위 작업이 있어. Render후 -> Draw해야됨
+        // 또 다른경우: 상자를 맵에 생성하기
+        //  ㄴ 생성한 후에 -> Render -> Draw 해야지
+        //
+        // 이런것들을 죄다 일일이 Loop 에 하면 끝도없어. 나중에  순서 바꿔야될때
+        // 전체적으로 고려해야함(마치 롤의 캐릭터마다 선공권이 신규챔피언 나올때마다 바뀌어서
+        // 버그가 엄청 많은것처럼)
+
         if(this.loop.isLoop === false) {
             this.loop.isLoop = true;
 
@@ -316,10 +297,32 @@ export class _MAIN
                     this.loop.isHover = false;
                     this.CheckCollisionEdge();
                 }
+                // isCaptureCompact, isCaptureExpand
+                if(this.loop.isCaptureCompact === true) {
+                    this.loop.isCaptureCompact = false;
+                    const dCompact = args?.get('target');
+                    if(dCompact !== null) {
+                        console.log(dCompact)
+                        dCompact.InitCapture(0);
+                        dCompact.Render();
+                    }
+                }
+                if(this.loop.isCaptureExpand === true) {
+                    this.loop.isCaptureExpand = false;
+                    const dExpand = this.down?.target;
+                    dExpand?.InitCapture(1);
+                    dExpand?.Render();
+                }
+                if(this.loop.isRender === true) {
+                    this.loop.isRender = false;
+
+                    _VIEW.Draw();
+                }
                 if(this.loop.isDraw === true) {
                     this.loop.isDraw = false;
                     _VIEW.Draw();
                 }
+
                 if(this.loop.isResize === true) {
                     this.loop.isResize = false;
                     
@@ -335,6 +338,65 @@ export class _MAIN
         }
     }
 
+    ResizeDiagram(xRange:number, yRange:number)
+    {
+        if(this.down === null) return;
+
+        const size = new Map<string, number>();
+        // w, h 가 100 이하면 반려하자
+        switch (this.down.edge) 
+        {
+            case 'e': 
+                size.set('w', this.down.w + xRange);
+                break;
+            case 'w':
+                size.set('x', this.down.x + xRange);
+                size.set('w', this.down.w - xRange);
+                break;
+            case 's': 
+                size.set('h', this.down.h + yRange);
+                break;
+            case 'n':
+                size.set('y', this.down.y + yRange);
+                size.set('h', this.down.h - yRange);
+                break;
+            case 'es':
+                size.set('w', this.down.w + xRange);
+                size.set('h', this.down.h + yRange);
+                break; 
+            case 'wn':
+                size.set('x', this.down.x + xRange);
+                size.set('w', this.down.w - xRange);
+
+                size.set('y', this.down.y + yRange);
+                size.set('h', this.down.h - yRange);
+                break;
+            case 'en':
+                size.set('w', this.down.w + xRange);
+
+                size.set('y', this.down.y + yRange);
+                size.set('h', this.down.h - yRange);
+                break; 
+            case 'ws':
+                size.set('x', this.down.x + xRange);
+                size.set('w', this.down.w - xRange);
+
+                size.set('h', this.down.h + yRange);
+                break;
+        }
+
+        
+        const sizeObj = Object.fromEntries(size);
+        if(sizeObj.w !== undefined && sizeObj.w <= 100) return;
+        if(sizeObj.h !== undefined && sizeObj.h <= 100) return;
+        if(sizeObj.w !== undefined && sizeObj.w >= 1000) return;
+        if(sizeObj.h !== undefined && sizeObj.h >= 1000) return;
+
+        const dTarget = this.down.target;
+        dTarget.SetData(sizeObj);
+        dTarget.Render();
+    }
+
     CheckCollisionEdge()
     {
         const spaceX = _VIEW.SpaceX(this.move.x);
@@ -346,7 +408,7 @@ export class _MAIN
         if( nowHover !== oldHover ) {
             _VIEW.status.hover = nowHover;
             this.loop.isDraw = true;
-            this.Loop();
+            this.Loop(null);
         }
 
         let cursorStyle = 'default';
