@@ -76,9 +76,11 @@ export class _MAIN extends _DC.CLASS.axis
     }
 
 
-    async LoadMap(id:string)
+    async LoadMap(tabID:string)
     {
-        console.log(id);        
+        this.tabID = tabID; 
+        
+        // 탭에 대한걸 로드할지 다이어그램 아이디로 로드해야될지
         this.children = {
             none: [],
             point: [],
@@ -90,8 +92,8 @@ export class _MAIN extends _DC.CLASS.axis
         // 생성순서가 있으니 순서대로 하는게 맞을거같아
         this.AddChild({type:'square', x:-400, y: 0, w:700, h:300, bgColor:'blue', id:'blue'});
         this.AddChild({type:'square', x:-200, y: 0, w:300, h:300, bgColor:'orange', id:'orange'});
-        this.AddChild({type:'square', x:0, y: 0, w:100, h:200, bgColor:'red',id:'red'});
-        this.AddChild({type:'square', x:200, y: 0, w:300, h:300, bgColor:'green', id:'green'});
+        // this.AddChild({type:'square', x:0, y: 0, w:100, h:200, bgColor:'red',id:'red'});
+        // this.AddChild({type:'square', x:200, y: 0, w:300, h:300, bgColor:'green', id:'green'});
 
         _CTRL.loop.isDraw = true;
         _CTRL.Loop(null);

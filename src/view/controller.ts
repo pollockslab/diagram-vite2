@@ -1,37 +1,17 @@
-// 메인 앱의 _VIEW 인스턴스 타입이 필요합니다. 임시로 any 처리하거나 타입을 가져오세요.
+
 import { _VIEW, _REMO } from '../main';
-import { type _DT } from '../diagrams/diagrams.type'
+import { type _CT } from './controller.type'
 
-
-// 인터페이스 정의
-interface IDown {
-    target: _DT.CHILD_OBJECT;
-    offsetX: number;
-    offsetY: number;
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-    timeStamp: number;
-    edge: _DT.EDGE_NAME | null;
-}
-interface IMove {
-    x: number;
-    y: number;
-    isLoop: boolean;
-}
-interface IPinch {
-    distance: number; // 터치간 거리
-    targets: Map<number, PointerEvent>;
-}
 
 export class _MAIN 
 {
+    parentNode: HTMLDivElement;
+
     // 클래스 멤버 변수 타입 선언
-    private down : IDown  | null = null;
-    private move : IMove         = { x: 0, y: 0, isLoop: false };
-    private pinch: IPinch | null = null;
-    parentNode:HTMLDivElement;
+    public down    : _CT.DOWN  | null = null;
+    private move    : _CT.MOVE         = { x: 0, y: 0, isLoop: false };
+    private pinch   : _CT.PINCH | null = null;
+  
     loop = {
         isLoop: false,
         isHover: false,
@@ -48,7 +28,7 @@ export class _MAIN
         this.parentNode = div;
         this.Resize();
 
-        // --- ▽▽▽ Event ▽▽▽ ---
+        // --- 터치 두손가락 범위 구하기 ---
         const GetDistance = (): number => {
             if(!this.pinch || this.pinch.targets.size < 2) return 0;
             const p = Array.from(this.pinch.targets.values());
@@ -57,6 +37,8 @@ export class _MAIN
                 p[0].clientY - p[1].clientY,
             );
         }
+
+        // --- 포인터 이벤트 회수(cancel, mouseup) ---
         const DeletePointerEvent = (e: PointerEvent) => {
             div.releasePointerCapture(e.pointerId);
             if(!this.pinch || !this.pinch.targets.has(e.pointerId)) {return;}
@@ -75,24 +57,21 @@ export class _MAIN
                     break;
             }
         }
-
-        // --- Window Resize ---
+        
         window.addEventListener('resize', () => { 
             this.Resize(); 
         });
 
-        // --- Mouse Event ---
         div.addEventListener('contextmenu', (e: MouseEvent) => {
             e.preventDefault();
         });
 
         div.addEventListener('wheel', (e: WheelEvent) => {
-            // zoom 수치 업데이트
             const WHEEL_ZOOM_FACTOR = 0.001;
             this.PanZoom(-e.deltaY * WHEEL_ZOOM_FACTOR);
         }, { passive: true });
 
-        // --- Pan Event ---
+        // --- 펜 이벤트(down, move, up) ---
         div.addEventListener('pointerdown', (e: PointerEvent) => {
 
             // 세번째 이상 터치는 무시
@@ -190,6 +169,7 @@ export class _MAIN
 
         // 모서리 클릭시 다이어그램 사이즈 조절 시작
         if(this.down.edge !== null) {
+            console.log(dEdge)
             this.loop.isCaptureExpand = true;
         }
         this.loop.isDraw = true;
@@ -241,7 +221,7 @@ export class _MAIN
         this.Loop(null);
     }
 
-    private async PanEnd(screenX: number, screenY: number, timeStamp: number): Promise<void> 
+    private PanEnd(screenX: number, screenY: number, timeStamp: number): void
     {
         const downTime = this.down?.timeStamp ?? 0;
         const isClick = (timeStamp-downTime < 200)? true:false;
@@ -251,6 +231,7 @@ export class _MAIN
             const x = _VIEW.SpaceX(screenX);
             const y = _VIEW.SpaceY(screenY);
 
+            // 다중선택시, 어쨋든 down 정보를 보내야되나 아니면 저짝에서 읽을까 싶은
             _REMO.Action({x, y});
         }
         
@@ -273,17 +254,6 @@ export class _MAIN
      */
     Loop(args: null|Record<string, any>)
     {
-        // 루프에서 하는일
-        // 그림그리기
-        // 작업 스케줄에서 꺼내서 처리한다?
-        // 우선순위 작업이 있어. Render후 -> Draw해야됨
-        // 또 다른경우: 상자를 맵에 생성하기
-        //  ㄴ 생성한 후에 -> Render -> Draw 해야지
-        //
-        // 이런것들을 죄다 일일이 Loop 에 하면 끝도없어. 나중에  순서 바꿔야될때
-        // 전체적으로 고려해야함(마치 롤의 캐릭터마다 선공권이 신규챔피언 나올때마다 바뀌어서
-        // 버그가 엄청 많은것처럼)
-
         if(this.loop.isLoop === false) {
             this.loop.isLoop = true;
 
@@ -302,7 +272,7 @@ export class _MAIN
                     this.loop.isCaptureCompact = false;
                     const dCompact = args?.get('target');
                     if(dCompact !== null) {
-                        console.log(dCompact)
+                        console.log(dCompact, args)
                         dCompact.InitCapture(0);
                         dCompact.Render();
                     }

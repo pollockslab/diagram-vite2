@@ -8,7 +8,7 @@ const _CAPTURE_EXPAND = {
     h: 1024,   
 };
 
-export class _MAIN 
+export class _MAIN implements _DT.AXIS
 {
     type:       string = 'axis';
 
@@ -22,6 +22,8 @@ export class _MAIN
     _w:         number = 100;
     _h:         number = 100;
 
+    text:       string  = '';
+
     _capture:   _DT.CAPTURE;
 
     children = {
@@ -31,9 +33,9 @@ export class _MAIN
         line:   [] as _DT.CHILD_OBJECT[],
         button: [] as _DT.CHILD_OBJECT[],
     };
-    
 
-    constructor() {
+    constructor() 
+    {
         const cav = document.createElement('canvas');
         const ctx = cav.getContext('2d') as CanvasRenderingContext2D;
         this._capture = {
@@ -41,7 +43,6 @@ export class _MAIN
         };
 
         this.InitCapture(0);
-        document.body.appendChild(cav);
     }
 
     get w()
@@ -61,6 +62,26 @@ export class _MAIN
     {
         if(100 <= size && size <= 1000) this._h = size;
     }
+
+    get serialize() 
+    {
+        const data:_DT.AXIS = {
+            type:       this.type,
+
+            id:         this.id,
+            parentID:   this.parentID,
+            tabID:      this.tabID,
+            zIndex:     this.zIndex,
+
+            x:          this.x,
+            y:          this.y,
+            w:          this.w,
+            h:          this.h,
+
+            text:       '',
+        };
+        return data; 
+    } 
 
     SetData(args: Partial<any> = {}) {
         Object.assign(this, args);
@@ -93,7 +114,7 @@ export class _MAIN
     
     AddChild(args: any): _DT.CHILD_OBJECT | null
     {
-        const dClass = (_DC.CLASS as any)[args.type];
+        const dClass = _DC.GET_CLASS_BY_NAME(args.type);
         if (!dClass) return null;
         
         const instance = new dClass(args);
@@ -102,6 +123,14 @@ export class _MAIN
         const list = this.GetChildrenByType(args.type);
         list.push(instance);
         return instance;
+    }
+    DeleteChild(dChild: _DT.CHILD_OBJECT)
+    {
+        const list = this.GetChildrenByType(dChild.type);
+        const index = list.indexOf(dChild);
+        if (index > -1) {
+            list.splice(index, 1);
+        }
     }
 
     SetOrderChild(dChild: _DT.CHILD_OBJECT)

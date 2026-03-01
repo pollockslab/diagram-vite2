@@ -10,6 +10,7 @@
     cursor: pointer;
     user-select: none;
     margin: 4px;
+    
     background-color: rgb(44,44,44);
 
     background-size: contain;    /* 이미지가 잘리지 않게 div 안에 맞춤 */

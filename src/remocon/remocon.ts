@@ -1,18 +1,18 @@
 import './remocon.css'
-import imgSquare from './square.png'
-import imgPointer from './remocon-pointer.png'
-import imgfavorate from './favorite.png'
-import imgSetting from './setting.png'
-import imgPicture from './picture.png'
-import imgRemove from './remove.png'
-import imgImageDownload from './imageDownload.png'
-import imgMultiSelect from './remocon-multiselect.png'
-import imgEditorText from './remocon-editortext.png'
+import imgSquare from '../assets/remocon/button/square.png'
+import imgPointer from '../assets/remocon/button/pointer.png'
+import imgfavorate from '../assets/remocon/button/favorite.png'
+import imgSetting from '../assets/remocon/button/setting.png'
+import imgPicture from '../assets/remocon/button/picture.png'
+import imgRemove from '../assets/remocon/button/remove.png'
+import imgImageDownload from '../assets/remocon/button/imageDownload.png'
+import imgMultiSelect from '../assets/remocon/button/multiselect.png'
+import imgEditorText from '../assets/remocon/button/editortext.png'
+import imgUndo from '../assets/remocon/button/undo.png'
+import imgRedo from '../assets/remocon/button/redo.png'
 
-import imgUndo from './remocon-undo.png'
-import imgRedo from './remocon-redo.png'
-
-import { _VIEW } from '../main'
+import { _VIEW, _TRAN, _CTRL, _TEDI } from '../main'
+import { type _DT } from '../diagrams/diagrams.type'
 
 interface IRemoteState {
     btn: HTMLDivElement|null;
@@ -125,7 +125,7 @@ export class _MAIN
         
     }
 
-    Action(args: {x?: number, y?: number} = {})
+    async Action(args: {x?: number, y?: number} = {}) // 파라미터에서 정보를 다 얻어야돼
     {
         // 선택된 버튼이 없으면 리턴
         // if(!this.remote.id) return;
@@ -134,8 +134,7 @@ export class _MAIN
         {
             case 'square':
                 console.log(`[설치] 좌표 (${args.x}, ${args.y}) 에 사각형 생성`);
-                // 여기서 실제 _VIEW에 사각형을 추가하는 로직 호출
-                // const dSquare = _VIEW.AddChild({type:'square', x:args.x, y:args.y, w:100, h:100, bgColor:'red', id:crypto.randomUUID()});
+                await _TRAN.AddDiagram('square', args.x as number, args.y as number);
                 break;
             case 'favorate':
                 console.log('즐겨찾기 실행');
@@ -144,6 +143,16 @@ export class _MAIN
                 console.log('화면 캡처 시작');
                 break;
             case 'editortext':
+                // console.log('편집창 열기', _CTRL.down)
+                _TEDI.Open('바꿔보자');
+                break;
+            case 'undo':
+                await _TRAN.Undo();
+                _CTRL.loop.isDraw = true;
+                _CTRL.Loop(null);
+                break;
+            case 'redo':
+                _TRAN.Redo();
                 break;
             case 'pointer':
             default:

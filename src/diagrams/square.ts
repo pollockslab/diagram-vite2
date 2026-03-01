@@ -1,45 +1,31 @@
 
 import { _MAIN as _AXIS } from './axis'
-import { _STOR } from '../main'
-// const _DPR = Math.round(window.devicePixelRatio) || 1;
+import { type _DT, _DC } from './diagrams.type'
+import { _VIEW } from '../main'
 
-export class _MAIN extends _AXIS
+export class _MAIN extends _AXIS implements _DT.SQUARE
 {
-    bgColor:string;
+    type:       string = 'square';
+    bgColor:    string = 'orange';
+    text:       string = '반가워요123';
 
     constructor(args: Record<string, any>) 
     {
         super();
-
-        // 추가 데이터 변경
-        this.type = 'square';
-        this.bgColor = args.bgColor || 'black';
-        
         this.SetData(args);
-
-        // 각 diagram 마다 버튼이라던가 생성하자
-        // 그리고 children 에 넣어야됨
-        // axis 에 안넣고 각자 필요시 넣는거? 불편해. 
-
-        // console.log(this.children)
-        // this.Render();
     }
 
-    Save()
+    get serialize()
     {
-
         // 1. 현재정보에서 스트리지용 데이터 추출
-        // const data:IDiagram = {
-        //     id: this.id as string,
-        //     type: this.type,  
-        //     parentID: this.parentID as string | null,
-        //     tabID: string | null;
-        //     zIndex: number | null;
-        // };
-
-
-        // 2. 거래호출
+        const data:_DT.SQUARE = {
+            ...super.serialize,
+            bgColor: this.bgColor,
+        };
+        return data;
     }
+
+
     private a2 = 1;
    
 
@@ -67,7 +53,7 @@ export class _MAIN extends _AXIS
         ctx.textBaseline = 'top'; // 좌표 잡기 편하게 베이스라인 설정
         
         // 20, 20 위치에 그리되 DPR 반영
-        ctx.fillText(`안녕하세요${this.a2++}`, x+20, y+20);
+        ctx.fillText(`글: ${this.text}${this.a2++}`, x+20, y+20);
         
         ctx.restore();
     }
