@@ -7,7 +7,11 @@ export class _MAIN extends _DC.CLASS.axis
 {
     parentNode: HTMLElement;
     scope = {
-        min:0.5, max:2, zoom:1, w:0, h:0,
+        min:0.5, 
+        max:2, 
+        zoom:1, 
+        w:0, 
+        h:0,
         dpr: Math.round(window.devicePixelRatio) || 1,
         bgStep: 100,
         bgPattern: null as CanvasPattern | null,
@@ -27,6 +31,11 @@ export class _MAIN extends _DC.CLASS.axis
         this.parentNode = args.parentNode || document.body;
 
         this.InitLayers();
+
+        window.addEventListener('resize', () => {
+            this.Resize();
+        });
+        this.Resize();
     }
     
     get zoom()
@@ -38,6 +47,12 @@ export class _MAIN extends _DC.CLASS.axis
         if(size >= this.scope.min && size <= this.scope.max) {
             this.scope.zoom = size;
         }
+    }
+
+    Resize()
+    {
+        this.scope.w = window.innerWidth;
+        this.scope.h = window.innerHeight;
     }
 
     InitLayers()
@@ -95,8 +110,6 @@ export class _MAIN extends _DC.CLASS.axis
         // this.AddChild({type:'square', x:0, y: 0, w:100, h:200, bgColor:'red',id:'red'});
         // this.AddChild({type:'square', x:200, y: 0, w:300, h:300, bgColor:'green', id:'green'});
 
-        _CTRL.loop.isDraw = true;
-        _CTRL.Loop(null);
     }
 
     Draw()

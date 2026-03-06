@@ -3,9 +3,10 @@ import './main.css'
 import {_MAIN as _PAGE_STORAGE} from './storage/storage'
 import {_MAIN as _PAGE_EDITOR_TEXT} from './editor/texteditor'
 import {_MAIN as _PAGE_VIEW} from './view/view'
-import {_MAIN as _PAGE_CONTROLLER} from './view/controller'
+import {_MAIN as _PAGE_CONTROLLER} from './controller/controller'
 import {_MAIN as _PAGE_REMOCON} from './remocon/remocon'
 import {_MAIN as _PAGE_TRANSACTION} from './transaction/transaction'
+import {_MAIN as _PAGE_LOOP} from './loop/loop'
 
 
 interface PageConstructor<T> {
@@ -20,6 +21,7 @@ export const _VIEW = LoadPage(_PAGE_VIEW, "view");
 export const _CTRL = LoadPage(_PAGE_CONTROLLER, "controller");
 export const _REMO = LoadPage(_PAGE_REMOCON, "remocon");
 export const _TRAN = new _PAGE_TRANSACTION();
+export const _LOOP = new _PAGE_LOOP();
 
 
 const btnRemoPos = document.createElement("div");

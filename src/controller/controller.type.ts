@@ -18,6 +18,7 @@ export namespace _CT
         y: number;
         isLoop: boolean;
     }
+    
     export interface PINCH {
         distance: number; // 터치간 거리
         targets: Map<number, PointerEvent>;

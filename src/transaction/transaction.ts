@@ -1,6 +1,5 @@
 import { type _DT, _DC } from '../diagrams/diagrams.type'
 import { type _TT } from './transaction.type'
-import { _MAIN as _COMM } from './command'
 import { _VIEW, _STOR } from '../main'
 
 
@@ -8,7 +7,7 @@ import { _VIEW, _STOR } from '../main'
 export class _MAIN 
 {
    
-    queue = [] as _TT.ICommand[];
+    logs = [] as _TT.ICommand[];
     nowOrder = -1 as number;
 
     constructor()
@@ -20,24 +19,24 @@ export class _MAIN
     private Exec(commandID:string, mementos:_TT.IMemento[])
     {
         const nextOrder = this.nowOrder + 1;
-        this.queue = [...this.queue.slice(0, nextOrder),
+        this.logs = [...this.logs.slice(0, nextOrder),
              {commandID, mementos}];
-        this.nowOrder = this.queue.length - 1;
+        this.nowOrder = this.logs.length - 1;
 
 
-        console.log('[Exec]', this.queue, this.nowOrder);
+        console.log('[Exec]', this.logs, this.nowOrder);
     }
 
     // 앞으로 돌리기 (ctrl + y)
     Redo()
     {
         //  현재랑 같아서 바뀔점이 없으면 리턴
-        if(this.nowOrder >= this.queue.length - 1) {
+        if(this.nowOrder >= this.logs.length - 1) {
             return;
         } 
 
         this.nowOrder += 1;
-        const currentCmd = this.queue[this.nowOrder];
+        const currentCmd = this.logs[this.nowOrder];
         console.log('[Redo]', currentCmd);
     }
 
@@ -49,7 +48,7 @@ export class _MAIN
             return;
         }
 
-        const currentCmd = this.queue[this.nowOrder];
+        const currentCmd = this.logs[this.nowOrder];
 
         // 복원하기
         for(let memento of currentCmd.mementos) {
