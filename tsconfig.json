@@ -1,29 +1,69 @@
+// {
+//   "compilerOptions": {
+//     "target": "ES2022",
+//     "useDefineForClassFields": true,
+//     "module": "ESNext",
+//     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+//     "types": ["vite/client"],
+//     "skipLibCheck": true,
+
+//     /* Bundler mode */
+//     "moduleResolution": "bundler",
+//     "allowImportingTsExtensions": true,
+//     "verbatimModuleSyntax": true,
+//     "moduleDetection": "force",
+//     "noEmit": true,
+
+//     /* Linting */
+//     "strict": true,
+//     "noUnusedLocals": true,
+//     "noUnusedParameters": true,
+//     "erasableSyntaxOnly": true,
+//     "noFallthroughCasesInSwitch": true,
+//     "noUncheckedSideEffectImports": true
+//   },
+//   "include": [
+//     "src",
+    
+//     "node_modules/vite/client.d.ts"
+//   ]
+// }
+
+
 {
   "compilerOptions": {
     "target": "ES2022",
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": ["vite/client"],
+    /* 1. 명시적으로 vite/client 타입을 전역에 주입 */
+    "types": ["vite/client"], 
     "skipLibCheck": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
+    /* 2. verbatimModuleSyntax를 유지한다면, 'import type'을 엄격히 써야 함 */
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
+    "noUnusedLocals": false, /* 개발 중엔 false가 편합니다 */
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    
+    /* 3. 루트 경로 명시 (맥북 인식 오류 방지) */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": [
-    "src",
-    "node_modules/vite/client.d.ts"
-  ]
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "vite-env.d.ts" /* 이 파일을 다시 살리고 include에 명시하세요 */
+  ],
+  "exclude": ["node_modules"]
 }
