@@ -1,62 +1,37 @@
-
-import {_MAIN as _AXIS} from './axis'
-import {_MAIN as _SQUARE} from './square'
-
-const _D_CLASS = {
-    axis: _AXIS,
-    // point: null,
-    square: _SQUARE,
-    // line: null,
-    // button: null,
-} as const;
-const _D_EDGE = [null,'e','w','s','n','es','en','ws','wn'] as const;
+import * as DiagramsConst from './diagrams.const'
 
 
-export namespace _DT
-{
-    export interface CAPTURE {
-        cav: HTMLCanvasElement,
-        ctx: CanvasRenderingContext2D,
-    }
-    
-    export interface AXIS {
-        type:       string,
+export type ClassName = keyof typeof DiagramsConst.Class;
 
-        id:         string | null,
-        parentID:   string | null,
-        tabID:      string | null,
-        zIndex:     number | null,
+export type Class = typeof DiagramsConst.Class[ClassName];
 
-        x:          number,
-        y:          number,
-        w:          number,
-        h:          number,
+export type Instance = InstanceType<typeof DiagramsConst.Class[ClassName]>;
 
-         text:       string,
-    }
-    export interface SQUARE extends AXIS {
-       bgColor: string,
-    }
+export type Edge  = typeof DiagramsConst.Edge[number];
 
-    export type CHILD_NAME = keyof typeof _D_CLASS;
-    export type CHILD_CLASS = typeof _D_CLASS[CHILD_NAME];
-    export type CHILD_OBJECT = _AXIS | _SQUARE;
-    export type EDGE_NAME  = typeof _D_EDGE[number];
-
+export interface Capture {
+    cav: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D,
 }
 
-const GetClassByName = (type: _DT.CHILD_NAME): _DT.CHILD_CLASS =>
-{
-    const dClass = _D_CLASS[type];
-    if (!dClass) {
-        throw new Error(`[D_ERROR] ${type} 클래스가 등록되지 않았습니다.`);
-    }
-    return dClass;
+export interface Axis {
+    type:       string,
+
+    id:         string | null,
+    parentID:   string | null,
+    tabID:      string | null,
+    zIndex:     number | null,
+
+    x:          number,
+    y:          number,
+    w:          number,
+    h:          number,
+
+    text:       string,
+}
+export interface Square extends Axis {
+    bgColor: string,
 }
 
-export const _DC = {
-    CLASS: _D_CLASS,
-    EDGE: _D_EDGE,
-    CHILD_ORDER: Object.keys(_D_CLASS) as _DT.CHILD_NAME[],
-    GET_CLASS_BY_NAME: GetClassByName,
-} as const;
+
+

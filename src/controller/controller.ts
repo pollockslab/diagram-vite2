@@ -1,18 +1,17 @@
 
-import { _VIEW, _REMO, _LOOP } from '../main';
-import { type _CT } from './controller.type'
+import * as ControllerType from './controller.type'
+import { _VIEW, _REMO, _LOOP } from '../main'
 import { _ENGINES } from '../engines/engines'
 
 
 export class _MAIN {
 
-    protected pinch   : _CT.PINCH | null = null;
-    protected down    : _CT.DOWN  | null = null;
-    protected move    : _CT.MOVE         = { x: 0, y: 0, isLoop: false };
+    private down: ControllerType.Down | null = null;
+    private move: ControllerType.Move        = { x: 0, y: 0, isLoop: false };
 
     constructor(args: { parentNode: HTMLDivElement }) {
 
-        new _ENGINES.event.pan({
+        new _ENGINES._EVENT_PAN({
             panel: args.parentNode,
             callers: {
                 zoom    : this.PanZoom,
@@ -20,15 +19,12 @@ export class _MAIN {
                 move    : this.PanMove,
                 end     : this.PanEnd,
                 cancel  : this.PanCancel,
-            }
+            },
         });
     }
 
     protected PanZoom = (size: number) => {
-        _VIEW.zoom += size;
-        // this.loop.isDraw = true;
-        // this.Loop(null);
-        _VIEW.Draw();
+        // 트랜잭션.SetZoom
     }
      
     protected PanStart = (screenX: number, screenY: number, timeStamp: number): void => {
@@ -133,108 +129,7 @@ export class _MAIN {
         this.down = null;
     }
 
-    protected PanCancel = () => {
+    protected PanCancel = (): void => {
 
-    }
-    
-
-    ResizeDiagram(xRange:number, yRange:number)
-    {
-        if(this.down === null) return;
-
-        const size = new Map<string, number>();
-        // w, h 가 100 이하면 반려하자
-        switch (this.down.edge) 
-        {
-            case 'e': 
-                size.set('w', this.down.w + xRange);
-                break;
-            case 'w':
-                size.set('x', this.down.x + xRange);
-                size.set('w', this.down.w - xRange);
-                break;
-            case 's': 
-                size.set('h', this.down.h + yRange);
-                break;
-            case 'n':
-                size.set('y', this.down.y + yRange);
-                size.set('h', this.down.h - yRange);
-                break;
-            case 'es':
-                size.set('w', this.down.w + xRange);
-                size.set('h', this.down.h + yRange);
-                break; 
-            case 'wn':
-                size.set('x', this.down.x + xRange);
-                size.set('w', this.down.w - xRange);
-
-                size.set('y', this.down.y + yRange);
-                size.set('h', this.down.h - yRange);
-                break;
-            case 'en':
-                size.set('w', this.down.w + xRange);
-
-                size.set('y', this.down.y + yRange);
-                size.set('h', this.down.h - yRange);
-                break; 
-            case 'ws':
-                size.set('x', this.down.x + xRange);
-                size.set('w', this.down.w - xRange);
-
-                size.set('h', this.down.h + yRange);
-                break;
-        }
-
-        
-        const sizeObj = Object.fromEntries(size);
-        if(sizeObj.w !== undefined && sizeObj.w <= 100) return;
-        if(sizeObj.h !== undefined && sizeObj.h <= 100) return;
-        if(sizeObj.w !== undefined && sizeObj.w >= 1000) return;
-        if(sizeObj.h !== undefined && sizeObj.h >= 1000) return;
-
-        const dTarget = this.down.target;
-        dTarget.SetData(sizeObj);
-        dTarget.Render();
-    }
-
-    CheckCollisionEdge()
-    {
-        const spaceX = _VIEW.SpaceX(this.move.x);
-        const spaceY = _VIEW.SpaceY(this.move.y);
-        const oldHover = _VIEW.status.hover;
-        const nowHover = _VIEW.GetCollisionChildPoint(spaceX, spaceY);
-        
-        // hover 대상이 변경되었을 경우만 처리
-        if( nowHover !== oldHover ) {
-            _VIEW.status.hover = nowHover;
-        }
-
-        let cursorStyle = 'default';
-        if( nowHover !== null ) {
-            const edge = nowHover.GetCollisionEdge(spaceX, spaceY);
-            switch (edge) 
-            {
-                case 'e': 
-                case 'w':
-                    cursorStyle = 'ew-resize';
-                    break;
-                case 's': 
-                case 'n':
-                    cursorStyle = 'ns-resize';
-                    break;
-                case 'es': 
-                case 'wn':
-                    cursorStyle = 'nwse-resize';
-                    break;
-                case 'en': 
-                case 'ws':
-                    cursorStyle = 'nesw-resize';
-                    break;
-                default:
-                    cursorStyle = 'move';
-                    break;
-            }
-        }
-        // this.panel.style.setProperty('cursor', cursorStyle, 'important');
     }
 }

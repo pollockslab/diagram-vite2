@@ -1,22 +1,18 @@
-import { type _DT, _DC } from '../diagrams/diagrams.type'
-import { type _TT } from './transaction.type'
-import { _VIEW, _STOR } from '../main'
+
+import * as TransactionType from './transaction.type'
+import * as TransactionView from './transaction.view'
+import * as TransactionDiagram from './transaction.diagram'
 
 
+export class _MAIN {
 
-export class _MAIN 
-{
-   
-    logs = [] as _TT.ICommand[];
+    logs = [] as TransactionType.Command[];
     nowOrder = -1 as number;
-
-    constructor()
-    {
- 
-    }
+    
+    constructor() {}
 
     // 현재 상태를 저장
-    private Exec(commandID:string, mementos:_TT.IMemento[])
+    private Exec(commandID:string, mementos:TransactionType.Memento[])
     {
         const nextOrder = this.nowOrder + 1;
         this.logs = [...this.logs.slice(0, nextOrder),
@@ -70,10 +66,10 @@ export class _MAIN
                     // 다음번에 다시 undo 하면 그때 맞춰지니까 지우게
 
                     // 1. db삭제
-                    await _STOR.Call('deleteDiagram', now.serialize);
-                    // 2. 보이는거 삭제
-                    _VIEW.DeleteChild(now);
-                    console.log('삭제했다')
+                    // await _STOR.Call('deleteDiagram', now.serialize);
+                    // // 2. 보이는거 삭제
+                    // _VIEW.DeleteChild(now);
+                    // console.log('삭제했다')
                 }
             }
             else {
@@ -89,36 +85,6 @@ export class _MAIN
 
         this.nowOrder -= 1;
         console.log('[Undo]', currentCmd, this.nowOrder);
-    }
-
-    /**
-     * 사용처: 리모콘
-     * @param type 
-     * @param x 
-     * @param y 
-     */
-    async AddDiagram(type:_DT.CHILD_NAME, x:number, y:number)
-    {
-        // 1. 객체생성
-        const instance = _VIEW.AddChild({
-            type, x, y,
-            
-            id: crypto.randomUUID(),
-            parentID: _VIEW.id,
-            tabID: _VIEW.tabID,
-            zIndex: Date.now(),
-        });
-        if(!instance) return;
-        
-        // 3. DB저장 -> 실패시 배열에서 빼야지
-        await _STOR.Call('saveDiagram', instance.serialize);
-
-        // 4. execute
-        const memento = {
-            old: null,
-            now: instance,
-        };
-        this.Exec('AddDiagram', [memento]);
     }
 }
 

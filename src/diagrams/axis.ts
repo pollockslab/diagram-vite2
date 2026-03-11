@@ -1,5 +1,7 @@
 
-import { type _DT, _DC } from './diagrams.type'
+import * as DiagramsType from './diagrams.type'
+import * as DiagramsConst from './diagrams.const'
+import * as DiagramsFunction from './diagrams.function'
 
 
 const _DPR = Math.round(window.devicePixelRatio) || 1;
@@ -8,7 +10,7 @@ const _CAPTURE_EXPAND = {
     h: 1024,   
 };
 
-export class _MAIN implements _DT.AXIS
+export class _MAIN implements DiagramsType.Axis
 {
     type:       string = 'axis';
 
@@ -24,14 +26,14 @@ export class _MAIN implements _DT.AXIS
 
     text:       string  = '';
 
-    _capture:   _DT.CAPTURE;
+    _capture:   DiagramsType.Capture;
 
     children = {
-        none:   [] as _DT.CHILD_OBJECT[],
-        point:  [] as _DT.CHILD_OBJECT[],
-        square: [] as _DT.CHILD_OBJECT[],
-        line:   [] as _DT.CHILD_OBJECT[],
-        button: [] as _DT.CHILD_OBJECT[],
+        none:   [] as DiagramsType.Instance[],
+        point:  [] as DiagramsType.Instance[],
+        square: [] as DiagramsType.Instance[],
+        line:   [] as DiagramsType.Instance[],
+        button: [] as DiagramsType.Instance[],
     };
 
     constructor() 
@@ -65,7 +67,7 @@ export class _MAIN implements _DT.AXIS
 
     get serialize() 
     {
-        const data:_DT.AXIS = {
+        const data:DiagramsType.Axis = {
             type:       this.type,
 
             id:         this.id,
@@ -108,23 +110,23 @@ export class _MAIN implements _DT.AXIS
         ctx.scale(_DPR, _DPR);
     }
 
-    private GetChildrenByType(type: string): _DT.CHILD_OBJECT[] {
+    private GetChildrenByType(type: string): DiagramsType.Instance[] {
         return (this.children as any)[type] || [];
     }
     
-    AddChild(args: any): _DT.CHILD_OBJECT | null
+    AddChild(args: any): DiagramsType.Instance | null
     {
-        const dClass = _DC.GET_CLASS_BY_NAME(args.type);
-        if (!dClass) return null;
+        const targetClass = DiagramsFunction.GetClassByName(args.type);
+        if (!targetClass) return null;
         
-        const instance = new dClass(args);
+        const instance = new targetClass(args);
         instance.InitCapture(0);
         instance.Render();
         const list = this.GetChildrenByType(args.type);
         list.push(instance);
         return instance;
     }
-    DeleteChild(dChild: _DT.CHILD_OBJECT)
+    DeleteChild(dChild: DiagramsType.Instance)
     {
         const list = this.GetChildrenByType(dChild.type);
         const index = list.indexOf(dChild);
@@ -133,7 +135,7 @@ export class _MAIN implements _DT.AXIS
         }
     }
 
-    SetOrderChild(dChild: _DT.CHILD_OBJECT)
+    SetOrderChild(dChild: DiagramsType.Instance)
     {
         const list = this.GetChildrenByType(dChild.type);
         const index = list.indexOf(dChild);
@@ -143,29 +145,29 @@ export class _MAIN implements _DT.AXIS
         }
     }
 
-    FindByID(diagramID: string): _DT.CHILD_OBJECT | null 
+    FindByID(diagramID: string): DiagramsType.Instance | null 
     {
         const allLists = Object.values(this.children);
 
         for (const list of allLists) {
-            const found = list.find((item: _DT.CHILD_OBJECT) => item.id === diagramID);
+            const found = list.find((item: DiagramsType.Instance) => item.id === diagramID);
             if (found) return found;
         }
         return null;
     }
 
-    FindByIDAndType(diagramID: string, diagramType: string): _DT.CHILD_OBJECT | null 
+    FindByIDAndType(diagramID: string, diagramType: string): DiagramsType.Instance | null 
     {
         const list = this.GetChildrenByType(diagramType);
-        const found = list.find((item: _DT.CHILD_OBJECT) => item.id === diagramID);
+        const found = list.find((item: DiagramsType.Instance) => item.id === diagramID);
         if (found) return found;
     
         return null;
     }
 
-    GetAllChildren(): _DT.CHILD_OBJECT[]
+    GetAllChildren(): DiagramsType.Instance[]
     {
-        const temps:_DT.CHILD_OBJECT[] = [];
+        const temps:DiagramsType.Instance[] = [];
         const allLists = Object.values(this.children);
         for (const list of allLists) {
             for(const diagram of list) {
@@ -191,10 +193,10 @@ export class _MAIN implements _DT.AXIS
     // }
 
     // 1. 자신, 2.직전자식까지, 3.전체 subChild까지
-    GetCollisionChildPoint(x:number, y:number): _DT.CHILD_OBJECT | null
+    GetCollisionChildPoint(x:number, y:number): DiagramsType.Instance | null
     {
-        for(let nOrder=_DC.CHILD_ORDER.length-1; nOrder>=0; nOrder--) {
-            const childName = _DC.CHILD_ORDER[nOrder];
+        for(let nOrder=DiagramsConst.ClassOrder.length-1; nOrder>=0; nOrder--) {
+            const childName = DiagramsConst.ClassOrder[nOrder];
             const dChildren = this.GetChildrenByType(childName);
             for(let i=dChildren.length-1; i>=0; i--) {
                 const dChild = dChildren[i];
@@ -204,7 +206,7 @@ export class _MAIN implements _DT.AXIS
         return null;
     }
 
-    GetCollisionEdge(x:number, y:number): _DT.EDGE_NAME
+    GetCollisionEdge(x:number, y:number): DiagramsType.Edge
     {
         if(!this.IsCollisionPoint(x, y)) {return null;}
         
@@ -222,7 +224,7 @@ export class _MAIN implements _DT.AXIS
         if      (Math.abs(y - bottom) <= lineWidth) arrow += 's';
         else if (Math.abs(y - top)    <= lineWidth) arrow += 'n';
 
-        return (arrow || null) as _DT.EDGE_NAME;
+        return (arrow || null) as DiagramsType.Edge;
     }
 
     Render() {} // 각 다이어그램에서 초기화 필요

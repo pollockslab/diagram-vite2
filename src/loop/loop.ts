@@ -42,7 +42,12 @@ export class _MAIN {
         // 5. 
         
         // tran 에서 루프로 추가할 일이 있을까?
+        // 일단 테스트차 그림은 그려져야 하니까
 
+        if(this.isDraw) {
+            this.isDraw = false;
+            
+        }
         
         requestAnimationFrame(this.Loop);
     }
