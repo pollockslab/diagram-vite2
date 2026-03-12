@@ -36,7 +36,7 @@
         protected PanCancel = (): void => {}
     }
  */
-export class _EVENT_PAN {
+export class EventPan {
 
     private panel: HTMLDivElement;
     private callers: any;

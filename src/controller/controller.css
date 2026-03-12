@@ -1,0 +1,15 @@
+
+
+#controller {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+
+  /* 1. 텍스트 선택을 막아 '내부 드래그' 오해를 차단 (X표시 방지) */
+  user-select: none;
+  -webkit-user-select: none;
+
+  /* 2. 터치 환경 간섭 차단 (핀치 줌 로직 보호) */
+  touch-action: none;
+}

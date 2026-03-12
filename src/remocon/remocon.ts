@@ -25,9 +25,9 @@ interface IRemoteState {
 
 // type TButtonType = 'toggle' | 'active' | 'passive'; // default:pointer
 
-export class _MAIN 
+export class Remocon 
 {
-    parentNode: HTMLElement;
+    panel: HTMLDivElement;
     display: _DISPLAY;
     remote:IRemoteState = {
         btn: null,
@@ -36,12 +36,22 @@ export class _MAIN
         data: null,
     };
 
+    constructor(args: {parentNode: HTMLDivElement}) {
 
-    constructor(args: Partial<_MAIN> = {})
-    {
-        this.parentNode = args.parentNode || document.body;
+        this.panel = document.createElement('div');
+        this.panel.id = 'remocon';
+        args.parentNode.appendChild(this.panel);
+
+        const btnRemoPos = document.createElement("div");
+        btnRemoPos.id = 'remocon_reset_pos';
+        args.parentNode.appendChild(btnRemoPos);
+        btnRemoPos.onclick = () =>
+        {
+            this.panel.style.left = '10px';
+            this.panel.style.top = '30px';
+        };
  
-        this.display = new _DISPLAY({parentNode: this.parentNode});
+        this.display = new _DISPLAY({parentNode: this.panel});
         
         this.AddText('Pointer');
         this.AddButton('pointer', 'toggle',"포인터", imgPointer);
@@ -65,13 +75,15 @@ export class _MAIN
         this.AddText('Undo & Redo');
         this.AddButton('undo', 'action',"작업 복원하기(뒤)", imgUndo);
         this.AddButton('redo', 'action',"작업 복원하기(앞)", imgRedo);
+
+
     }
 
     AddLine()
     {
         const line = document.createElement("hr");
         line.classList.add('line');
-        this.parentNode.appendChild(line);
+        this.panel.appendChild(line);
     }
 
     AddText(text:string)
@@ -79,7 +91,7 @@ export class _MAIN
         const small = document.createElement("small");
         small.classList.add('small');
         small.innerText = text;
-        this.parentNode.appendChild(small);
+        this.panel.appendChild(small);
     }
 
     AddButton(id:string, type:string, title:string, url:string|null)
@@ -93,7 +105,7 @@ export class _MAIN
             btn.style.backgroundImage = `url(${url})`;
         }
 
-        this.parentNode.appendChild(btn);
+        this.panel.appendChild(btn);
 
         btn.addEventListener("click", () => {
            if (this.remote.id !== null) {

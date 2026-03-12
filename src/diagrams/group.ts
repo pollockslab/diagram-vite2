@@ -1,5 +1,5 @@
 
-import { _MAIN as _AXIS } from './axis'
+import { _MAIN as _AXIS } from './axis/axis'
 import { _STOR } from '../main'
 
 

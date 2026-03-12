@@ -1,7 +1,5 @@
 
 import * as DiagramsType from './diagrams.type'
-import * as DiagramsConst from './diagrams.const'
-import * as DiagramsFunction from './diagrams.function'
 
 
 const _DPR = Math.round(window.devicePixelRatio) || 1;
@@ -10,9 +8,9 @@ const _CAPTURE_EXPAND = {
     h: 1024,   
 };
 
-export class _MAIN implements DiagramsType.Axis
+export abstract class Axis
 {
-    type:       string = 'axis';
+    type:       DiagramsType.ClassName = 'axis';
 
     id:         string | null = null;
     parentID:   string | null = null;
@@ -28,12 +26,13 @@ export class _MAIN implements DiagramsType.Axis
 
     _capture:   DiagramsType.Capture;
 
-    children = {
-        none:   [] as DiagramsType.Instance[],
-        point:  [] as DiagramsType.Instance[],
-        square: [] as DiagramsType.Instance[],
-        line:   [] as DiagramsType.Instance[],
-        button: [] as DiagramsType.Instance[],
+    children: DiagramsType.Children = {
+        axis: [],
+        // none:   [],
+        // point:  [],
+        square: [],
+        // line:   [],
+        // button: [],
     };
 
     constructor() 
@@ -65,9 +64,9 @@ export class _MAIN implements DiagramsType.Axis
         if(100 <= size && size <= 1000) this._h = size;
     }
 
-    get serialize() 
+    get serialize(): DiagramsType.AxisSerialize
     {
-        const data:DiagramsType.Axis = {
+        return {
             type:       this.type,
 
             id:         this.id,
@@ -82,7 +81,6 @@ export class _MAIN implements DiagramsType.Axis
 
             text:       '',
         };
-        return data; 
     } 
 
     SetData(args: Partial<any> = {}) {
@@ -109,124 +107,7 @@ export class _MAIN implements DiagramsType.Axis
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.scale(_DPR, _DPR);
     }
-
-    private GetChildrenByType(type: string): DiagramsType.Instance[] {
-        return (this.children as any)[type] || [];
-    }
     
-    AddChild(args: any): DiagramsType.Instance | null
-    {
-        const targetClass = DiagramsFunction.GetClassByName(args.type);
-        if (!targetClass) return null;
-        
-        const instance = new targetClass(args);
-        instance.InitCapture(0);
-        instance.Render();
-        const list = this.GetChildrenByType(args.type);
-        list.push(instance);
-        return instance;
-    }
-    DeleteChild(dChild: DiagramsType.Instance)
-    {
-        const list = this.GetChildrenByType(dChild.type);
-        const index = list.indexOf(dChild);
-        if (index > -1) {
-            list.splice(index, 1);
-        }
-    }
-
-    SetOrderChild(dChild: DiagramsType.Instance)
-    {
-        const list = this.GetChildrenByType(dChild.type);
-        const index = list.indexOf(dChild);
-        if (index > -1) {
-            const [dTarget] = list.splice(index, 1);
-            list.push(dTarget);
-        }
-    }
-
-    FindByID(diagramID: string): DiagramsType.Instance | null 
-    {
-        const allLists = Object.values(this.children);
-
-        for (const list of allLists) {
-            const found = list.find((item: DiagramsType.Instance) => item.id === diagramID);
-            if (found) return found;
-        }
-        return null;
-    }
-
-    FindByIDAndType(diagramID: string, diagramType: string): DiagramsType.Instance | null 
-    {
-        const list = this.GetChildrenByType(diagramType);
-        const found = list.find((item: DiagramsType.Instance) => item.id === diagramID);
-        if (found) return found;
-    
-        return null;
-    }
-
-    GetAllChildren(): DiagramsType.Instance[]
-    {
-        const temps:DiagramsType.Instance[] = [];
-        const allLists = Object.values(this.children);
-        for (const list of allLists) {
-            for(const diagram of list) {
-                temps.push(diagram);
-            }
-        }
-        return temps;
-    }
-
-    IsCollisionPoint(x:number, y:number): boolean
-    {
-        return (
-            x >= this.x &&
-            x <= this.x + this.w &&
-            y >= this.y &&
-            y <= this.y + this.h
-        );
-    }
-   
-    // GetCollisionChildRect(x:number, y:number, w:number, h:number): TDiagram[] | []
-    // {
-    //     return [];
-    // }
-
-    // 1. 자신, 2.직전자식까지, 3.전체 subChild까지
-    GetCollisionChildPoint(x:number, y:number): DiagramsType.Instance | null
-    {
-        for(let nOrder=DiagramsConst.ClassOrder.length-1; nOrder>=0; nOrder--) {
-            const childName = DiagramsConst.ClassOrder[nOrder];
-            const dChildren = this.GetChildrenByType(childName);
-            for(let i=dChildren.length-1; i>=0; i--) {
-                const dChild = dChildren[i];
-                if(dChild.IsCollisionPoint(x, y)) { return dChild; }
-            }
-        }
-        return null;
-    }
-
-    GetCollisionEdge(x:number, y:number): DiagramsType.Edge
-    {
-        if(!this.IsCollisionPoint(x, y)) {return null;}
-        
-        const lineWidth = 10;
-
-        const left      = this.x;
-        const right     = this.x + this.w;
-        const top       = this.y;
-        const bottom    = this.y + this.h;
-        
-        let arrow = '';
-
-        if      (Math.abs(x - right)  <= lineWidth) arrow += 'e';
-        else if (Math.abs(x - left)   <= lineWidth) arrow += 'w';
-        if      (Math.abs(y - bottom) <= lineWidth) arrow += 's';
-        else if (Math.abs(y - top)    <= lineWidth) arrow += 'n';
-
-        return (arrow || null) as DiagramsType.Edge;
-    }
-
     Render() {} // 각 다이어그램에서 초기화 필요
 
     Draw(ctxView:CanvasRenderingContext2D)

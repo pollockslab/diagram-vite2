@@ -2,9 +2,9 @@
 import './main.css'
 import {_MAIN as _PAGE_STORAGE} from './storage/storage'
 import {_MAIN as _PAGE_EDITOR_TEXT} from './editor/texteditor'
-import {_MAIN as _PAGE_VIEW} from './view/view'
-import {_MAIN as _PAGE_CONTROLLER} from './controller/controller'
-import {_MAIN as _PAGE_REMOCON} from './remocon/remocon'
+import { View } from './view/view'
+import { Controller } from './controller/controller'
+import { Remocon } from './remocon/remocon'
 import {_MAIN as _PAGE_TRANSACTION} from './transaction/transaction'
 import {_MAIN as _PAGE_LOOP} from './loop/loop'
 
@@ -17,21 +17,13 @@ const divApp = document.querySelector<HTMLDivElement>('#app') as HTMLDivElement;
 
 export const _STOR = new _PAGE_STORAGE();
 export const _TEDI = LoadPage(_PAGE_EDITOR_TEXT, "tedi");
-export const _VIEW = LoadPage(_PAGE_VIEW, "view");
-export const _CTRL = LoadPage(_PAGE_CONTROLLER, "controller");
-export const _REMO = LoadPage(_PAGE_REMOCON, "remocon");
+export const _VIEW = LoadPage(View, "view");
+export const _CTRL = new Controller({parentNode: divApp});
+export const _REMO = new Remocon({parentNode: divApp});
 export const _TRAN = new _PAGE_TRANSACTION();
 export const _LOOP = new _PAGE_LOOP();
 
 
-const btnRemoPos = document.createElement("div");
-btnRemoPos.id = 'remocon_reset_pos';
-divApp?.appendChild(btnRemoPos);
-btnRemoPos.onclick = () =>
-{
-    _REMO.parentNode.style.left = '10px';
-    _REMO.parentNode.style.top = '30px';
-};
 
 
 const Init = async (): Promise<void> => 
@@ -43,7 +35,6 @@ const Init = async (): Promise<void> =>
         await _VIEW.LoadMap(setting.openTabID);
     }
 };
-
 Init();
 
 

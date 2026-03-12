@@ -1,9 +1,9 @@
 
-import { _DC } from '../diagrams/diagrams.type'
+import { Axis } from '../diagrams/axis'
 import { _CTRL } from '../main'
 
 
-export class _MAIN extends _DC.CLASS.axis
+export class View extends Axis
 {
     parentNode: HTMLElement;
     scope = {

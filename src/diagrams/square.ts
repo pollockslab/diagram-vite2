@@ -1,11 +1,11 @@
 
-import { _MAIN as _AXIS } from './axis'
-import { type _DT, _DC } from './diagrams.type'
+import * as DiagramsType from './diagrams.type'
+import { Axis } from './axis'
 import { _VIEW } from '../main'
 
-export class _MAIN extends _AXIS implements _DT.SQUARE
+export class Square extends Axis
 {
-    type:       string = 'square';
+    type:       DiagramsType.ClassName = 'square';
     bgColor:    string = 'orange';
     text:       string = '반가워요123';
 
@@ -15,14 +15,12 @@ export class _MAIN extends _AXIS implements _DT.SQUARE
         this.SetData(args);
     }
 
-    get serialize()
+    get serialize(): DiagramsType.SquareSerialize
     {
-        // 1. 현재정보에서 스트리지용 데이터 추출
-        const data:_DT.SQUARE = {
+        return {
             ...super.serialize,
             bgColor: this.bgColor,
         };
-        return data;
     }
 
 

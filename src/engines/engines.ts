@@ -1,7 +1,7 @@
 
-import { _EVENT_PAN } from "./event.pan";
+import { EventPan } from "./event.pan";
 
-export const _ENGINES = {
-    _EVENT_PAN,
+export const Engines = {
+    EventPan,
 }
 

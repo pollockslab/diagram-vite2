@@ -28,49 +28,7 @@ body {
   overflow: hidden;
 }
 
-#controller {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: transparent;
 
-  /* 1. 텍스트 선택을 막아 '내부 드래그' 오해를 차단 (X표시 방지 핵심) */
-  user-select: none;
-  -webkit-user-select: none;
-
-  /* 2. 터치 환경 간섭 차단 (핀치 줌 로직 보호) */
-  touch-action: none;
-}
-
-#remocon {
-  position: absolute;
-  width: 116px;
-  /* width: 58px; */
-  height: 700px;
-  top: 30px;
-  left: 10px;
-  background-color: rgb(50, 50, 50);
-  border-radius: 10px;
-  z-index: 2000;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
-}
-
-#remocon_reset_pos {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  width: 20px;
-  height: 20px;
-  
-  z-index: 3000;  
-
-  /* 45도 각도로 빨간색과 투명(또는 다른색)을 절반씩 채움 */
-  /* background: linear-gradient(135deg, rgb(179, 22, 22) 50%, transparent 50%); */
-  background: linear-gradient(135deg, rgb(14, 14, 14) 50%, transparent 50%);
-}
-#remocon_reset_pos:hover {
-  background: linear-gradient(135deg, red 50%, transparent 50%);
-}
 
 #tedi {
     position: absolute;

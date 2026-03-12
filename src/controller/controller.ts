@@ -1,18 +1,25 @@
-
-import * as ControllerType from './controller.type'
+import { Engines } from '../engines/engines'
 import { _VIEW, _REMO, _LOOP } from '../main'
-import { _ENGINES } from '../engines/engines'
+import * as ControllerType from './controller.type'
+import * as TransactionView from '../transaction/transaction.view'
+import * as AxisCollisionPoint from '../diagrams/axis/axis.collision.point'
+import * as AxisChildren from '../diagrams/axis/axis.children'
+import './controller.css'
 
 
-export class _MAIN {
+export class Controller {
 
-    private down: ControllerType.Down | null = null;
-    private move: ControllerType.Move        = { x: 0, y: 0, isLoop: false };
+    private down    : ControllerType.Down | null = null;
+    private panel   : HTMLDivElement;
 
     constructor(args: { parentNode: HTMLDivElement }) {
 
-        new _ENGINES._EVENT_PAN({
-            panel: args.parentNode,
+        this.panel = document.createElement('div');
+        this.panel.id = 'controller';
+        args.parentNode.appendChild(this.panel);
+
+        new Engines.EventPan({
+            panel: this.panel,
             callers: {
                 zoom    : this.PanZoom,
                 start   : this.PanStart,
@@ -23,20 +30,18 @@ export class _MAIN {
         });
     }
 
-    protected PanZoom = (size: number) => {
-        // 트랜잭션.SetZoom
+    protected PanZoom = (size: number): void => {
+        TransactionView.SetZoom(size);
     }
      
-    protected PanStart = (screenX: number, screenY: number, timeStamp: number): void => {
-        const spaceX = _VIEW.SpaceX(screenX);
-        const spaceY = _VIEW.SpaceY(screenY);
-        const dCollision = _VIEW.GetCollisionChildPoint(spaceX, spaceY);
+    protected PanStart = (offsetX: number, offsetY: number, timeStamp: number): void => {
         
+        const spaceX = _VIEW.SpaceX(offsetX);
+        const spaceY = _VIEW.SpaceY(offsetY);
+        const target = AxisCollisionPoint.GetChildFirst(_VIEW, spaceX, spaceY);
         
-        if(dCollision !== null) {
-            // 클릭한 다이어그램 상단으로 올리기
-            _VIEW.SetOrderChild(dCollision);
-        }
+        // [Convert] 클릭한 다이어그램 최상단으로 올리기
+        if(target) {AxisChildren.SetOrderChild(target);}
 
 
         const dTarget = (dCollision)? dCollision : _VIEW;
@@ -54,14 +59,9 @@ export class _MAIN {
             timeStamp: timeStamp,
             edge: dEdge,
         };
-
-        // 모서리 클릭시 다이어그램 사이즈 조절 시작
-        if(this.down.edge !== null) {
-            console.log(dEdge)
-        }
     }
 
-    protected PanMove = (screenX: number, screenY: number, timeStamp: number, isDown: boolean): void  => {
+    protected PanMove = (offsetX: number, offsetY: number, timeStamp: number, isDown: boolean): void  => {
     
         if (isDown === true) {
             if(this.down === null) return;
@@ -96,16 +96,7 @@ export class _MAIN {
         }
     }
 
-    protected PanHover = (screenX: number, screenY: number): void  => {
-
-        if (this.down !== null) return;
-
-        this.move.x = screenX;
-        this.move.y = screenY;
-        
-    }
-
-    protected PanEnd = (screenX: number, screenY: number, timeStamp: number): void => {
+    protected PanEnd = (offsetX: number, offsetY: number, timeStamp: number): void => {
         
         const downTime = this.down?.timeStamp ?? 0;
         const isClick = (timeStamp-downTime < 200)? true:false;
