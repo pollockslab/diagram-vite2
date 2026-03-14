@@ -1,6 +1,9 @@
 
 import { Axis } from '../diagrams/axis'
-import { _CTRL } from '../main'
+import { _CTRL, _DPR } from '../main'
+import { Grid } from './grid'
+import * as DiagramsConst from '../diagrams/diagrams.const'
+import * as DiagramsChildren from '../diagrams/diagrams.children'
 
 
 export class View extends Axis
@@ -12,7 +15,6 @@ export class View extends Axis
         zoom:1, 
         w:0, 
         h:0,
-        dpr: Math.round(window.devicePixelRatio) || 1,
         bgStep: 100,
         bgPattern: null as CanvasPattern | null,
     };
@@ -24,8 +26,10 @@ export class View extends Axis
         hover: null as Record<string, any> | null,
         select: [] as Record<string, any>[],
     }
+
+    grid = new Grid();
     
-    constructor(args: Partial<_MAIN> = {})
+    constructor(args: Partial<View> = {})
     {
         super();
         this.parentNode = args.parentNode || document.body;
@@ -93,20 +97,20 @@ export class View extends Axis
 
     async LoadMap(tabID:string)
     {
-        this.tabID = tabID; 
+        this.tab.id = tabID; 
         
         // 탭에 대한걸 로드할지 다이어그램 아이디로 로드해야될지
         this.children = {
-            none: [],
-            point: [],
+            axis: [],
             square: [],
-            line: [],
-            button: [],
         };
 
         // 생성순서가 있으니 순서대로 하는게 맞을거같아
-        this.AddChild({type:'square', x:-400, y: 0, w:700, h:300, bgColor:'blue', id:'blue'});
-        this.AddChild({type:'square', x:-200, y: 0, w:300, h:300, bgColor:'orange', id:'orange'});
+        const inst1 = DiagramsChildren.Add(this, {
+            axis: {type:'square', x:-400, y: 0, w:700, h:300,}, 
+            square: {bgColor:'blue', id:'blue'},
+        });
+        // DiagramsChildren.Add(this, {type:'square', x:-200, y: 0, w:300, h:300, bgColor:'orange', id:'orange'});
         // this.AddChild({type:'square', x:0, y: 0, w:100, h:200, bgColor:'red',id:'red'});
         // this.AddChild({type:'square', x:200, y: 0, w:300, h:300, bgColor:'green', id:'green'});
 
@@ -117,14 +121,13 @@ export class View extends Axis
         // 1. clear canvas
         const w = this.scope.w;
         const h = this.scope.h;
-        const dpr = this.scope.dpr;
-        const zoom = this.scope.zoom
+        const zoom = this.scope.zoom;
 
         Object.values(this.layers).forEach(layer => 
         {
             const ctx = layer.ctx;
-            
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            ctx.setTransform(_DPR.value, 0, 0, _DPR.value, 0, 0);
             ctx.clearRect(0, 0, w, h);
             ctx.translate(w/2, h/2);
 
@@ -136,10 +139,10 @@ export class View extends Axis
         this.DrawBackground();
 
         // 3. draw diagram
-        const types = ['none', 'point', 'square', 'line', 'button'] as const;
-        types.forEach((dType) =>
+        const types = DiagramsConst.ClassOrder;
+        types.forEach((type) =>
         {
-            const diagrams = this.children[dType];
+            const diagrams = this.children[type];
             if(diagrams.length <= 0) {return;}
             for(const diagram of diagrams) {
                 diagram.Draw(this.layers.board.ctx);
@@ -157,8 +160,8 @@ export class View extends Axis
         if (!this.layers.background) return;
         const ctx = this.layers.background.ctx;
         const step = this.scope.bgStep;
-        const { w, h, dpr, zoom } = this.scope;
-
+        const { w, h, zoom } = this.scope;
+        
         if (!this.scope.bgPattern) {
             const pCav = document.createElement('canvas');
             pCav.width = step; 
@@ -177,7 +180,7 @@ export class View extends Axis
             ctx.save();
             
             // 1. 먼저 배경 캔버스도 다른 캔버스와 똑같이 dpr을 세팅합니다.
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.setTransform(_DPR.value, 0, 0, _DPR.value, 0, 0);
             ctx.clearRect(0, 0, w, h);
 
             // 2. 패턴 매트릭스에는 오직 가상 좌표와 줌만 계산합니다. (dpr 제외)

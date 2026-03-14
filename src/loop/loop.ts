@@ -46,7 +46,7 @@ export class _MAIN {
 
         if(this.isDraw) {
             this.isDraw = false;
-            
+            _VIEW.Draw();
         }
         
         requestAnimationFrame(this.Loop);

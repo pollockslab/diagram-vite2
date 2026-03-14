@@ -1,15 +1,16 @@
-import { Axis } from './axis'
 
-export function GetCollisionEdge(x:number, y:number): DiagramsType.Edge
-{
-    if(!this.IsCollisionPoint(x, y)) {return null;}
+import * as DiagramsType from './diagrams.type'
+import * as DiagramsCollisionPoint from './diagrams.collision.point'
+
+export function Check(target: DiagramsType.Instance, x:number, y:number): DiagramsType.Edge {
+    if(!DiagramsCollisionPoint.Check(target, x, y)) {return null;}
     
     const lineWidth = 10;
 
-    const left      = this.x;
-    const right     = this.x + this.w;
-    const top       = this.y;
-    const bottom    = this.y + this.h;
+    const left      = target.x;
+    const right     = target.x + target.w;
+    const top       = target.y;
+    const bottom    = target.y + target.h;
     
     let arrow = '';
 

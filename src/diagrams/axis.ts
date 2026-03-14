@@ -1,31 +1,28 @@
 
 import * as DiagramsType from './diagrams.type'
+import { _DPR } from '../main'
+import { Capture } from './axis.capture'
 
 
-const _DPR = Math.round(window.devicePixelRatio) || 1;
-const _CAPTURE_EXPAND = {
-    w: 1024,
-    h: 1024,   
-};
 
-export abstract class Axis
-{
-    type:       DiagramsType.ClassName = 'axis';
+export class Axis implements DiagramsType.serialize.Axis {
 
-    id:         string | null = null;
-    parentID:   string | null = null;
-    tabID:      string | null = null;
-    zIndex:     number | null = null;
-
-    x:          number = 0;
-    y:          number = 0;
-    _w:         number = 100;
-    _h:         number = 100;
-
-    text:       string  = '';
-
-    _capture:   DiagramsType.Capture;
-
+    tab = {
+        id: null as string | null,
+    };
+    parent = {
+        id: null as string | null,
+    };
+    axis = {
+        type    : 'axis' as DiagramsType.ClassName,
+        id      : null as string | null,
+        zIndex  : null as number | null,
+        x       : 0 as number,
+        y       : 0 as number,
+        w       : 100 as number,
+        h       : 100 as number,
+    };
+    capture : Capture;
     children: DiagramsType.Children = {
         axis: [],
         // none:   [],
@@ -35,77 +32,82 @@ export abstract class Axis
         // button: [],
     };
 
-    constructor() 
-    {
-        const cav = document.createElement('canvas');
-        const ctx = cav.getContext('2d') as CanvasRenderingContext2D;
-        this._capture = {
-            cav: cav, ctx: ctx
-        };
-
-        this.InitCapture(0);
+    constructor() {
+        this.capture = new Capture(this);
+        this.capture.InitCapture(0);
     }
 
-    get w()
-    {
-        return this._w;
+    get type() {
+        return this.axis.type;
     }
-    set w(size)
-    {
-        if(100 <= size && size <= 1000) this._w = size;
+    set type(value) {
+        this.axis.type = value;
     }
 
-    get h()
-    {
-        return this._h;
+    get id() {
+        return this.axis.id;
     }
-    set h(size)
-    {
-        if(100 <= size && size <= 1000) this._h = size;
+    set id(value) {
+        this.axis.id = value;
+    }
+    
+    get zIndex() {
+        return this.axis.zIndex;
+    }
+    set zIndex(value) {
+        this.axis.zIndex = value;
     }
 
-    get serialize(): DiagramsType.AxisSerialize
-    {
+    get x() {
+        return this.axis.x;
+    }
+    set x(size) {
+        this.axis.x = size;
+    }
+
+    get y() {
+        return this.axis.y;
+    }
+    set y(size) {
+        this.axis.y = size;
+    }
+
+    get w() {
+        return this.axis.w;
+    }
+    set w(size) {
+        if(100 <= size && size <= 1000) this.axis.w = size;
+    }
+
+    get h() {
+        return this.axis.h;
+    }
+    set h(size) {
+        if(100 <= size && size <= 1000) this.axis.h = size;
+    }
+
+    get serialize(): DiagramsType.serialize.Axis {
         return {
-            type:       this.type,
-
-            id:         this.id,
-            parentID:   this.parentID,
-            tabID:      this.tabID,
-            zIndex:     this.zIndex,
-
-            x:          this.x,
-            y:          this.y,
-            w:          this.w,
-            h:          this.h,
-
-            text:       '',
+            tab: {
+                id: this.tab.id,
+            },
+            parent: {
+                id: this.parent.id,
+            },
+            axis: {
+                type:       this.type,
+                id:         this.id,
+                zIndex:     this.zIndex,
+                x:          this.x,
+                y:          this.y,
+                w:          this.w,
+                h:          this.h,
+            },
         };
     } 
 
     SetData(args: Partial<any> = {}) {
         Object.assign(this, args);
-    }
-
-    /**
-     * 캡처용 캔버스 초기화( 최대크기로 초기화할지 판단 )
-     * @param isExpand 0:compact, 1:expand
-     */
-    InitCapture(isExpand: 0 | 1)
-    {
-        const w = isExpand === 1 ? _CAPTURE_EXPAND.w : this.w;
-        const h = isExpand === 1 ? _CAPTURE_EXPAND.h : this.h;
-        const cav = this._capture.cav;
-        cav.width = w * _DPR;
-        cav.height = h * _DPR;
-        cav.style = 
-            `position:absolute; float:right; top:100px;` +
-            `right: ${w/10}px; width: ${w/10}px; height: ${h/10}px;` +
-            `border: 1px solid gold;`;
-
-        const ctx = this._capture.ctx;
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.scale(_DPR, _DPR);
     }
     
     Render() {} // 각 다이어그램에서 초기화 필요
@@ -113,11 +115,11 @@ export abstract class Axis
     Draw(ctxView:CanvasRenderingContext2D)
     {
         ctxView.drawImage(
-            this._capture.cav,
+            this.capture.cav,
             0, 
             0, 
-            this.w*_DPR, 
-            this.h*_DPR,
+            this.w*_DPR.value, 
+            this.h*_DPR.value,
             this.x, 
             this.y, 
             this.w, 

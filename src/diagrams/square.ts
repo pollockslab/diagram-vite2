@@ -5,24 +5,25 @@ import { _VIEW } from '../main'
 
 export class Square extends Axis
 {
-    type:       DiagramsType.ClassName = 'square';
     bgColor:    string = 'orange';
     text:       string = '반가워요123';
 
-    constructor(args: Record<string, any>) 
+    constructor() 
     {
         super();
-        this.SetData(args);
+        this.type = 'square';
     }
 
-    get serialize(): DiagramsType.SquareSerialize
+    get serialize(): DiagramsType.serialize.Square
     {
         return {
             ...super.serialize,
-            bgColor: this.bgColor,
+            square: {
+                backgroundColor: this.bgColor,
+                text: this.text,
+            } 
         };
     }
-
 
     private a2 = 1;
    
@@ -30,7 +31,7 @@ export class Square extends Axis
     // 현재모습 캡처cav에 복사하기
     Render()
     {
-        const ctx = this._capture.ctx;
+        const ctx = this.capture.ctx;
         const x = 0;
         const y = 0;
         

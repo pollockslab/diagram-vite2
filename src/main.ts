@@ -15,6 +15,12 @@ interface PageConstructor<T> {
 
 const divApp = document.querySelector<HTMLDivElement>('#app') as HTMLDivElement;
 
+export const _DPR  = {
+    value: Math.round(window.devicePixelRatio) || 1,
+    Update(): void {
+        this.value = Math.round(window.devicePixelRatio) || 1;
+    },
+};
 export const _STOR = new _PAGE_STORAGE();
 export const _TEDI = LoadPage(_PAGE_EDITOR_TEXT, "tedi");
 export const _VIEW = LoadPage(View, "view");
@@ -34,6 +40,7 @@ const Init = async (): Promise<void> =>
     if (setting?.openTabID) {
         await _VIEW.LoadMap(setting.openTabID);
     }
+    _LOOP.isDraw = true;
 };
 Init();
 
