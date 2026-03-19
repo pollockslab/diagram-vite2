@@ -5,13 +5,13 @@ import './texteditor.css'
 import { type _DT } from '../diagrams/diagrams.type'
 
 
-export class _MAIN
+export class Texteditor
 {
     parentNode: HTMLElement;
     popup: HTMLElement;
     targetDiagram: _DT.CHILD_OBJECT | null = null;
 
-    constructor(args: Partial<_MAIN> = {})
+    constructor(args: Partial<Texteditor> = {})
     {
         // 백그라운드.
         this.parentNode = args.parentNode || document.body;

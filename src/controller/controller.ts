@@ -1,7 +1,6 @@
 import { Engines } from '../engines/engines'
 import { _DPR, _VIEW, _REMO, _LOOP } from '../main'
 import * as ControllerType from './controller.type'
-import * as TransactionView from '../transaction/transaction.view'
 import * as diagramsType from '../diagrams/diagrams.type'
 import * as diagramsCollisionPoint from '../diagrams/diagrams.collision.point'
 import * as diagramsCollisionEdge from '../diagrams/diagrams.collision.edge'
@@ -33,13 +32,14 @@ export class Controller {
 
         window.addEventListener('resize', () => {
             _DPR.Update();
-            _VIEW.Resize();
+            _LOOP.isResize = true;
             _LOOP.isDraw = true;
         });
     }
 
     protected PanZoom = (size: number): void => {
-        TransactionView.SetZoom(size);
+        _VIEW.zoom += size;
+        _LOOP.isDraw = true;
     }
      
     protected PanStart = (offsetX: number, offsetY: number, timeStamp: number): void => {
@@ -56,8 +56,8 @@ export class Controller {
         }
 
         this.down = {
-            offsetX: screenX,
-            offsetY: screenY,
+            offsetX,
+            offsetY,
             target: {
                 diagram: collisionTarget,
                 edge: edge,
@@ -89,14 +89,14 @@ export class Controller {
                     // [Move] 맵 이동
                     _VIEW.x = target.x - range.w;
                     _VIEW.y = target.y - range.h;
-
                     _LOOP.isDraw = true;
                 }
                 else {
                     if(target.edge === null) {
                         // [Move] 다이어그램 이동
-                        target.diagram.x = target.x - range.w;
-                        target.diagram.y = target.y - range.h;
+                        target.diagram.x = target.x + range.w;
+                        target.diagram.y = target.y + range.h;
+                        _LOOP.isDraw = true;
                     }
                     else {
                         // 다이어그램 리사이즈
@@ -107,7 +107,7 @@ export class Controller {
         }
         // [Hover]
         else {
-            // loop 에 collision.check 요청하기.
+            _LOOP.isHover = {offsetX, offsetY,};
         }
     }
 
@@ -119,8 +119,8 @@ export class Controller {
         const remocon = _REMO.remote.id;
 
         if(isClick && remocon !== null) {
-            const x = _VIEW.SpaceX(screenX);
-            const y = _VIEW.SpaceY(screenY);
+            const x = _VIEW.SpaceX(offsetX);
+            const y = _VIEW.SpaceY(offsetY);
 
             // 다중선택시, 어쨋든 down 정보를 보내야되나 아니면 저짝에서 읽을까 싶은
             _REMO.Action({x, y});
@@ -131,6 +131,13 @@ export class Controller {
         if(this.down?.target.edge !== null) {
             loopArgs.set('target', this.down?.target.diagram);
         }
+        /////////////////////////////////
+        // 업됐으니까 끌고있던 다이어그램 정보 저장하는거 호출하자.
+        // 트랜잭션에 보내.
+
+
+
+
 
         // (마무리) down 정보 초기화
         this.down = null;

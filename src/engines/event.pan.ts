@@ -27,10 +27,10 @@
         protected PanStart = (offsetX: number, offsetY: number, timeStamp: number): void => {
             console.log(offsetX, offsetY, timeStamp);
         }
-        protected PanMove = (screenX: number, screenY: number, timeStamp: number, isDown: boolean): void  => {
+        protected PanMove = (offsetX: number, offsetY: number, timeStamp: number, isDown: boolean): void  => {
             console.log(offsetX, offsetY, timeStamp, isDown);
         }
-        protected PanEnd = (screenX: number, screenY: number, timeStamp: number): void => {
+        protected PanEnd = (offsetX: number, offsetY: number, timeStamp: number): void => {
             console.log(offsetX, offsetY, timeStamp);
         }
         protected PanCancel = (): void => {}

@@ -23,6 +23,7 @@ export function Add(parent: DiagramsType.Instance, serialize: any): DiagramsType
     if (!targetClass) return null;
     
     const instance = new targetClass();
+    instance.SetData(serialize);
     instance.capture.InitCapture(0);
     instance.Render();
     const list = GetListByType(parent, serialize.axis.type);

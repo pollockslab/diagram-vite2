@@ -62,14 +62,18 @@ export class Axis implements DiagramsType.serialize.Axis {
         return this.axis.x;
     }
     set x(size) {
-        this.axis.x = size;
+        // [Validation] 비정상적인 숫자일 때 0으로 초기화 하여 화면이탈 방지
+        // 예: NaN, Infinity, 부동소수점 이슈
+        this.axis.x = (!Number.isFinite(size))? 0 : size;
     }
 
     get y() {
         return this.axis.y;
     }
     set y(size) {
-        this.axis.y = size;
+        // [Validation] 비정상적인 숫자일 때 0으로 초기화 하여 화면이탈 방지
+        // 예: NaN, Infinity, 부동소수점 이슈
+        this.axis.y = (!Number.isFinite(size))? 0 : size;
     }
 
     get w() {

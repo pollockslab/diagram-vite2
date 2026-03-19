@@ -11,7 +11,7 @@ interface _IF_MESSAGE {
     error: any
 }
 
-export class _MAIN 
+export class Storage 
 {
     private worker: Worker;
     private seq: number = 0;

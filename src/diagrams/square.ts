@@ -5,13 +5,15 @@ import { _VIEW } from '../main'
 
 export class Square extends Axis
 {
-    bgColor:    string = 'orange';
-    text:       string = '반가워요123';
+    square = {
+        backgroundColor: 'orange',
+        text           : '반가워요123',
+    };
 
     constructor() 
     {
         super();
-        this.type = 'square';
+        this.axis.type = 'square';
     }
 
     get serialize(): DiagramsType.serialize.Square
@@ -19,8 +21,8 @@ export class Square extends Axis
         return {
             ...super.serialize,
             square: {
-                backgroundColor: this.bgColor,
-                text: this.text,
+                backgroundColor: this.square.backgroundColor,
+                text: this.square.text,
             } 
         };
     }
@@ -42,7 +44,7 @@ export class Square extends Axis
         // 그림자 설정
 
         // 배경 그리기
-        ctx.fillStyle = this.bgColor;
+        ctx.fillStyle = this.square.backgroundColor;
         ctx.fillRect(x, y, this.w, this.h);
 
         // 1. dpr 안한거
@@ -52,7 +54,7 @@ export class Square extends Axis
         ctx.textBaseline = 'top'; // 좌표 잡기 편하게 베이스라인 설정
         
         // 20, 20 위치에 그리되 DPR 반영
-        ctx.fillText(`글: ${this.text}${this.a2++}`, x+20, y+20);
+        ctx.fillText(`글: ${this.square.text}${this.a2++}`, x+20, y+20);
         
         ctx.restore();
     }

@@ -1,102 +1,91 @@
 
-import { Axis } from '../diagrams/axis'
 import { _CTRL, _DPR } from '../main'
-import { Grid } from './grid'
-import * as DiagramsConst from '../diagrams/diagrams.const'
 import * as DiagramsChildren from '../diagrams/diagrams.children'
+import { Axis } from '../diagrams/axis'
+import { Grid } from './grid'
+import { ViewBackground } from './view.background'
+import { ViewBoard } from './view.board'
+import { ViewEffect } from './view.effect'
+import './view.css'
 
 
 export class View extends Axis
 {
-    parentNode: HTMLElement;
+    panel: HTMLDivElement;
     scope = {
-        min:0.5, 
-        max:2, 
-        zoom:1, 
-        w:0, 
-        h:0,
-        bgStep: 100,
-        bgPattern: null as CanvasPattern | null,
+        w: 0, 
+        h: 0,
+        zoom: {
+            size: 1,
+            min : 0.5, 
+            max : 2,
+        },
     };
 
-    // 배경타일, 다이어그램, 선택표시 그릴 캔버스 레이어들
-    layers: { [key: string]: { cav: HTMLCanvasElement, ctx: CanvasRenderingContext2D } } = {};
-
-    status = {
-        hover: null as Record<string, any> | null,
-        select: [] as Record<string, any>[],
-    }
-
+    /** 
+     * [Optimize] Grid
+     * 수천 개의 다이어그램을 전부 조사하지 않기 위한 공간 분할 격자입니다.
+     * 마우스 좌표(x,y)에 위치한 특정 Grid 셀(예: 100x100) 주변만 검사하여 
+     * Collision(충돌) 함수 호출을 줄였습니다.
+     */
     grid = new Grid();
+
+    background  : ViewBackground;
+    board       : ViewBoard;
+    effect      : ViewEffect;
     
-    constructor(args: Partial<View> = {})
-    {
+    constructor(args: {parentNode: HTMLDivElement}) {
         super();
-        this.parentNode = args.parentNode || document.body;
+        
+        // [Cover] 배경 담을 div 생성
+        this.panel = document.createElement('div');
+        this.panel.id = 'view';
+        args.parentNode.appendChild(this.panel);
 
-        this.InitLayers();
+        // [Create] 배경 순차적 생성. (1. Background, 2. Board, 3. Effect)
+        this.background = new ViewBackground({parentNode: this.panel});
+        this.board      = new ViewBoard     ({parentNode: this.panel});
+        this.effect     = new ViewEffect    ({parentNode: this.panel});
 
-        window.addEventListener('resize', () => {
-            this.Resize();
-        });
+        // [Resize] 배경 생성직후, 캔버스 초기화 위해 호출.
         this.Resize();
     }
     
-    get zoom()
-    {
-        return this.scope.zoom;
+    get zoom() {
+        return this.scope.zoom.size;
     }
-    set zoom(size)
-    {
-        if(size >= this.scope.min && size <= this.scope.max) {
-            this.scope.zoom = size;
+    set zoom(size) {
+        const zoom = this.scope.zoom;
+        if(size >= zoom.min && size <= zoom.max) {
+            zoom.size = size;
         }
     }
 
-    Resize()
-    {
-        this.scope.w = window.innerWidth;
-        this.scope.h = window.innerHeight;
+    Resize() {
+        const width  = this.panel.offsetWidth;
+        const height = this.panel.offsetHeight;
+        this.scope.w = width;
+        this.scope.h = height;
+
+        this.background.Resize(width, height);
+        this.board     .Resize(width, height);
+        this.effect    .Resize(width, height);
     }
 
-    InitLayers()
-    {
-        ['background', 'board', 'effect'].forEach(name => {
-            const cav = document.createElement('canvas');
-            const ctx = cav.getContext('2d')!; // !는 "무조건 있어"라는 뜻
-            cav.style = 'position:absolute; width:100%; height:100%;';
-            this.parentNode.appendChild(cav);
-
-            this.layers[name] = { cav, ctx };
-        });
+    SpaceX(offsetX: number): number {
+        return Math.round((offsetX-(this.scope.w/2))/this.zoom + this.x);
     }
 
-
-    SpaceX(screenX: number): number 
-    {
-        const w = this.scope.w;
-        const zoom = this.scope.zoom;
-        
-        // 계산 후 통째로 반올림
-        const worldX = (screenX - (w / 2)) / zoom + this.x;
-        return Math.round(worldX);
-    }
-    SpaceY(screenY: number): number 
-    {
-        const h = this.scope.h;
-        const zoom = this.scope.zoom;
-        
-        const worldY = (screenY - (h / 2)) / zoom + this.y;
-        return Math.round(worldY);
-    }
-    SpaceLine(pixel:number): number
-    {
-        return Math.round(pixel / this.zoom);
+    SpaceY(offsetY: number): number {
+        return Math.round((offsetY-(this.scope.h/2))/this.zoom + this.y);
     }
 
+    SpaceLine(pixel:number): number {
+        return Math.round(pixel/this.zoom);
+    }
 
-    async LoadMap(tabID:string)
-    {
+    // !!! 정리 후에 데이터 불러오기 테스트때 고치자
+    async LoadMap(tabID:string) {
         this.tab.id = tabID; 
         
         // 탭에 대한걸 로드할지 다이어그램 아이디로 로드해야될지
@@ -107,96 +96,43 @@ export class View extends Axis
 
         // 생성순서가 있으니 순서대로 하는게 맞을거같아
         const inst1 = DiagramsChildren.Add(this, {
-            axis: {type:'square', x:-400, y: 0, w:700, h:300,}, 
-            square: {bgColor:'blue', id:'blue'},
-        });
-        // DiagramsChildren.Add(this, {type:'square', x:-200, y: 0, w:300, h:300, bgColor:'orange', id:'orange'});
-        // this.AddChild({type:'square', x:0, y: 0, w:100, h:200, bgColor:'red',id:'red'});
-        // this.AddChild({type:'square', x:200, y: 0, w:300, h:300, bgColor:'green', id:'green'});
-
-    }
-
-    Draw()
-    {
-        // 1. clear canvas
-        const w = this.scope.w;
-        const h = this.scope.h;
-        const zoom = this.scope.zoom;
-
-        Object.values(this.layers).forEach(layer => 
-        {
-            const ctx = layer.ctx;
-
-            ctx.setTransform(_DPR.value, 0, 0, _DPR.value, 0, 0);
-            ctx.clearRect(0, 0, w, h);
-            ctx.translate(w/2, h/2);
-
-            ctx.scale(zoom, zoom);
-            ctx.translate(-this.x, -this.y);
+            axis: {type:'square', id:'fir1', x:-300, y: 0, w:200, h:200,}, 
+            square: {backgroundColor:'blue', text:'글입히자'},
         });
 
-        // 2. draw background
-        this.DrawBackground();
-
-        // 3. draw diagram
-        const types = DiagramsConst.ClassOrder;
-        types.forEach((type) =>
-        {
-            const diagrams = this.children[type];
-            if(diagrams.length <= 0) {return;}
-            for(const diagram of diagrams) {
-                diagram.Draw(this.layers.board.ctx);
-            }
+         const inst2 = DiagramsChildren.Add(this, {
+            axis: {type:'square', id:'fir2', x:110, y: 0, w:200, h:200,}, 
+            square: {backgroundColor:'blue', text:'글입히자'},
         });
 
-        const hover = this.status.hover;
-        if(hover !== null) {
-            hover.DrawHover(this.layers.effect.ctx);
-        }
-    }
-
-    DrawBackground() 
-    {
-        if (!this.layers.background) return;
-        const ctx = this.layers.background.ctx;
-        const step = this.scope.bgStep;
-        const { w, h, zoom } = this.scope;
+        // let cnt = 0;
+        // for(let col=-5; col<5; col++) {
+        //     for(let row=-5; row<5; row++) {
+        //         DiagramsChildren.Add(this, {
+        //             axis: {type:'square', id:`id${col}_${row}`, x:110*col, y: 110*row, w:100, h:100, zIndex:cnt++}, 
+        //             square: {backgroundColor:`rgb(${col*20+100},${col*20+100},${row*20+100})`, text:`${col}_${row}`},
+        //         });
+        //     }
+            
+        // }
         
-        if (!this.scope.bgPattern) {
-            const pCav = document.createElement('canvas');
-            pCav.width = step; 
-            pCav.height = step;
-            const pCtx = pCav.getContext('2d')!;
-            pCtx.strokeStyle = 'rgb(54,63,63)';
-            pCtx.beginPath();
-            pCtx.moveTo(0, 0); pCtx.lineTo(step, step);
-            pCtx.moveTo(step, 0); pCtx.lineTo(0, step);
-            pCtx.stroke();
-            this.scope.bgPattern = ctx.createPattern(pCav, 'repeat');
-        }
-
-        if (this.scope.bgPattern) {
-
-            ctx.save();
-            
-            // 1. 먼저 배경 캔버스도 다른 캔버스와 똑같이 dpr을 세팅합니다.
-            ctx.setTransform(_DPR.value, 0, 0, _DPR.value, 0, 0);
-            ctx.clearRect(0, 0, w, h);
-
-            // 2. 패턴 매트릭스에는 오직 가상 좌표와 줌만 계산합니다. (dpr 제외)
-            const matrix = new DOMMatrix();
-            matrix.translateSelf(w / 2, h / 2); // 물리 dpr 곱하지 않음
-            matrix.scaleSelf(zoom, zoom);
-            matrix.translateSelf(-this.x, -this.y);
-            
-            this.scope.bgPattern.setTransform(matrix);
-
-            // 3. 칠하기
-            ctx.fillStyle = this.scope.bgPattern as CanvasPattern;
-            ctx.fillRect(0, 0, w, h); 
-            
-            ctx.restore();
-        }
     }
-    
+
+    Draw() {
+        // !!!!!!! controller 에서 command 로 Move 보내는 형식으로 바꾼 이후에
+        // 여기서 직접 Update 호출부분 삭제필요.
+
+        // [Background]
+        this.background.Update(this.x, this.y, this.zoom);
+        this.background.Draw();
+
+        // [Board]
+        this.board.Update(this.x, this.y, this.zoom);
+        this.board.Draw(this.x, this.y, DiagramsChildren.GetListAll(this));
+
+        // [Effect]
+        this.effect.Update(this.x, this.y, this.zoom);
+        this.effect.Draw(this.x, this.y);
+    }
+
 }

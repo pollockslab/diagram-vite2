@@ -1,10 +1,9 @@
 
 import * as TransactionType from './transaction.type'
-import * as TransactionView from './transaction.view'
-import * as TransactionDiagram from './transaction.diagram'
+import * as TransactionAction from './transaction.action'
 
 
-export class _MAIN {
+export class Transaction {
 
     logs = [] as TransactionType.Command[];
     nowOrder = -1 as number;

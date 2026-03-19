@@ -55,7 +55,7 @@ export class Remocon
         
         this.AddText('Pointer');
         this.AddButton('pointer', 'toggle',"포인터", imgPointer);
-        this.AddButton('multiselect', 'toggle',"그룹선택", imgMultiSelect);
+        this.AddButton('multiselect', 'toggle',"다중선택", imgMultiSelect);
         this.AddButton('editortext', 'toggle',"텍스트편집", imgEditorText);
 
         // 여기에 라인을 추가해서 넣자
@@ -133,7 +133,7 @@ export class Remocon
         this.remote.type = type;
 
         // 전역에 스타일을 강제 고정하는 전문가적 자바스크립트 한 줄
-        document.body.style.setProperty('cursor', `url(${url}), auto`, 'important');
+        // document.body.style.setProperty('cursor', `url(${url}), auto`, 'important');
         
     }
 
@@ -190,7 +190,7 @@ export class Remocon
         this.remote.id = null;
         this.remote.type = null;
 
-        document.body.style.removeProperty('cursor');
+        // document.body.style.removeProperty('cursor');
     }
 }
 
