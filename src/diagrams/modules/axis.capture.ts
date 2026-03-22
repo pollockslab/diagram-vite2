@@ -1,6 +1,6 @@
 
-import { _DPR } from '../main'
-import * as DiagramsType from './diagrams.type'
+import { _DPR } from '../../main'
+import * as DiagramsType from '../diagrams.type'
 
 
 export class Capture {

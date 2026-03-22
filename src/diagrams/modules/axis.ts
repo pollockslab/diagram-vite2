@@ -1,6 +1,6 @@
 
-import * as DiagramsType from './diagrams.type'
-import { _DPR } from '../main'
+import * as DiagramsType from '../diagrams.type'
+import { _DPR } from '../../main'
 import { Capture } from './axis.capture'
 
 

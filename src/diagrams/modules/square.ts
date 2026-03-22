@@ -1,7 +1,7 @@
 
-import * as DiagramsType from './diagrams.type'
+import * as DiagramsType from '../diagrams.type'
 import { Axis } from './axis'
-import { _VIEW } from '../main'
+import { _VIEW } from '../../main'
 
 export class Square extends Axis
 {

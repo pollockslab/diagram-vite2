@@ -1,7 +1,6 @@
 
 import { _DPR } from '../main'
 import * as DiagramsType from '../diagrams/diagrams.type'
-import * as DiagramsChildren from '../diagrams/diagrams.children'
 
 export class ViewBoard {
 

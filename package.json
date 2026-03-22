@@ -11,6 +11,7 @@
   "devDependencies": {
     "typescript": "~5.9.3",
     "vite": "^7.2.4",
-    "vite-plugin-full-reload": "^1.2.0"
+    "vite-plugin-full-reload": "^1.2.0",
+    "vite-tsconfig-paths": "^6.1.1"
   }
 }

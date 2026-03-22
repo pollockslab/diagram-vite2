@@ -1,7 +1,7 @@
 
 import { _CTRL, _DPR } from '../main'
-import * as DiagramsChildren from '../diagrams/diagrams.children'
-import { Axis } from '../diagrams/axis'
+import { Diagrams } from '../diagrams/diagrams'
+import { Axis } from '../diagrams/modules/axis'
 import { Grid } from './grid'
 import { ViewBackground } from './view.background'
 import { ViewBoard } from './view.board'
@@ -95,12 +95,12 @@ export class View extends Axis
         };
 
         // 생성순서가 있으니 순서대로 하는게 맞을거같아
-        const inst1 = DiagramsChildren.Add(this, {
+        const inst1 = Diagrams.children.Add(this, {
             axis: {type:'square', id:'fir1', x:-300, y: 0, w:200, h:200,}, 
             square: {backgroundColor:'blue', text:'글입히자'},
         });
 
-         const inst2 = DiagramsChildren.Add(this, {
+         const inst2 = Diagrams.children.Add(this, {
             axis: {type:'square', id:'fir2', x:110, y: 0, w:200, h:200,}, 
             square: {backgroundColor:'blue', text:'글입히자'},
         });
@@ -108,7 +108,7 @@ export class View extends Axis
         // let cnt = 0;
         // for(let col=-5; col<5; col++) {
         //     for(let row=-5; row<5; row++) {
-        //         DiagramsChildren.Add(this, {
+        //         Diagrams.children.Add(this, {
         //             axis: {type:'square', id:`id${col}_${row}`, x:110*col, y: 110*row, w:100, h:100, zIndex:cnt++}, 
         //             square: {backgroundColor:`rgb(${col*20+100},${col*20+100},${row*20+100})`, text:`${col}_${row}`},
         //         });
@@ -128,7 +128,7 @@ export class View extends Axis
 
         // [Board]
         this.board.Update(this.x, this.y, this.zoom);
-        this.board.Draw(this.x, this.y, DiagramsChildren.GetListAll(this));
+        this.board.Draw(this.x, this.y, Diagrams.children.GetListAll(this));
 
         // [Effect]
         this.effect.Update(this.x, this.y, this.zoom);

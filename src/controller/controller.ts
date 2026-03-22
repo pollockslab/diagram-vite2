@@ -1,10 +1,7 @@
-import { Engines } from '../engines/engines'
-import { _DPR, _VIEW, _REMO, _LOOP } from '../main'
+import { _DPR, _VIEW, _REMO, _LOOP, _TRAN } from '@/main'
+import { Engines } from '@engines/engines'
+import * as DiagramsType from '@diagrams/diagrams.type'
 import * as ControllerType from './controller.type'
-import * as diagramsType from '../diagrams/diagrams.type'
-import * as diagramsCollisionPoint from '../diagrams/diagrams.collision.point'
-import * as diagramsCollisionEdge from '../diagrams/diagrams.collision.edge'
-import * as diagramsChildren from '../diagrams/diagrams.children'
 import './controller.css'
 
 
@@ -12,6 +9,8 @@ export class Controller {
 
     private panel   : HTMLDivElement;
     private down    : ControllerType.Down | null = null;
+    public hover    = new HoverBucket();
+    public select   = new SelectBucket();
 
     constructor(args: { parentNode: HTMLDivElement }) {
 
@@ -31,28 +30,26 @@ export class Controller {
         });
 
         window.addEventListener('resize', () => {
-            _DPR.Update();
-            _LOOP.isResize = true;
-            _LOOP.isDraw = true;
+            _TRAN.render.Resize();
         });
     }
 
     protected PanZoom = (size: number): void => {
-        _VIEW.zoom += size;
-        _LOOP.isDraw = true;
+        _TRAN.render.Zoom(size);
     }
      
     protected PanStart = (offsetX: number, offsetY: number, timeStamp: number): void => {
         
         const spaceX = _VIEW.SpaceX(offsetX);
         const spaceY = _VIEW.SpaceY(offsetY);
-        const collisionTarget = diagramsCollisionPoint.GetChildFirst(_VIEW, spaceX, spaceY) ?? _VIEW;
-        let edge: diagramsType.Edge | null = null;
+        const collisionTarget = _TRAN.collision.point.FindFront(_VIEW, spaceX, spaceY) ?? _VIEW;
+        let edge: DiagramsType.Edge | null = null;
 
         if(collisionTarget !== _VIEW) {
             // [Convert] 클릭한 다이어그램 최상단으로 올리기
-            diagramsChildren.SetTopZIndex(_VIEW, collisionTarget);
-            edge = diagramsCollisionEdge.Check(collisionTarget, spaceX, spaceY);
+            _TRAN.action.MoveFront(_VIEW, collisionTarget);
+            edge = _TRAN.collision.edge.Check(collisionTarget, spaceX, spaceY);
+        
         }
 
         this.down = {
@@ -89,14 +86,15 @@ export class Controller {
                     // [Move] 맵 이동
                     _VIEW.x = target.x - range.w;
                     _VIEW.y = target.y - range.h;
-                    _LOOP.isDraw = true;
+                    _TRAN.render.Draw();
+
                 }
                 else {
                     if(target.edge === null) {
                         // [Move] 다이어그램 이동
                         target.diagram.x = target.x + range.w;
                         target.diagram.y = target.y + range.h;
-                        _LOOP.isDraw = true;
+                        _TRAN.render.Draw();
                     }
                     else {
                         // 다이어그램 리사이즈
@@ -107,7 +105,11 @@ export class Controller {
         }
         // [Hover]
         else {
-            _LOOP.isHover = {offsetX, offsetY,};
+            // _LOOP.state.isHover = { offsetX, offsetY };
+            this.hover.offsetX = offsetX;
+            this.hover.offsetY = offsetY;
+            _TRAN.collision.hover.Hover();
+
         }
     }
 
@@ -144,6 +146,35 @@ export class Controller {
     }
 
     protected PanCancel = (): void => {
+
+    }
+}
+
+class SelectBucket {
+
+    targets: DiagramsType.Instance[] = [];
+
+    constructor() {
+
+    }
+
+    Init(): void {
+        this.targets = [];
+    }
+
+    Set(arr: DiagramsType.Instance[]): void {
+        this.targets.push(...arr);
+    }
+}
+
+class HoverBucket {
+
+    target: DiagramsType.Instance | null = null;
+    edge: DiagramsType.Edge | null = null;
+    offsetX: number = 0;
+    offsetY: number = 0;
+
+    constructor() {
 
     }
 }

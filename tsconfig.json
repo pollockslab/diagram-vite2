@@ -20,7 +20,26 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* url */
+    "baseUrl": ".",
+    "paths": {
+      /* src */
+      "@/*"             : ["src/*"],
+      "@engines/*"     : ["src/engines/*"],
+      "@storage/*"      : ["src/storage/*"],
+      "@editor/*"       : ["src/editor/*"],
+      "@view/*"         : ["src/view/*"],
+      "@controller/*"   : ["src/controller/*"],
+      "@remocon/*"      : ["src/remocon/*"],
+      "@transaction/*"  : ["src/transaction/*"],
+      "@loop/*"         : ["src/loop/*"],
+      "@diagrams/*"     : ["src/diagrams/*"],
+
+      /* public */
+      "@public/*"       : ["public/*"],
+    },
   },
   "include": ["src"]
 }

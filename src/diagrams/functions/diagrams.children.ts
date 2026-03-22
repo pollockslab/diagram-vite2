@@ -1,7 +1,6 @@
 
-import { _VIEW } from '../main'
-import * as DiagramsType from './diagrams.type'
-import * as DiagramsFunction from './diagrams.function'
+import * as DiagramsType from '../diagrams.type'
+import { Diagrams } from '../diagrams'
 
 export function GetListByType(axis: DiagramsType.Instance, type: string): DiagramsType.Instance[] {
     return axis.children[type as DiagramsType.ClassName] || [];
@@ -19,7 +18,7 @@ export function GetListAll(axis: DiagramsType.Instance): DiagramsType.Instance[]
 }
     
 export function Add(parent: DiagramsType.Instance, serialize: any): DiagramsType.Instance | null {
-    const targetClass = DiagramsFunction.GetClassByName(serialize.axis.type);
+    const targetClass = Diagrams.function.GetClassByName(serialize.axis.type);
     if (!targetClass) return null;
     
     const instance = new targetClass();

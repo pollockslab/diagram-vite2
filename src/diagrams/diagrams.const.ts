@@ -1,6 +1,6 @@
 
-import { Axis } from './axis'
-import { Square } from './square'
+import { Axis } from './modules/axis'
+import { Square } from './modules/square'
 
 export const ClassOrder = ['axis', 'square'] as const;
 export const Class = {

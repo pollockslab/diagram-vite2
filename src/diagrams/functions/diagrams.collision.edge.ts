@@ -1,5 +1,5 @@
 
-import * as DiagramsType from './diagrams.type'
+import * as DiagramsType from '../diagrams.type'
 import * as DiagramsCollisionPoint from './diagrams.collision.point'
 
 export function Check(target: DiagramsType.Instance, x:number, y:number): DiagramsType.Edge {

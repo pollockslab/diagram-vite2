@@ -1,12 +1,29 @@
 
-import * as TransactionType from './transaction.type'
-import * as TransactionAction from './transaction.action'
+import * as TransactionType     from './transaction.type'
+import * as TransactionAction   from './transaction.action'
+import * as TransactionFilter   from './transaction.filter'
+import * as TransactionRender   from './transaction.render'
+
+// [Collision]
+import * as CollisionHover      from './collision/collision.hover'
+import * as CollisionPoint      from './collision/collision.point'
+import * as CollisionEdge       from './collision/collision.edge'
 
 
 export class Transaction {
 
-    logs = [] as TransactionType.Command[];
-    nowOrder = -1 as number;
+    readonly action = TransactionAction;
+    readonly filter = TransactionFilter;
+    readonly render = TransactionRender;
+    collision = {
+        hover: CollisionHover,
+        point: CollisionPoint,
+        edge: CollisionEdge,
+    } as const;
+
+
+    private logs = [] as TransactionType.Command[];
+    private nowOrder = -1 as number;
     
     constructor() {}
 

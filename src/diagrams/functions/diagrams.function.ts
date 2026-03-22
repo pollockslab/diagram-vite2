@@ -1,6 +1,6 @@
 
-import * as DiagramsConst from './diagrams.const'
-import * as DiagramsType from './diagrams.type'
+import * as DiagramsConst from '../diagrams.const'
+import * as DiagramsType from '../diagrams.type'
 
 export function GetClassByName(type: string): null | DiagramsType.Class {
     if (!(type in DiagramsConst.Class)) {return null;}

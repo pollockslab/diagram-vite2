@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
-import FullReload from 'vite-plugin-full-reload';
+import FullReload from 'vite-plugin-full-reload'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   // 깃허브용은 확인:  base: '/diagram-vite2/',
@@ -16,6 +17,7 @@ export default defineConfig({
   },
   plugins: [
     // src 내부의 모든 ts, js 파일이 바뀌면 묻지도 따지지도 않고 새로고침!
-    FullReload(['src/**/*.(ts|js|css)'])
+    FullReload(['src/**/*.(ts|js|css)']),
+    tsconfigPaths(),
   ],
 })

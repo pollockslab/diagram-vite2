@@ -1,6 +1,6 @@
 
-import { _DPR } from '../main'
-import * as diagramsType from '../diagrams/diagrams.type'
+import { _DPR, _CTRL } from '@/main'
+import * as diagramsType from '@diagrams/diagrams.type'
 
 type EffectType = 'hover' | 'select';
 
@@ -8,12 +8,6 @@ export class ViewEffect {
 
     private cav: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
-    hover = {
-        targets: [] as diagramsType.Instance[],
-    };
-    select = {
-        targets: [] as diagramsType.Instance[],
-    };
 
     constructor(args: {parentNode: HTMLDivElement}) {
         // [Create] 이펙트 캔버스 생성.
@@ -23,22 +17,6 @@ export class ViewEffect {
         args.parentNode.appendChild(this.cav);
         
 
-    }
-
-    GetLength(type: EffectType) {
-        return this[type].targets.length;
-    }
-    Init(type: EffectType): void {
-        this[type].targets = [];
-    }
-
-    InitAll(): void {
-        this.hover.targets = [];
-        this.select.targets = [];
-    }
-
-    Insert(type: EffectType, arr: diagramsType.Instance[]): void {
-        this[type].targets.push(...arr);
     }
 
     Resize(w: number, h: number): void {
@@ -67,11 +45,11 @@ export class ViewEffect {
         
         this.ctx.clearRect(x-w/2, y-h/2, w, h);
 
-        const hovers = this.hover.targets;
-        const selects = this.select.targets;
+        const hover = _CTRL.hover.target;
+        const selects = _CTRL.select.targets;
 
-        for(let h=0; h<hovers.length; h++) {
-            this.DrawBorder(hovers[h], 'red');
+        if(hover) {
+            this.DrawBorder(hover, 'red');
         }
 
         for(let s=0; s<selects.length; s++) {
