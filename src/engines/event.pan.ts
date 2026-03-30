@@ -1,6 +1,6 @@
 
 /**
- * [Class] _EVENT_PAN
+ * [Class] EventPan
  * @description 
  * 포인터 위치 추적 및 줌(Wheel/Pinch) 연산 엔진.
  * - **※ 자식 요소 이벤트에서 무시하고 계산.**
@@ -12,7 +12,7 @@
  * @example
     class _MAIN {
         constructor(args: { parentNode: HTMLDivElement }) {
-            new _ENGINES._EVENT_PAN({
+            new _ENGINES.EventPan({
                 panel: args.parentNode,
                 callers: {
                     zoom    : this.PanZoom,

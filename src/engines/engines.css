@@ -1,0 +1,87 @@
+
+:root {
+    /* font-size */
+    --wd-font-size-title: 16px;
+    --wd-font-size-content: 16px;
+
+    /* color */
+    --wd-color--default: rgb(95, 95, 95);
+    --wd-color--hover: aliceblue;
+    --wd-color--active: aliceblue;
+    --wd-color--selected: aliceblue;
+    
+    /* color--remove */
+    --wd-color--remove--default: rgb(87, 87, 87);
+    --wd-color--remove--hover: red;
+    --wd-color--remove--active: rgb(122, 13, 13);
+    --wd-color--remove--selected: rgb(122, 13, 13);
+
+    /* background-color */
+    --wd-background-color--default: rgb(32, 32, 32);
+    --wd-background-color--hover: rgb(56, 56, 56);
+    --wd-background-color--active: rgb(56, 56, 56);
+    --wd-background-color--selected: rgb(56, 56, 56);
+}
+
+/** 1. CSS 타이핑 순서 5계명: 복사용 */
+wd-default {
+    /* 1. 배치 */
+    /* 2. 크기 */
+    /* 3. 글자 */
+    /* 4. 배경 */
+    /* 5. 효과 */ 
+}
+
+/** 2. CSS 타이핑 순서 5계명: 예제 */
+wd-typing-guide {
+    /* 1. 배치 (Display, Position, Flex, Overflow) */
+    display: block;
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+
+    /* 2. 크기 (Width, Height, Margin, Padding, Border) */
+    width: 100%;
+    height: auto;
+
+    /* 3. 글자 (Color, Font, Align, White-space) */
+    color: var(--wd-color--default);
+    font-size: var(--wd-font-size-content);
+
+    /* 4. 배경 (Background, Radius, Shadow, Cursor) */
+    background-color: var(--wd-background-color--default);
+    cursor: default;
+
+    /* 5. 효과 (Transition, Pointer-events, User-select) */
+    user-select: none;
+}
+
+/** 3. CSS 타이핑 순서 5계명: 세부순서 예제 
+ * 세부순서 ('상, 우, 하, 좌' 시계방향 순서)
+ */
+wd-typing-order {
+    /* 1. 배치 */
+    /* 2. 크기 */
+    width: 100%;
+    height: 500px;
+    min-width: 180px;      /* 최소/최대 크기는 기본 크기 바로 뒤에 */
+
+    margin: 10px;          /* 마진 전체 */
+    margin-top: 5px;       /* 세부 마진은 상-우-하-좌 순서 */
+    margin-right: 0;
+    margin-bottom: 5px;
+    margin-left: 0;
+
+    border: 1px solid #000;
+    border-radius: 4px;
+
+    padding: 10px;         /* 패딩도 상-우-하-좌 순서 */
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+    /* 3. 글자 */
+    /* 4. 배경 */
+    /* 5. 효과 */
+}
+
+

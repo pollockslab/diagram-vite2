@@ -1,15 +1,15 @@
 
-import { _CTRL, _DPR } from '../main'
-import { Diagrams } from '../diagrams/diagrams'
-import { Axis } from '../diagrams/modules/axis'
-import { Grid } from './grid'
+import { _CTRL, _DPR } from '@/main'
+import * as Diagrams from '@diagrams/diagrams'
+
 import { ViewBackground } from './view.background'
 import { ViewBoard } from './view.board'
 import { ViewEffect } from './view.effect'
+import { ViewChildren } from './view.children'
 import './view.css'
 
 
-export class View extends Axis
+export class View extends Diagrams.Class.Square
 {
     panel: HTMLDivElement;
     scope = {
@@ -21,20 +21,15 @@ export class View extends Axis
             max : 2,
         },
     };
+    children = new ViewChildren();
 
-    /** 
-     * [Optimize] Grid
-     * 수천 개의 다이어그램을 전부 조사하지 않기 위한 공간 분할 격자입니다.
-     * 마우스 좌표(x,y)에 위치한 특정 Grid 셀(예: 100x100) 주변만 검사하여 
-     * Collision(충돌) 함수 호출을 줄였습니다.
-     */
-    grid = new Grid();
+ 
 
     background  : ViewBackground;
     board       : ViewBoard;
     effect      : ViewEffect;
     
-    constructor(args: {parentNode: HTMLDivElement}) {
+    constructor(args: {parentNode: HTMLElement}) {
         super();
         
         // [Cover] 배경 담을 div 생성
@@ -90,19 +85,22 @@ export class View extends Axis
         
         // 탭에 대한걸 로드할지 다이어그램 아이디로 로드해야될지
         this.children = {
-            axis: [],
-            square: [],
+            Axis:   [],
+            Line:   [],
+            Square: [],
+            Point:  [],
+            Button: [],
         };
 
         // 생성순서가 있으니 순서대로 하는게 맞을거같아
-        const inst1 = Diagrams.children.Add(this, {
+        Diagrams.children.Add(this, {
             axis: {type:'square', id:'fir1', x:-300, y: 0, w:200, h:200,}, 
             square: {backgroundColor:'blue', text:'글입히자'},
         });
 
-         const inst2 = Diagrams.children.Add(this, {
+        Diagrams.children.Add(this, {
             axis: {type:'square', id:'fir2', x:110, y: 0, w:200, h:200,}, 
-            square: {backgroundColor:'blue', text:'글입히자'},
+            square: {backgroundColor:'hotpink', text:'글입히자'},
         });
 
         // let cnt = 0;

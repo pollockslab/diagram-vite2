@@ -1,10 +1,12 @@
 import { _VIEW, _REMO, _LOOP } from '../main';
+import { View } from '@view/view'
 import * as DiagramsType from '@diagrams/diagrams.type'
 
 
-export function MoveFront(parent: DiagramsType.Instance, child: DiagramsType.Instance): void {
+export function MoveFront(parent: View, child: DiagramsType.Instance): void {
     const type = child.axis.type;
-    const list = parent.children[type];
+    const list = parent.children[type]; 
+    // children 오류나니까 view.grid 먼저 해결하고 넣자
     const index = list.indexOf(child);
     if (index > -1) {
         const [target] = list.splice(index, 1);

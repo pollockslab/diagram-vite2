@@ -3,16 +3,17 @@ import { Engines } from '@engines/engines'
 import * as DiagramsType from '@diagrams/diagrams.type'
 import * as ControllerType from './controller.type'
 import './controller.css'
+import * as ControllerCapture from './controller.capture'
 
 
 export class Controller {
 
-    private panel   : HTMLDivElement;
-    private down    : ControllerType.Down | null = null;
-    public hover    = new HoverBucket();
-    public select   = new SelectBucket();
+    panel    : HTMLDivElement;
+    down     = new ControllerCapture.Down();
+    hover    = new ControllerCapture.Hover();
+    select   = new ControllerCapture.Select();
 
-    constructor(args: { parentNode: HTMLDivElement }) {
+    constructor(args: { parentNode: HTMLElement }) {
 
         this.panel = document.createElement('div');
         this.panel.id = 'controller';
@@ -39,33 +40,10 @@ export class Controller {
     }
      
     protected PanStart = (offsetX: number, offsetY: number, timeStamp: number): void => {
-        
-        const spaceX = _VIEW.SpaceX(offsetX);
-        const spaceY = _VIEW.SpaceY(offsetY);
-        const collisionTarget = _TRAN.collision.point.FindFront(_VIEW, spaceX, spaceY) ?? _VIEW;
-        let edge: DiagramsType.Edge | null = null;
-
-        if(collisionTarget !== _VIEW) {
-            // [Convert] 클릭한 다이어그램 최상단으로 올리기
-            _TRAN.action.MoveFront(_VIEW, collisionTarget);
-            edge = _TRAN.collision.edge.Check(collisionTarget, spaceX, spaceY);
-        
+        this.down.Capture(offsetX, offsetY);
+        if(this.down.instance !== null && this.down.instance !== _VIEW) {
+            _TRAN.action.MoveFront(_VIEW, this.down.instance);
         }
-
-        this.down = {
-            offsetX,
-            offsetY,
-            target: {
-                diagram: collisionTarget,
-                edge: edge,
-                x: collisionTarget.x, // 마우스 다운시 좌표 복사
-                y: collisionTarget.y,
-                w: collisionTarget.w,
-                h: collisionTarget.h,
-                serialize: collisionTarget.serialize,
-            },
-            timeStamp: timeStamp,
-        };
     }
 
     protected PanMove = (offsetX: number, offsetY: number, timeStamp: number, isDown: boolean): void  => {
@@ -150,31 +128,3 @@ export class Controller {
     }
 }
 
-class SelectBucket {
-
-    targets: DiagramsType.Instance[] = [];
-
-    constructor() {
-
-    }
-
-    Init(): void {
-        this.targets = [];
-    }
-
-    Set(arr: DiagramsType.Instance[]): void {
-        this.targets.push(...arr);
-    }
-}
-
-class HoverBucket {
-
-    target: DiagramsType.Instance | null = null;
-    edge: DiagramsType.Edge | null = null;
-    offsetX: number = 0;
-    offsetY: number = 0;
-
-    constructor() {
-
-    }
-}

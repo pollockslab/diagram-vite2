@@ -2,7 +2,6 @@ import { _LOOP, _VIEW, _TRAN, _CTRL } from '../../main'
 
 
 export function Hover() {
-
     _LOOP.Command('collision', 'hover', () => {
 
         const spaceX = _VIEW.SpaceX(_CTRL.hover.offsetX);
@@ -26,5 +25,12 @@ export function Hover() {
             if(!nowEdge) { document.body.style.cursor = 'default'; }
             else         { document.body.style.cursor = `${nowEdge}-resize`; }
         }
+
+       
+
+    });
+
+    _LOOP.Command('render', 'draw', () => {
+        _VIEW.Draw();
     });
 }

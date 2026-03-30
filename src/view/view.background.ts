@@ -298,7 +298,7 @@ export class Grid {
 
     Update(x: number, y: number, w: number, h: number, zoom: number) {
         UpdatePattern(
-            x, y, w, h, zoom, 
+            x + 50, y + 50, w, h, zoom, 
             this.matrix, 
             this.style
         );

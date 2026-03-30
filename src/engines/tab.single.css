@@ -1,0 +1,180 @@
+/** 전체 */
+wd-tabsingle {
+    /* 1. 배치 */
+    display: flex;
+    flex-direction: column;
+
+    /* 2. 크기 */
+    width: 100%;
+    height: 100%;
+
+    /* 3. 글자 */
+    /* 4. 배경 */
+    /* 5. 효과 */ 
+}
+
+wd-tabsingle > tab-header {
+    /* 1. 배치 */
+    display: block;
+
+    /* 2. 크기 */
+    min-height: 40px;
+
+    /* 3. 글자 */
+    /* 4. 배경 */
+    background-color: var(--wd-background-color--default);
+
+    /* 5. 효과 */ 
+}
+
+wd-tabsingle > tab-panel {
+    /* 1. 배치 */
+    display: block;
+    position: relative;
+    flex: 1;  /* 남은 공간 모두 차지하게 함. */
+    overflow: hidden;
+
+    /* 2. 크기 */
+    width: 100%;
+
+    /* 3. 글자 */
+    /* 4. 배경 */
+    background-color: var(--wd-background-color--default);
+    /* 5. 효과 */ 
+}
+
+/** 헤더 */
+tab-header > header-plus {
+    /* 1. 배치 */
+    display: inline-block;
+    vertical-align: top;
+
+    /* 2. 크기 */
+    padding: 10px;
+
+    /* 3. 글자 */
+    color: var(--wd-color--default);
+    text-align: center;
+
+    /* 4. 배경 */
+    /* 5. 효과 */ 
+    cursor: default;
+}
+
+tab-header > header-plus:hover {
+    /* 1. 배치 */
+    /* 2. 크기 */
+    /* 3. 글자 */
+    color: var(--wd-color--hover);
+
+    /* 4. 배경 */
+    background-color: var(--wd-background-color--hover);
+
+    /* 5. 효과 */ 
+}
+
+tab-header > header-title {
+    /* 1. 배치 */
+    display: inline-block;
+
+    /* 2. 크기 */
+    padding: 10px;
+    border-right: 1px solid rgb(26, 26, 26);
+
+    /* 3. 글자 */
+    color: var(--wd-color--default);
+
+    /* 4. 배경 */
+    background-color: var(--wd-background-color--default);
+   
+    /* 5. 효과 */  
+    cursor: default;
+}
+
+tab-header > header-title:hover {
+    /* 1. 배치 */
+    /* 2. 크기 */
+    /* 3. 글자 */
+    color: var(--wd-color--hover);
+
+    /* 4. 배경 */
+    background-color: var(--wd-background-color--hover);
+
+    /* 5. 효과 */ 
+}
+
+tab-header > .title-selected {
+    /* 1. 배치 */
+    /* 2. 크기 */
+    /* 3. 글자 */
+    color: aliceblue;
+
+    /* 4. 배경 */
+    background-color: var(--wd-background-color--selected);
+
+    /* 5. 효과 */ 
+}
+
+/** 헤더-타이틀 */
+header-title > title-close {
+    /* 1. 배치 */
+    float: right;
+
+    /* 2. 크기 */
+    margin-left: 4px;
+
+    /* 3. 글자 */
+    color: var(--wd-color--remove--default);
+
+    /* 4. 배경 */
+    /* 5. 효과 */ 
+}
+
+header-title > title-close:hover {
+    /* 1. 배치 */
+    /* 2. 크기 */
+    /* 3. 글자 */
+    color: var(--wd-color--remove--hover);
+
+    /* 4. 배경 */
+    /* 5. 효과 */ 
+}
+
+header-title > title-text {
+    /* 1. 배치 */
+    display: inline-block;
+    vertical-align: top;
+
+    /* 2. 크기 */
+    max-width: 150px;
+
+    /* 3. 글자 */
+    font-size: var(--wd-font-size-title);
+    /* 말줄임표(...) 적용. */
+    white-space: nowrap;      /* 텍스트가 줄바꿈되지 않게 강제 */
+    overflow: hidden;         /* 넘치는 부분은 숨김 */
+    text-overflow: ellipsis;  /* 넘치는 텍스트를 ...으로 표시 */
+
+    /* 4. 배경 */
+    /* 5. 효과 */ 
+    pointer-events: none; /* 포커스 없애기 위해 추가 */
+}
+tab-header > .selected-color {
+    /* 1. 배치 */
+    /* 2. 크기 */
+    /* 3. 글자 */
+    color: var(--wd-color--selected);
+
+    /* 4. 배경 */
+    /* 5. 효과 */ 
+}
+
+tab-header > .selected-background-color {
+    /* 1. 배치 */
+    /* 2. 크기 */
+    /* 3. 글자 */
+    /* 4. 배경 */
+    background-color: var(--wd-background-color--selected);
+
+    /* 5. 효과 */ 
+}

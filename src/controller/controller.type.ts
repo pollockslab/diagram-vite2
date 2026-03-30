@@ -9,11 +9,7 @@ export interface Down {
 }
 
 export interface Target {
-    diagram     : DiagramsType.Instance;
+    instance    : DiagramsType.Instance;
     edge        : DiagramsType.Edge | null;
-    x           : number;
-    y           : number;
-    w           : number;
-    h           : number;
-    serialize   : DiagramsType.serialize.Axis;
+    serialize   : any;
 }

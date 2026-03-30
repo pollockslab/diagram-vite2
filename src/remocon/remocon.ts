@@ -36,7 +36,7 @@ export class Remocon
         data: null,
     };
 
-    constructor(args: {parentNode: HTMLDivElement}) {
+    constructor(args: {parentNode: HTMLElement}) {
 
         this.panel = document.createElement('div');
         this.panel.id = 'remocon';
@@ -199,7 +199,7 @@ class _DISPLAY
 {
     parentNode: HTMLElement;
     div: HTMLDivElement;
-    down:{x: number, y: number} | null = null;
+    down:{x: number, y: number, left: number, top: number} | null = null;
 
     constructor(args: Partial<_MAIN> = {})
     {
@@ -213,16 +213,25 @@ class _DISPLAY
         
         div.addEventListener("pointerdown", e => {
             div.setPointerCapture(e.pointerId);
-            this.down = {x: e.offsetX, y: e.offsetY};
+            this.down = {
+                x: e.clientX,
+                y: e.clientY,
+                left: this.parentNode.offsetLeft,
+                top: this.parentNode.offsetTop
+            };
+            // this.text = `${this.down.x}, ${this.down.y}`;
         });
         div.addEventListener("pointermove", e => {
             if(!this.down) return;
 
-            const x = e.clientX - this.down.x;
-            const y = e.clientY - this.down.y;
+            const deltaX = e.clientX - this.down.x;
+            const deltaY = e.clientY - this.down.y;
 
-            this.parentNode.style.left = `${x}px`;
-            this.parentNode.style.top = `${y}px`;
+            const nextX = this.down.left + deltaX;
+            const nextY = this.down.top + deltaY;
+
+            this.parentNode.style.left = `${nextX}px`;
+            this.parentNode.style.top = `${nextY}px`;
         });
         const STOP_POINTER = (e:PointerEvent) =>
         {
