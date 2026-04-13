@@ -1,6 +1,6 @@
 
 import { _DPR } from '@/main'
-import * as DiagramsType from '@diagrams/diagrams.type'
+import * as DiagramsType from '@/diagrams/diagrams.type'
 
 
 export class Axis implements DiagramsType.serialize.core.Axis {

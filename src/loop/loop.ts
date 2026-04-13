@@ -79,7 +79,8 @@ export class Loop {
     }
   
     private Pointer() {
-        this.Calls(['resize', 'collision', 'render']);
+        // this.Calls(['resize', 'collision', 'render']);
+        this.Calls(['resize', 'render']);
     }
 
     private Multiselect() {

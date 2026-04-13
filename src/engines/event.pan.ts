@@ -11,7 +11,7 @@
  * -        [Two Pinch Drag] Wide:Increase | Short:Decrease
  * @example
     class _MAIN {
-        constructor(args: { parentNode: HTMLDivElement }) {
+        constructor(args: { parentNode: HTMLElement }) {
             new _ENGINES.EventPan({
                 panel: args.parentNode,
                 callers: {
@@ -38,7 +38,7 @@
  */
 export class EventPan {
 
-    private panel: HTMLDivElement;
+    private panel: HTMLElement;
     private callers: any;
     private pointers: Map<number, PointerEvent> = new Map();
     private zoom = { 
@@ -51,13 +51,13 @@ export class EventPan {
     private down = { count: 0 };
 
     constructor(args: { 
-        panel   : HTMLDivElement, 
+        panel   : HTMLElement, 
         callers : {
-            zoom    : (size: number) => void,
-            start   : (offsetX: number, offsetY: number, timeStamp: number) => void,
-            move    : (offsetX: number, offsetY: number, timeStamp: number, isDown: boolean) => void,
-            end     : (offsetX: number, offsetY: number, timeStamp: number) => void,
-            cancel  : () => void,
+            zoom   ?  : (size: number) => void,
+            start  ?  : (offsetX: number, offsetY: number, timeStamp: number) => void,
+            move   ?  : (offsetX: number, offsetY: number, timeStamp: number, isDown: boolean) => void,
+            end    ?  : (offsetX: number, offsetY: number, timeStamp: number) => void,
+            cancel ?  : () => void,
         },
     }) {
         this.panel = args.panel;
@@ -73,7 +73,7 @@ export class EventPan {
 
     private OnWheel = (e: WheelEvent): void => {
         e.preventDefault();
-        this.callers.zoom(-e.deltaY * this.zoom.size.mouse);
+        this.callers.zoom?.(-e.deltaY * this.zoom.size.mouse);
     }
     private OnPointerDown = (e: PointerEvent): void => {
         // [Validation] 자식 요소 클릭 시 무시
@@ -87,7 +87,7 @@ export class EventPan {
         this.down.count++;
 
         if(this.pointers.size === 1) {
-            this.callers.start(e.offsetX, e.offsetY, e.timeStamp);
+            this.callers.start?.(e.offsetX, e.offsetY, e.timeStamp);
         }
     }
     private OnPointerMove = (e: PointerEvent): void => {
@@ -97,10 +97,10 @@ export class EventPan {
         }
         switch(this.pointers.size) {
             case 0:
-                this.callers.move(e.offsetX, e.offsetY, e.timeStamp, false);
+                this.callers.move?.(e.offsetX, e.offsetY, e.timeStamp, false);
                 break;
             case 1:
-                this.callers.move(e.offsetX, e.offsetY, e.timeStamp, true);
+                this.callers.move?.(e.offsetX, e.offsetY, e.timeStamp, true);
                 break;
             case 2:
                 const values = this.pointers.values();
@@ -114,7 +114,7 @@ export class EventPan {
                 }
                 const deltaY = this.zoom.distance - dist;
                 this.zoom.distance = dist;
-                this.callers.zoom(-deltaY * this.zoom.size.touch);
+                this.callers.zoom?.(-deltaY * this.zoom.size.touch);
                 break;
         }
     }
@@ -128,7 +128,7 @@ export class EventPan {
             // [Validation] 두 손가락 터치 이후 END 방지
             //  ( ※아이패드에서 줌->한손가락 먼저 뗄 경우, pointerup 이벤트 동작하는 이슈 )
             if( this.down.count <= 1 ) {
-                this.callers.end(e.offsetX, e.offsetY, e.timeStamp);
+                this.callers.end?.(e.offsetX, e.offsetY, e.timeStamp);
             }
 
             // [Release] 모든 손가락 떼지면 초기화
@@ -143,7 +143,7 @@ export class EventPan {
 
         this.zoom.distance = 0;
         this.down.count = 0;
-        this.callers.cancel();
+        this.callers.cancel?.();
     }
     private OnContextMenu = (e: Event): void => {
         e.preventDefault();
@@ -176,7 +176,7 @@ export class EventPan {
      * - 2. 패널에서 _EVENT_PAN 기능을 제거하고 싶을 때.
      * - 3. 한 패널에 여러번 _EVENT_PAN 기능을 등록/삭제 할 때, 이벤트 리스너 중첩을 없애기 위해.
      * @example 
-        function _MAIN(args: { panel: HTMLDivElement }) {
+        function _MAIN(args: { panel: HTMLElement }) {
             let pan:_ENGINES._EVENT_PAN | null = null;
             pan = new _ENGINES._EVENT_PAN({panel, callers...});
             ...

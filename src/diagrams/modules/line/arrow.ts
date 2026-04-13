@@ -1,7 +1,7 @@
 
 import { _DPR } from '@/main'
-import * as DiagramsType from '@diagrams/diagrams.type'
-import { Line } from '@diagrams/core/line'
+import * as DiagramsType from '@/diagrams/diagrams.type'
+import { Line } from '@/diagrams/core/line'
 
 export class Arrow extends Line implements DiagramsType.serialize.modules.line.Arrow {
     arrow = {

@@ -1,6 +1,6 @@
 
 import { _CTRL, _DPR } from '@/main'
-import * as Diagrams from '@diagrams/diagrams'
+import * as Diagrams from '@/diagrams/diagrams'
 
 import { ViewBackground } from './view.background'
 import { ViewBoard } from './view.board'
@@ -84,24 +84,24 @@ export class View extends Diagrams.Class.Square
         this.tab.id = tabID; 
         
         // 탭에 대한걸 로드할지 다이어그램 아이디로 로드해야될지
-        this.children = {
-            Axis:   [],
-            Line:   [],
-            Square: [],
-            Point:  [],
-            Button: [],
-        };
+        // this.children = {
+        //     Axis:   [],
+        //     Line:   [],
+        //     Square: [],
+        //     Point:  [],
+        //     Button: [],
+        // };
 
         // 생성순서가 있으니 순서대로 하는게 맞을거같아
-        Diagrams.children.Add(this, {
-            axis: {type:'square', id:'fir1', x:-300, y: 0, w:200, h:200,}, 
-            square: {backgroundColor:'blue', text:'글입히자'},
-        });
+        // Diagrams.children.Add(this, {
+        //     axis: {type:'square', id:'fir1', x:-300, y: 0, w:200, h:200,}, 
+        //     square: {backgroundColor:'blue', text:'글입히자'},
+        // });
 
-        Diagrams.children.Add(this, {
-            axis: {type:'square', id:'fir2', x:110, y: 0, w:200, h:200,}, 
-            square: {backgroundColor:'hotpink', text:'글입히자'},
-        });
+        // Diagrams.children.Add(this, {
+        //     axis: {type:'square', id:'fir2', x:110, y: 0, w:200, h:200,}, 
+        //     square: {backgroundColor:'hotpink', text:'글입히자'},
+        // });
 
         // let cnt = 0;
         // for(let col=-5; col<5; col++) {
@@ -126,7 +126,7 @@ export class View extends Diagrams.Class.Square
 
         // [Board]
         this.board.Update(this.x, this.y, this.zoom);
-        this.board.Draw(this.x, this.y, Diagrams.children.GetListAll(this));
+        // this.board.Draw(this.x, this.y, Diagrams.children.GetListAll(this));
 
         // [Effect]
         this.effect.Update(this.x, this.y, this.zoom);

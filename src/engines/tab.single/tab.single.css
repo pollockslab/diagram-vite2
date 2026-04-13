@@ -10,32 +10,21 @@ wd-tabsingle {
 
     /* 3. 글자 */
     /* 4. 배경 */
+    background-color: var(--wd-background-color--selected);
     /* 5. 효과 */ 
 }
 
-wd-tabsingle > tab-header {
-    /* 1. 배치 */
-    display: block;
-
-    /* 2. 크기 */
-    min-height: 40px;
-
-    /* 3. 글자 */
-    /* 4. 배경 */
-    background-color: var(--wd-background-color--default);
-
-    /* 5. 효과 */ 
-}
-
+/** 패널 */
 wd-tabsingle > tab-panel {
     /* 1. 배치 */
     display: block;
     position: relative;
     flex: 1;  /* 남은 공간 모두 차지하게 함. */
-    overflow: hidden;
+    /* overflow: hidden; */
 
     /* 2. 크기 */
-    width: 100%;
+    margin: 10px;
+    box-sizing: border-box;
 
     /* 3. 글자 */
     /* 4. 배경 */
@@ -44,16 +33,32 @@ wd-tabsingle > tab-panel {
 }
 
 /** 헤더 */
+wd-tabsingle > tab-header {
+    /* 1. 배치 */
+    display: block;
+
+    /* 2. 크기 */
+    /* min-height: 40px; */
+
+    /* 3. 글자 */
+    /* 4. 배경 */
+    background-color: var(--wd-background-color--default);
+
+    /* 5. 효과 */ 
+}
+
 tab-header > header-plus {
     /* 1. 배치 */
     display: inline-block;
     vertical-align: top;
 
     /* 2. 크기 */
+    height: 20px;
     padding: 10px;
 
     /* 3. 글자 */
     color: var(--wd-color--default);
+    font-size: var(--wd-font-size-title);
     text-align: center;
 
     /* 4. 배경 */
@@ -73,21 +78,26 @@ tab-header > header-plus:hover {
     /* 5. 효과 */ 
 }
 
+/** 타이틀 버튼 */
 tab-header > header-title {
     /* 1. 배치 */
     display: inline-block;
+    vertical-align: top;
 
     /* 2. 크기 */
+    height: 20px;
     padding: 10px;
-    border-right: 1px solid rgb(26, 26, 26);
+    border-right: 1px solid rgb(28, 28, 28);
 
     /* 3. 글자 */
     color: var(--wd-color--default);
+    font-size: var(--wd-font-size-title);
 
     /* 4. 배경 */
     background-color: var(--wd-background-color--default);
    
     /* 5. 효과 */  
+    user-select: none;
     cursor: default;
 }
 
@@ -115,13 +125,12 @@ tab-header > .title-selected {
     /* 5. 효과 */ 
 }
 
-/** 헤더-타이틀 */
 header-title > title-close {
     /* 1. 배치 */
     float: right;
 
     /* 2. 크기 */
-    margin-left: 4px;
+    margin-left: 6px;
 
     /* 3. 글자 */
     color: var(--wd-color--remove--default);
@@ -143,13 +152,12 @@ header-title > title-close:hover {
 header-title > title-text {
     /* 1. 배치 */
     display: inline-block;
-    vertical-align: top;
 
     /* 2. 크기 */
     max-width: 150px;
 
     /* 3. 글자 */
-    font-size: var(--wd-font-size-title);
+    
     /* 말줄임표(...) 적용. */
     white-space: nowrap;      /* 텍스트가 줄바꿈되지 않게 강제 */
     overflow: hidden;         /* 넘치는 부분은 숨김 */
@@ -157,7 +165,7 @@ header-title > title-text {
 
     /* 4. 배경 */
     /* 5. 효과 */ 
-    pointer-events: none; /* 포커스 없애기 위해 추가 */
+
 }
 tab-header > .selected-color {
     /* 1. 배치 */

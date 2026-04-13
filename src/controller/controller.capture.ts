@@ -1,5 +1,5 @@
 import { _VIEW, _TRAN } from '@/main'
-import * as DiagramsType from '@diagrams/diagrams.type'
+import * as DiagramsType from '@/diagrams/diagrams.type'
 
 
 export class Down {
@@ -15,15 +15,15 @@ export class Down {
         const spaceY = _VIEW.SpaceY(offsetY);
 
 
-        const collisionTarget = _TRAN.collision.point.FindFront(_VIEW, spaceX, spaceY) ?? _VIEW;
-        let edge: DiagramsType.Edge | null = null;
+        // const collisionTarget = _TRAN.collision.point.FindFront(_VIEW, spaceX, spaceY) ?? _VIEW;
+        // let edge: DiagramsType.Edge | null = null;
 
-        if(collisionTarget !== _VIEW) {
-            // [Convert] 클릭한 다이어그램 최상단으로 올리기
-            _TRAN.action.MoveFront(_VIEW, collisionTarget);
-            edge = _TRAN.collision.edge.Check(collisionTarget, spaceX, spaceY);
+        // if(collisionTarget !== _VIEW) {
+        //     // [Convert] 클릭한 다이어그램 최상단으로 올리기
+        //     _TRAN.action.MoveFront(_VIEW, collisionTarget);
+        //     edge = _TRAN.collision.edge.Check(collisionTarget, spaceX, spaceY);
         
-        }
+        // }
 
 
 

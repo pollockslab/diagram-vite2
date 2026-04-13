@@ -1,7 +1,7 @@
 
 import { _DPR } from '@/main'
-import * as DiagramsType from '@diagrams/diagrams.type'
-import { Square } from '@diagrams/core/square'
+import * as DiagramsType from '@/diagrams/diagrams.type'
+import { Square } from '@/diagrams/core/square'
 
 export class Action extends Square implements DiagramsType.serialize.modules.button.Action {
     action = {

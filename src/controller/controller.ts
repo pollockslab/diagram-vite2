@@ -1,6 +1,6 @@
 import { _DPR, _VIEW, _REMO, _LOOP, _TRAN } from '@/main'
-import { Engines } from '@engines/engines'
-import * as DiagramsType from '@diagrams/diagrams.type'
+import { Engines } from '@/engines/engines'
+import * as DiagramsType from '@/diagrams/diagrams.type'
 import * as ControllerType from './controller.type'
 import './controller.css'
 import * as ControllerCapture from './controller.capture'

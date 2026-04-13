@@ -1,7 +1,7 @@
 
 import { _DPR } from '@/main'
-import * as DiagramsType from '@diagrams/diagrams.type'
-import { Square } from '@diagrams/core/square'
+import * as DiagramsType from '@/diagrams/diagrams.type'
+import { Square } from '@/diagrams/core/square'
 
 export class Memo extends Square implements DiagramsType.serialize.modules.square.Memo {
     memo = {

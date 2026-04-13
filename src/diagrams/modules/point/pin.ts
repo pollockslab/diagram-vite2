@@ -1,7 +1,7 @@
 
 import { _DPR } from '@/main'
-import * as DiagramsType from '@diagrams/diagrams.type'
-import { Point } from '@diagrams/core/point'
+import * as DiagramsType from '@/diagrams/diagrams.type'
+import { Point } from '@/diagrams/core/point'
 
 export class Pin extends Point implements DiagramsType.serialize.modules.point.Pin {
     pin = {

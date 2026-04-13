@@ -1,6 +1,20 @@
 import { _VIEW, _REMO, _LOOP } from '../main';
-import { View } from '@view/view'
-import * as DiagramsType from '@diagrams/diagrams.type'
+import { View } from '@/view/view'
+import * as DiagramsType from '@/diagrams/diagrams.type'
+
+
+// 역할: 셋팅값 가져오고 저장된 정보대로 맵 꾸리기
+export function InitMap(): void {
+    // 1. 셋팅값 가져오기
+    // 2. 현 다이어그램:Space ID 확인(없으면 최상단 super)
+    // 3. 기준대로 space 탭에 로드
+    // 4. 메멘토 리스트를 로드할지 고민해보자( 스페이스 이동도 뒤로,앞으로 가기 되야 함)
+    // 5. draw 실행
+}
+
+export function LoadMap(): void {
+
+}
 
 
 export function MoveFront(parent: View, child: DiagramsType.Instance): void {

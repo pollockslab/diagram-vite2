@@ -1,6 +1,6 @@
 
 import { _DPR, _CTRL, _VIEW } from '@/main'
-import * as diagramsType from '@diagrams/diagrams.type'
+import * as diagramsType from '@/diagrams/diagrams.type'
 
 export class ViewEffect {
 

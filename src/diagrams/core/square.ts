@@ -1,5 +1,5 @@
 import { _DPR } from '@/main'
-import * as DiagramsType from '@diagrams/diagrams.type'
+import * as DiagramsType from '@/diagrams/diagrams.type'
 import { Axis } from '@/diagrams/core/axis'
 import { Capture } from './square.capture'
 

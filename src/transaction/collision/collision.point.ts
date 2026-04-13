@@ -1,5 +1,5 @@
-import * as Diagrams from '@diagrams/diagrams'
-import * as DiagramsType from '@diagrams/diagrams.type'
+import * as Diagrams from '@/diagrams/diagrams'
+import * as DiagramsType from '@/diagrams/diagrams.type'
 
 
 // export function Check(axis: DiagramsType.Instance, x: number, y: number): boolean {

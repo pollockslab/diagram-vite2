@@ -1,24 +1,24 @@
 
 // [Core]
 import { Axis } from '@/diagrams/core/axis'
-import { Line } from '@diagrams/core/line'
-import { Point } from '@diagrams/core/point'
-import { Square } from '@diagrams/core/square'
+import { Line } from '@/diagrams/core/line'
+import { Point } from '@/diagrams/core/point'
+import { Square } from '@/diagrams/core/square'
 
 // [Modules][Bottun]
-import { Action } from '@diagrams/modules/button/action'
+import { Action } from '@/diagrams/modules/button/action'
 
 // [Modules][Line]
-import { Link } from '@diagrams/modules/line/link'
-import { Arrow } from '@diagrams/modules/line/arrow'
+import { Link } from '@/diagrams/modules/line/link'
+import { Arrow } from '@/diagrams/modules/line/arrow'
 
 // [Modules][Point]
-import { Pin } from '@diagrams/modules/point/pin'
+import { Pin } from '@/diagrams/modules/point/pin'
 
 // [Modules][Square]
-import { Drawmap } from '@diagrams/modules/square/drawmap'
-import { Group } from '@diagrams/modules/square/group'
-import { Memo } from '@diagrams/modules/square/memo'
+import { Drawmap } from '@/diagrams/modules/square/drawmap'
+import { Group } from '@/diagrams/modules/square/group'
+import { Memo } from '@/diagrams/modules/square/memo'
 
 
 

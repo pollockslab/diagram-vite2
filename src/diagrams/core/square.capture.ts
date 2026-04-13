@@ -1,6 +1,6 @@
 
 import { _DPR } from '@/main'
-import { Square } from '@diagrams/core/square'
+import { Square } from '@/diagrams/core/square'
 
 
 export class Capture {

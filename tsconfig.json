@@ -23,22 +23,13 @@
     "noUncheckedSideEffectImports": true,
 
     /* url */
-    "baseUrl": ".",
+    // "baseUrl": ".",
     "paths": {
       /* src */
-      "@/*"             : ["src/*"],
-      "@engines/*"     : ["src/engines/*"],
-      "@storage/*"      : ["src/storage/*"],
-      "@editor/*"       : ["src/editor/*"],
-      "@view/*"         : ["src/view/*"],
-      "@controller/*"   : ["src/controller/*"],
-      "@remocon/*"      : ["src/remocon/*"],
-      "@transaction/*"  : ["src/transaction/*"],
-      "@loop/*"         : ["src/loop/*"],
-      "@diagrams/*"     : ["src/diagrams/*"],
+      "@/*"             : ["./src/*"],
 
       /* public */
-      "@public/*"       : ["public/*"],
+      "@public/*"       : ["./public/*"],
     },
   },
   "include": ["src"]

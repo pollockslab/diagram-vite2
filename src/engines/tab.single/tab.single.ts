@@ -1,4 +1,5 @@
-import { ElementCustom } from './element.custom'
+import { ElementCustom } from '../element.custom'
+import { TabSingleEvent } from './tab.single.event'
 import './tab.single.css'
 type EventCall = (id: string) => boolean;
 
@@ -15,15 +16,27 @@ export class TabSingle {
         select: null as null | Function,
         close: null as null | Function,
     };
-    selected: HTMLElement | null = null;
-
+    status = {
+        selected: null as HTMLElement | null,
+    };
+    
     constructor(args: {parentElement   : HTMLDivElement,}) {
         
         this.cover  = ElementCustom.create({tag: 'wd-tabsingle', parentElement: args.parentElement});
         this.header = ElementCustom.create({tag: 'tab-header', parentElement: this.cover});
         this.panel  = ElementCustom.create({tag: 'tab-panel', parentElement: this.cover});
-        
-        this.Plus();
+        const plus = ElementCustom.create({tag: 'header-plus', parentElement: this.header});
+        plus.textContent = '✚';
+
+        new TabSingleEvent({
+            panel: this.header,
+            callers: {
+                start   : this.PanStart,
+                move    : this.PanMove,
+                end     : this.PanEnd,
+                cancel  : this.PanCancel,
+            },
+        });
 
         // 기능: 헤더 클릭이벤트 하나 크게 생성
         this.header.addEventListener('click', (e: MouseEvent) => {
@@ -73,26 +86,40 @@ export class TabSingle {
                 this.Add('*새 페이지', true);
             }
         });
-
-        // 지금 많이 쓰이는데 같이 가도 될거같은데 이건 엔진이잖아.
-        // 공통 css 가 있어야 되지 않나 생각이 든다.
-
-        // color: default, hover, active
-        // background-color: default, hover, active
-        // font-size, text padding
     }
 
-    private Plus() {
-        const plus = ElementCustom.create({tag: 'header-plus', parentElement: this.header});
-        plus.textContent = '✚';
+    get selected() {
+        return this.status.selected;
     }
+    set selected(target: HTMLElement | null) {
+        if(this.status.selected !== null) {
+            this.status.selected.classList.remove('title-selected');
+        }
+        this.status.selected = target;
+        if(this.status.selected !== null) {
+            this.status.selected.classList.add('title-selected');
+        }
+    }
+
+    protected PanStart = (offsetX: number, offsetY: number, timeStamp: number): void => {
+        console.log(offsetX, offsetY, timeStamp);
+    }
+    protected PanMove = (offsetX: number, offsetY: number, timeStamp: number): void  => {
+        console.log(offsetX, offsetY, timeStamp);
+    }
+    protected PanEnd = (offsetX: number, offsetY: number, timeStamp: number): void => {
+        console.log(offsetX, offsetY, timeStamp);
+    }
+    protected PanCancel = (): void => {}
+    
 
     Add(content: string, selected?: boolean) {
         const title = ElementCustom.create({tag: 'header-title', parentElement: this.header});
         title.id = this.id.name + this.id.count++;
-        
+          title.title = content;
         const text = ElementCustom.create({tag: 'title-text', parentElement: title});
         text.textContent = content;
+      
 
         const close = ElementCustom.create({tag: 'title-close', parentElement: title});
         close.textContent = 'X';
