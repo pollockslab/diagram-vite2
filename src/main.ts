@@ -24,6 +24,7 @@ export const _LOOP = new Loop();
 export const _TRAN = new Transaction();
 
 async function Start(): Promise<void>  { 
+
     _LOOP.remocon = 'Pointer';
     const setting = await _STOR.Call('loadSetting', {});
     
@@ -39,3 +40,5 @@ async function Start(): Promise<void>  {
 
 };
 Start();
+
+

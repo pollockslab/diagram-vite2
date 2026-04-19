@@ -1,4 +1,4 @@
-
+import * as SpaceType from './space.type'
 
 /**
  * 좌표별로 관리해보자
@@ -7,10 +7,39 @@
  * 어떻게 최적화해서 안보여줄지 (이건 잘 모르겠음. 일단 다 그린느걸로)
  */
 export class Space {
+
+    children: SpaceType.List = {
+        axis:   [],
+        line:   [],
+        square: [],
+        point:  [],
+        button: [],
+    } ;
+
     constructor() {
 
     }
 
-    
+    Init() {
+        for(let type in this.children) {
+            // this.children[type] = [];
+        }
+    }
+
+    Select() {
+
+    }
+
+    Insert() {
+
+    }
+   
+    Update() {
+
+    }
+
+    Delete() {
+
+    }
 }
 
