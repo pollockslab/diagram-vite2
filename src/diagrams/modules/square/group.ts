@@ -9,8 +9,9 @@ export class Group extends Square implements DiagramsType.serialize.modules.squa
         text            : '',
     };
 
-    constructor() {
+    constructor(args: Partial<any> = {}) {
         super();
+        this.SetData(args);
         this.axis.type = 'Group';
     }
 

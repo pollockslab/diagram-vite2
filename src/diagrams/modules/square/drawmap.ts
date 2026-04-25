@@ -9,8 +9,9 @@ export class Drawmap extends Square implements DiagramsType.serialize.modules.sq
         text            : '',
     };
 
-    constructor() {
+    constructor(args: Partial<any> = {}) {
         super();
+        this.SetData(args);
         this.axis.type = 'Drawmap';
     }
 

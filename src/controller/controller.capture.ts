@@ -4,7 +4,7 @@ import * as DiagramsType from '@/diagrams/diagrams.type'
 
 export class Down {
 
-    instance: DiagramsType.Instance | null = null;
+    target: DiagramsType.Instance | null = null;
     private serialize: any;
     edge: DiagramsType.Edge | null = null;
 
@@ -13,9 +13,9 @@ export class Down {
     Capture(offsetX: number, offsetY: number) {
         const spaceX = _VIEW.SpaceX(offsetX);
         const spaceY = _VIEW.SpaceY(offsetY);
+        const collisionTarget = _TRAN.collision.point.FindFront(_VIEW, spaceX, spaceY) ?? _VIEW;
+        
 
-
-        // const collisionTarget = _TRAN.collision.point.FindFront(_VIEW, spaceX, spaceY) ?? _VIEW;
         // let edge: DiagramsType.Edge | null = null;
 
         // if(collisionTarget !== _VIEW) {

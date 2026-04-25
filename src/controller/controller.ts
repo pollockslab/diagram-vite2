@@ -108,6 +108,7 @@ export class Controller {
         
         const loopArgs = new Map<string, any>();
         // 모서리 클릭시 다이어그램 사이즈 조절 종료
+        console.log(this.down)
         if(this.down?.target.edge !== null) {
             loopArgs.set('target', this.down?.target.diagram);
         }

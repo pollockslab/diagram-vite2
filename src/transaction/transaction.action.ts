@@ -1,5 +1,6 @@
-import { _VIEW, _REMO, _LOOP } from '../main';
+import { _VIEW, _REMO, _LOOP, _SPCE } from '../main';
 import { View } from '@/view/view'
+import * as Diagrams from '@/diagrams/diagrams'
 import * as DiagramsType from '@/diagrams/diagrams.type'
 
 
@@ -45,26 +46,35 @@ export function MoveFront(parent: View, child: DiagramsType.Instance): void {
  * @param x 
  * @param y 
  */
-// async function AddDiagram(type:_DT.CHILD_NAME, x:number, y:number)
-// {
-//     // 1. 객체생성
-//     const instance = _VIEW.AddChild({
-//         type, x, y,
-        
-//         id: crypto.randomUUID(),
-//         parentID: _VIEW.id,
-//         tabID: _VIEW.tabID,
-//         zIndex: Date.now(),
-//     });
-//     if(!instance) return;
-    
-//     // 3. DB저장 -> 실패시 배열에서 빼야지
-//     await _STOR.Call('saveDiagram', instance.serialize);
+export async function AddDiagram(type: DiagramsType.ClassName, data: Partial<any> = {})
+{
+    if(!(type in Diagrams.Class)) {return;}
+    const typeClass = (Diagrams.Class as any)[type];
+    console.log(typeClass)
+    // 1. 객체생성
+    const instance = new typeClass({
+        axis: {
+            id: crypto.randomUUID(),
+            zIndex: Date.now(),
+            parentId: 'super',
+        },
+        data,
+    });
+    console.log(instance);
 
-//     // 4. execute
-//     const memento = {
-//         old: null,
-//         now: instance,
-//     };
-//     this.Exec('AddDiagram', [memento]);
-// }
+    // 2. Space에 넣기
+    _SPCE.Insert(instance);
+    console.log('확인', _SPCE.Select(instance.id));
+
+    
+    
+    // // 3. DB저장 -> 실패시 배열에서 빼야지
+    // await _STOR.Call('saveDiagram', instance.serialize);
+
+    // // 4. execute
+    // const memento = {
+    //     old: null,
+    //     now: instance,
+    // };
+    // this.Exec('AddDiagram', [memento]);
+}

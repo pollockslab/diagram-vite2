@@ -5,31 +5,23 @@ import * as DiagramsType from '@/diagrams/diagrams.type'
 
 export class Axis implements DiagramsType.serialize.core.Axis {
 
-    tab = {
-        id: null as string | null,
-    };
-    parent = {
-        id: null as string | null,
-    };
     axis = {
-        type    : 'Axis' as DiagramsType.ClassName,
-        id      : null as string | null,
-        zIndex  : null as number | null,
+        type     : 'Axis' as DiagramsType.ClassName,
+        id       : null as string | null,
+        zIndex   : 0 as number,
+        parentId : null as string | null,
     };
 
-    constructor() {}
+    constructor(args: Partial<any> = {}) {
+        this.SetData(args);
+    }
     get serialize(): DiagramsType.serialize.core.Axis {
         return {
-            tab: {
-                id: this.tab.id,
-            },
-            parent: {
-                id: this.parent.id,
-            },
             axis: {
-                type:       this.type,
-                id:         this.id,
-                zIndex:     this.zIndex,
+                type        : this.type,
+                id          : this.id,
+                zIndex      : this.zIndex,
+                parentId    : this.parentId,
             },
         };
     } 
@@ -54,8 +46,25 @@ export class Axis implements DiagramsType.serialize.core.Axis {
     set zIndex(value) {
         this.axis.zIndex = value;
     }
-    
-    SetData(args: Partial<any> = {}): void {
-        Object.assign(this, args);
+
+    get parentId() {
+        return this.axis.parentId;
     }
+    set parentId(value) {
+        this.axis.parentId = value;
+    }
+    
+    SetData(args: Partial<any> = {}): void {  
+        for(const any in args) {
+            const anyList = (args as any)[any];
+            if(anyList && typeof anyList === 'object') {
+                for(const getter in anyList) {
+                    if(!(getter in this)) {continue;}
+                    (this as any)[getter] = anyList[getter];
+                }
+            }
+        }
+    }
+
+    Draw(ctx: CanvasRenderingContext2D) {}
 }

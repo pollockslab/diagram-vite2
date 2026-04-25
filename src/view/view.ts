@@ -1,5 +1,5 @@
 
-import { _CTRL, _DPR } from '@/main'
+import { _CTRL, _DPR, _SPCE  } from '@/main'
 import * as Diagrams from '@/diagrams/diagrams'
 
 import { ViewBackground } from './view.background'
@@ -81,7 +81,6 @@ export class View extends Diagrams.Class.Square
 
     // !!! 정리 후에 데이터 불러오기 테스트때 고치자
     async LoadMap(tabID:string) {
-        this.tab.id = tabID; 
         
         // 탭에 대한걸 로드할지 다이어그램 아이디로 로드해야될지
         // this.children = {
@@ -125,8 +124,19 @@ export class View extends Diagrams.Class.Square
         this.background.Draw();
 
         // [Board]
+        const wHalf = this.scope.w/2;
+        const hHalf = this.scope.h/2;
+        const start = {
+            x: this.x-wHalf,
+            y: this.y-hHalf,
+        };
+        const end = {
+            x: this.x+wHalf,
+            y: this.y+hHalf,
+        };
+        const children = _SPCE.SelectArea(start.x, start.y, end.x, end.y);
         this.board.Update(this.x, this.y, this.zoom);
-        // this.board.Draw(this.x, this.y, Diagrams.children.GetListAll(this));
+        this.board.Draw(this.x, this.y, children);
 
         // [Effect]
         this.effect.Update(this.x, this.y, this.zoom);

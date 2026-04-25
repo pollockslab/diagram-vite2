@@ -2,26 +2,20 @@ import * as Diagrams from './diagrams'
 
 
 export type Edge        = typeof Diagrams.Edge[number];
-
 export type ClassName   = keyof typeof Diagrams.Class;
 export type Instance    = InstanceType< typeof Diagrams.Class[ClassName] >;
-// export type Children    = { [key in ClassName]: Instance[]; }
+
 
 // [Schema] Storage 저장용 인터페이스.(IndexedDB 에 넣을 데이터 형태.)
 export namespace serialize {
-    export namespace core {
-        // ※ 모든 다이어그램의 최상위 공통 속성
+    // ※ 모든 다이어그램들의 최상위 공통 속성들.
+    export namespace core {  
         export interface Axis {
-            tab: {
-                id: string | null,
-            },
-            parent: {
-                id: string | null,
-            },
             axis: {
-                type    : ClassName,
-                id      : string | null,
-                zIndex  : number | null,
+                type     : ClassName,
+                id       : string | null,
+                zIndex   : number,
+                parentId : string | null,
             },
         }
         export interface Line extends serialize.core.Axis{

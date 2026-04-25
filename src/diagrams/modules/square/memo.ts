@@ -9,8 +9,9 @@ export class Memo extends Square implements DiagramsType.serialize.modules.squar
         text            : '',
     };
 
-    constructor() {
+    constructor(args: Partial<any> = {}) {
         super();
+        this.SetData(args);
         this.axis.type = 'Memo';
     }
 

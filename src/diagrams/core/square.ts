@@ -13,10 +13,12 @@ export class Square extends Axis implements DiagramsType.serialize.core.Square {
   
     capture = new Capture(this);
 
-    constructor() {
+    constructor(args: Partial<any> = {}) {
         super();
+        this.SetData(args);
         this.axis.type = 'Square';
         this.capture.InitCapture(0);
+        this.Snapshot();
     }
     get serialize(): DiagramsType.serialize.core.Square {
         return {
@@ -67,7 +69,7 @@ export class Square extends Axis implements DiagramsType.serialize.core.Square {
         ctx.clearRect(0, 0, this.w, this.h);
 
         ctx.save();
-        ctx.fillStyle = 'black';
+        ctx.fillStyle = 'orange';
         ctx.fillRect(0, 0, this.w, this.h);
         ctx.restore();
     }

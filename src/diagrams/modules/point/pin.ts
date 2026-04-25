@@ -9,8 +9,9 @@ export class Pin extends Point implements DiagramsType.serialize.modules.point.P
         text            : '',
     };
 
-    constructor() {
+    constructor(args: Partial<any> = {}) {
         super();
+        this.SetData(args);
         this.axis.type = 'Pin';
     }
 

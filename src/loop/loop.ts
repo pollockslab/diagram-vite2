@@ -79,6 +79,8 @@ export class Loop {
     }
   
     private Pointer() {
+        // _TRAN.render.Draw();
+
         // this.Calls(['resize', 'collision', 'render']);
         this.Calls(['resize', 'render']);
     }

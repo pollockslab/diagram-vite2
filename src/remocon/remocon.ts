@@ -12,7 +12,6 @@ import imgUndo from '../assets/remocon/button/undo.png'
 import imgRedo from '../assets/remocon/button/redo.png'
 
 import { _VIEW, _TRAN, _CTRL, _TEDI } from '../main'
-import { type _DT } from '../diagrams/diagrams.type'
 
 interface IRemoteState {
     btn: HTMLDivElement|null;
@@ -108,8 +107,13 @@ export class Remocon
         this.panel.appendChild(btn);
 
         btn.addEventListener("click", () => {
-            testFileSystem();
-           if (this.remote.id !== null) {
+            // testFileSystem();
+            console.log('임시로 테스트');
+            _TRAN.action.AddDiagram('Square', {x:50, y:30});
+            _TRAN.action.AddDiagram('Line', {x1:2000, y1:-1550, x2: 1000, y2: 700});
+            _TRAN.action.AddDiagram('Point', {x:-50, y:-50});
+
+            if (this.remote.id !== null) {
                 if (this.remote.type === 'toggle' && this.remote.id === id) {
                     this.End(); // 같은 토글 버튼 -> 취소
                 } else {

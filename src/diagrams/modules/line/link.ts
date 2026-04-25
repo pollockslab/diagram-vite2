@@ -14,8 +14,9 @@ export class Link extends Line implements DiagramsType.serialize.modules.line.Li
         },
     };
 
-    constructor() {
+    constructor(args: Partial<any> = {}) {
         super();
+        this.SetData(args);
         this.axis.type = 'Link';
     }
 

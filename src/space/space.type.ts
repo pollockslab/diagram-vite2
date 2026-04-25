@@ -1,9 +1,7 @@
+import * as DiagramsType from '@/diagrams/diagrams.type'
 
-export interface List {
-        axis:   [],
-        line:   [],
-        square: [],
-        point:  [],
-        button: [],
-}
-export type Type = 'axis'|'line'|'square'|'point'|'button';
+export interface Children {
+    line    : DiagramsType.Instance[],
+    square  : DiagramsType.Instance[],
+    point   : DiagramsType.Instance[],
+};

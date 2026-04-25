@@ -9,8 +9,9 @@ export class Arrow extends Line implements DiagramsType.serialize.modules.line.A
         text            : '',
     };
 
-    constructor() {
+    constructor(args: Partial<any> = {}) {
         super();
+        this.SetData(args);
         this.axis.type = 'Arrow';
     }
 
