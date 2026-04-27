@@ -9,6 +9,7 @@ export class Square extends Axis implements DiagramsType.serialize.core.Square {
         y: 0 as number,
         w: 100 as number,
         h: 100 as number,
+        // children
     };
   
     capture = new Capture(this);
