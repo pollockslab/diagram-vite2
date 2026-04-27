@@ -121,19 +121,3 @@ xychart-beta
     y-axis "부하(ms)" 0 --> 100
     bar [45, 25, 20, 10]
 ```
-5. *수평 바 차트*
-```mermaid
-xychart-beta
-    title "모듈별 성능 부하(ms)"
-    orientation horizontal
-    x-axis "부하(ms)" 0 --> 100
-    y-axis [Render, Event, Storage, Loop]
-    bar [45, 25, 20, 10]
-```
-```mermaid
-xychart-beta
-    title "엔진 모듈별 성능 부하(ms)"
-    x-axis "부하(ms)" 0 --> 100
-    y-axis [Render, Event, Storage, Loop]
-    bar [45, 25, 20, 10]
-```
