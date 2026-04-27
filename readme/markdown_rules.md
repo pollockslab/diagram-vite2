@@ -71,12 +71,6 @@ let type2: null|'타입1'|'타입2' = null;
 | 데이터 4 | 데이터 5 | 데이터 6 |
 
 # 8. 다이어그램
-```mermaid
-graph LR
-    A[Start] --> B{Decision}
-    B --> |Yes| C[Process]
-    B --> |No| D[End]
-```
 1. Top Down (TD) 방식
 ```mermaid
 graph TD
@@ -91,7 +85,7 @@ graph TD
 2. Left to Right (LR) 방식
 ```mermaid
 graph LR
-    Start([시작]) --> Input[/입력 데이터/]
+    Start([시작]) --> Input[/입력 데이터<br>a: 시작값1<br>b: 시작값2/]
     Input --> DB[(데이터베이스)]
     DB --> Decision{분기 처리}
     Decision -- Yes --> Process[공정 처리]
@@ -99,6 +93,13 @@ graph LR
     Process --> End[종료]
     Note --> End
 ```
+### 주요 포함 요소 설명
+* `([ ])`: 알약(타원형) - 시작/종료
+* `[/ /]`: 평행사변형 - 입력/출력
+* `[( )]`: 원통형 - 데이터베이스
+* `{ }`: 마름모 - 분기/결정
+* `[ ]`: 사각형 - 일반 처리
+* `--[ ]`: 노트/메모 - 주석 형태
 
 
 
