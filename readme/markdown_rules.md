@@ -1,33 +1,17 @@
+*마크다운 기본 작성 규칙을 설명하는 페이지 입니다.*
 
-
-## 2026-04-28
-- **[Feature]** 리모콘 Action/Toggle 로직 분리 및 최적화
-  - `remocon.ts`에서 `End()` 함수 직접 호출로 컨트롤러 의존성 제거
-  - [View Details](./daily/2026-04-28.md#remote-refactor)
-- **[Fix]** 웹워커 상태 동기화 누락 수정
-  - [View Details](./daily/2026-04-28.md#worker-sync)
-- **[Optimization]** 렌더링 루프 가비지 컬렉션 최적화
-  - [View Details](./daily/2026-04-28.md#rendering-optimization)
-
-## 2026-04-27
-- **[Structure]** 렌더링 파이프라인 아키텍처 개편
-  - [View Details](./daily/2026-04-27.md#rendering-architecture)
-
----
-*규칙: 새로운 작업은 항상 맨 위에 추가. [View Details]는 해당 날짜 파일의 앵커(#)로 연결.*
-
-# 1. 수평선 긋기 \<hr /> (셋 다 동일)
---- 
-***
-___
+# 1. 수평선 긋기 `<hr />` (셋 다 동일)
+1. --- 
+2. ***
+3. ___
 
 # 2. 글씨크기 (샾+공백+문장 입력)
-# h1
-## h2
-### h3
-#### h4 
-##### h5
-###### h6 (최소 크기)
+- # h1
+- ## h2
+- ### h3
+- #### h4 
+- ##### h5
+- ###### h6 (최소 크기)
 
 # 3. 글씨타입
 - 기본글
@@ -56,7 +40,7 @@ const type1: string = '타입1';
 let type2: null|'타입1'|'타입2' = null;
 ```
 
-# 6. 링크
+# 6. 앵커 `<a>` (링크주소#아이디)
 1. [내부 섹션으로 이동](#under-link) 
     - <h4 id="under-link">여기로 이동합니다.</h4>
 
@@ -71,7 +55,7 @@ let type2: null|'타입1'|'타입2' = null;
 | 데이터 4 | 데이터 5 | 데이터 6 |
 
 # 8. 다이어그램
-1. Top Down (TD) 방식
+1. *Top Down (TD) 방식*
 ```mermaid
 graph TD
     Start([시작]) --> Input[/입력 데이터/]
@@ -82,7 +66,7 @@ graph TD
     Process --> End[종료]
     Note --> End
 ```
-2. Left to Right (LR) 방식
+2. *Left to Right (LR) 방식*
 ```mermaid
 graph LR
     Start([시작]) --> Input[/입력 데이터<br/>a: 시작값1<br/>b: 시작값2/]
