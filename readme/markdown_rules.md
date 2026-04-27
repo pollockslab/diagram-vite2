@@ -85,7 +85,7 @@ graph TD
 2. Left to Right (LR) 방식
 ```mermaid
 graph LR
-    Start([시작]) --> Input[/입력 데이터<br>a: 시작값1<br>b: 시작값2/]
+    Start([시작]) --> Input[/입력 데이터<br/>a: 시작값1<br/>b: 시작값2/]
     Input --> DB[(데이터베이스)]
     DB --> Decision{분기 처리}
     Decision -- Yes --> Process[공정 처리]
@@ -100,6 +100,7 @@ graph LR
 * `{ }`: 마름모 - 분기/결정
 * `[ ]`: 사각형 - 일반 처리
 * `--[ ]`: 노트/메모 - 주석 형태
+* `<br/>`: 내용 줄바꿈
 
 
 
