@@ -46,19 +46,12 @@ _TRAN.View.update();
 ## 2. 상태 구조 (State)
 사각형 객체는 다음의 상태를 독립적으로 관리함.
 
-```mermaid
-graph LR
-    A[Idle] --> |PointerDown| B[Dragging]
-    B --> |PointerUp| A
-    B --> |ResizeHandle| C[Resizing]
-    C --> |PointerUp| A
 
 | 항목 | 설명 | 비고 |
 | :--- | :---: | ---: |
 | 왼쪽 정렬 | 중앙 정렬 | 오른쪽 정렬 |
 | 데이터 1 | 데이터 2 | 데이터 3 |
 | 데이터 4 | 데이터 5 | 데이터 6 |
-```
 
 
 ```mermaid
