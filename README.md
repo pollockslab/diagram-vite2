@@ -47,7 +47,6 @@ _TRAN.View.update();
 사각형 객체는 다음의 상태를 독립적으로 관리함.
 
 
-```mermaid
 | 항목 | 설명 | 비고 |
 | :--- | :---: | ---: |
 | 왼쪽 정렬 | 중앙 정렬 | 오른쪽 정렬 |
@@ -55,6 +54,7 @@ _TRAN.View.update();
 | 데이터 4 | 데이터 5 | 데이터 6 |
 
 
+```mermaid
 graph LR
     A[Start] --> B{Decision}
     B --> |Yes| C[Process]
