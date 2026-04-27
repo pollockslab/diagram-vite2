@@ -88,6 +88,7 @@ graph LR
 * `<br/>`: 내용 줄바꿈
 
 # 9. 그 외 차트들
+1. *시퀀스 다이어그램*
 ```mermaid
 sequenceDiagram
     participant UI
@@ -95,6 +96,7 @@ sequenceDiagram
     UI->>Worker: 액션 요청 (조회/저장)
     Worker-->>UI: 결과 데이터 반환
 ```
+2. *간트 차트*
 ```mermaid
 gantt
     title 웹다이어그램 로드맵
@@ -104,9 +106,26 @@ gantt
     section 전문성 확보
     최적화 논리   :active, 2026-04-01, 2026-05-15
 ```
+3. *원형 분포도*
 ```mermaid
 pie title 엔진 성능 점유율
     "렌더링 루프" : 45
     "이벤트 처리" : 25
     "데이터 관리" : 30
 ```
+
+4. *수직 바 차트*
+```mermaid
+xychart-beta
+    title "엔진 모듈별 성능 부하(ms)"
+    x-axis [Render, Event, Storage, Loop]
+    y-axis "부하(ms)" 0 --> 100
+    bar [45, 25, 20, 10]
+```
+5. *수평 바 차트*
+xychart-beta
+    title "모듈별 성능 부하(ms)"
+    orientation horizontal
+    x-axis "부하(ms)" 0 --> 100
+    y-axis [Render, Event, Storage, Loop]
+    bar [45, 25, 20, 10]
