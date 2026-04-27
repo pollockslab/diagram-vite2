@@ -87,5 +87,26 @@ graph LR
 * `--[ ]`: 노트/메모 - 주석 형태
 * `<br/>`: 내용 줄바꿈
 
-
-
+# 9. 그 외 차트들
+```mermaid
+sequenceDiagram
+    participant UI
+    participant Worker
+    UI->>Worker: 액션 요청 (조회/저장)
+    Worker-->>UI: 결과 데이터 반환
+```
+```mermaid
+gantt
+    title 웹다이어그램 로드맵
+    dateFormat  YYYY-MM-DD
+    section 핵심엔진
+    엔진 완료      :done, 2026-01-01, 2026-03-30
+    section 전문성 확보
+    최적화 논리   :active, 2026-04-01, 2026-05-15
+```
+```mermaid
+pie title 엔진 성능 점유율
+    "렌더링 루프" : 45
+    "이벤트 처리" : 25
+    "데이터 관리" : 30
+```
