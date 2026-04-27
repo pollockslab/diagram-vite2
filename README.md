@@ -1,3 +1,5 @@
+<h1 id="welcome-link">환영합니다!</h1>
+
 
 # 프로젝트 이름 (가장 큼)
 ## 주요 모듈 설명
@@ -51,9 +53,17 @@ graph LR
     B --> |ResizeHandle| C[Resizing]
     C --> |PointerUp| A
 
-## 3. 테이블 예제
 | 항목 | 설명 | 비고 |
 | :--- | :---: | ---: |
 | 왼쪽 정렬 | 중앙 정렬 | 오른쪽 정렬 |
 | 데이터 1 | 데이터 2 | 데이터 3 |
 | 데이터 4 | 데이터 5 | 데이터 6 |
+```
+
+
+```mermaid
+graph LR
+    A[Start] --> B{Decision}
+    B --> |Yes| C[Process]
+    B --> |No| D[End]
+```
