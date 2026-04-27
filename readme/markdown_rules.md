@@ -113,7 +113,6 @@ pie title 엔진 성능 점유율
     "이벤트 처리" : 25
     "데이터 관리" : 30
 ```
-
 4. *수직 바 차트*
 ```mermaid
 xychart-beta
@@ -127,6 +126,13 @@ xychart-beta
 xychart-beta
     title "모듈별 성능 부하(ms)"
     orientation horizontal
+    x-axis "부하(ms)" 0 --> 100
+    y-axis [Render, Event, Storage, Loop]
+    bar [45, 25, 20, 10]
+```
+```mermaid
+xychart-beta
+    title "엔진 모듈별 성능 부하(ms)"
     x-axis "부하(ms)" 0 --> 100
     y-axis [Render, Event, Storage, Loop]
     bar [45, 25, 20, 10]
