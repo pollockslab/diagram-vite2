@@ -82,7 +82,11 @@ export class Loop {
         // _TRAN.render.Draw();
 
         // this.Calls(['resize', 'collision', 'render']);
-        this.Calls(['resize', 'render']);
+        // [Rule] 호출순서대로 배열에 입력
+        this.Calls([
+            'resize', 
+            'render'
+        ]);
     }
 
     private Multiselect() {
