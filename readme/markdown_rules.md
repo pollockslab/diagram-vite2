@@ -50,6 +50,7 @@
 const type1: string = '타입1';
 let type2: null|'타입1'|'타입2' = null;
 ```
+
 <br/><br/><br/>
 
 ## 6. 앵커 `<a>` (링크주소#아이디)
