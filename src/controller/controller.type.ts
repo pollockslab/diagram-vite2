@@ -1,10 +1,9 @@
 import * as DiagramsType from '../diagrams/diagrams.type'
 
 
-export interface Down {
+export interface OffsetPos {
     offsetX     : number;
     offsetY     : number;
-    target      : Target;
     timeStamp   : number;
 }
 

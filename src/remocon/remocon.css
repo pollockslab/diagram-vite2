@@ -1,4 +1,23 @@
 
+/* reset */
+#remocon-reset {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 20px;
+  height: 20px;
+  
+  z-index: 3000;  
+
+  /* 45도 각도로 빨간색과 투명(또는 다른색)을 절반씩 채움 */
+  /* background: linear-gradient(135deg, rgb(179, 22, 22) 50%, transparent 50%); */
+  background: linear-gradient(135deg, rgb(14, 14, 14) 50%, transparent 50%);
+}
+#remocon-reset:hover {
+  background: linear-gradient(135deg, red 50%, transparent 50%);
+}
+
+/* panel */
 #remocon {
   position: absolute;
   width: 116px;
@@ -12,63 +31,6 @@
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
 }
 
-#remocon_reset_pos {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  width: 20px;
-  height: 20px;
-  
-  z-index: 3000;  
-
-  /* 45도 각도로 빨간색과 투명(또는 다른색)을 절반씩 채움 */
-  /* background: linear-gradient(135deg, rgb(179, 22, 22) 50%, transparent 50%); */
-  background: linear-gradient(135deg, rgb(14, 14, 14) 50%, transparent 50%);
-}
-#remocon_reset_pos:hover {
-  background: linear-gradient(135deg, red 50%, transparent 50%);
-}
-
-
-/* button */
-#remocon > .button {
-    position: relative; 
-    display: inline-block;
-    width:50px; 
-    height:50px;
-    border-radius: 25px;
-    line-height: 50px;
-    text-align: center;
-    cursor: pointer;
-    user-select: none;
-    margin: 4px;
-    
-    background-color: rgb(44,44,44);
-
-    background-size: contain;    /* 이미지가 잘리지 않게 div 안에 맞춤 */
-    background-position: center; /* 가운데 정렬 */
-    background-repeat: no-repeat; /* 반복 방지 */
-}
-#remocon > .menu_select {
-    background-color: rgba(0,0,0,0.5);
-    font-size: 15px;
-    color:aliceblue;
-}
-
-#remocon > .button:hover {
-    background-color: gray;
-}
-#remocon > .button:active {
-    background-color: black;
-}
-
-/* line */
-#remocon > .line {
-    border: none;
-    height: 2px;
-    margin: 10px 0;
-    background-color: rgb(30,30,30);
-}
 
 /* display */
 #remocon > .display {
@@ -92,27 +54,44 @@
 #remocon > .display:active {
     cursor: grabbing;
 }
-/* 주사선 효과 */
-/* #remocon > .display::after {
-    content: "";
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    
-    background: linear-gradient(
-        rgba(18, 16, 16, 0) 50%, 
-        rgba(0, 0, 0, 0.25) 50%
-    ), 
-    linear-gradient(90deg, 
-        rgba(255, 0, 0, 0.06), 
-        rgba(0, 255, 0, 0.02), 
-        rgba(0, 0, 100, 0.06)
-    );
-    background-size: 100% 4px, 3px 100%;
-    pointer-events: none;
-} */
 
-#remocon > .small {
+/* button */
+#remocon > .button {
+    position: relative; 
+    display: inline-block;
+    width:50px; 
+    height:50px;
+    border-radius: 25px;
+    line-height: 50px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    margin: 4px;
+    
+    background-color: rgb(44,44,44);
+
+    background-size: contain;    /* 이미지가 잘리지 않게 div 안에 맞춤 */
+    background-position: center; /* 가운데 정렬 */
+    background-repeat: no-repeat; /* 반복 방지 */
+}
+#remocon > .button-select {
+    background-color: rgba(0,0,0,0.5);
+    font-size: 15px;
+    color:aliceblue;
+}
+#remocon > .button:hover {
+    background-color: gray;
+}
+#remocon > .button:active {
+    background-color: black;
+}
+#remocon > .line {
+    border: none;
+    height: 2px;
+    margin: 10px 0;
+    background-color: rgb(30,30,30);
+}
+#remocon > .text {
     display: block;
     margin-left: 4px;
     color: rgb(100,100,100);

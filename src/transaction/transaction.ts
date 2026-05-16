@@ -2,7 +2,9 @@
 import * as TransactionType     from './transaction.type'
 import * as TransactionAction   from './transaction.action'
 import * as TransactionFilter   from './transaction.filter'
-import * as TransactionRender   from './transaction.render'
+
+import * as TransactionDiagram  from './transaction.diagram'
+import * as TransactionMap      from './transaction.map'
 
 // [Collision]
 import * as CollisionHover      from './collision/collision.hover'
@@ -12,9 +14,10 @@ import * as CollisionEdge       from './collision/collision.edge'
 
 export class Transaction {
 
-    readonly action = TransactionAction;
-    readonly filter = TransactionFilter;
-    readonly render = TransactionRender;
+    readonly action     = TransactionAction;
+    readonly filter     = TransactionFilter;
+    readonly diagram    = TransactionDiagram;
+    readonly map        = TransactionMap;
     collision = {
         hover: CollisionHover,
         point: CollisionPoint,

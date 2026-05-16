@@ -1,11 +1,16 @@
 
 import { _DPR, _CTRL, _VIEW } from '@/main'
 import * as diagramsType from '@/diagrams/diagrams.type'
+import * as ViewType from './view.type'
 
 export class ViewEffect {
 
     private cav: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
+    list = {
+        square : [] as ViewType.EffectSquare[],
+    }
+    map = new Map<string, ViewType.EffectSquare>();
 
     constructor(args: {parentNode: HTMLDivElement}) {
         // [Create] 이펙트 캔버스 생성.
@@ -34,48 +39,62 @@ export class ViewEffect {
         this.ctx.translate(-x, -y);
     }
 
-    Draw(x: number, y: number) {
-
-        const w = this.cav.width;
-        const h = this.cav.height;
+    Draw(viewX: number, viewY: number) {
         
-        this.ctx.clearRect(x-w/2, y-h/2, w, h);
+        const cavW = this.cav.width;
+        const cavH = this.cav.height;
+        
+        this.ctx.clearRect(viewX-cavW/2, viewY-cavH/2, cavW, cavH);
+        this.ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        this.ctx.fillRect(viewX-cavW/2+10, viewY-cavH/2+10, cavW-20, cavH-20);
+        // this.AddSquare(-40, -30, 100, 100, 'skyblue');
+        
 
-        const hover = _CTRL.hover.target;
-        const selects = _CTRL.select.targets;
+        for (const [key, item] of this.map) {
+            // key 타입을 정해보자.
+            // 점, 라인, 사각형(보더, 렉트)
+            // *추가로 hover 인지 drag인지
+            // 분류해서 나열해봐
 
-        if(hover) {
-            this.DrawBorder(hover, 'skyblue');
+            // 필요한 키
+           
+            switch(key) {
+                case 'drag-border': {
+                    const { x, y, w, h, color } = item;
+                    this.DrawBorder(x, y, w, h, color);
+                    break;
+                }
+                case 'drag-square': {
+                    const { x, y, w, h, color } = item;
+                    this.DrawSquare(x, y, w, h, color);
+                    break;
+                }
+            }
+            
         }
 
-        for(let s=0; s<selects.length; s++) {
-            this.DrawBorder(selects[s], 'lightgreen');
-        }
         
-        ///////////////////////////////////////
-        // [Test] hover된 그리드 셀에 Border 적용
-        function SnapToGrid(value: number): number {
-            const size = 100;
-            return Math.floor(value / size) * size;
-        }
-        
-        const x1 = SnapToGrid(_VIEW.SpaceX(_CTRL.hover.offsetX));
-        const y1 = SnapToGrid(_VIEW.SpaceY(_CTRL.hover.offsetY));
-        
-
-        this.ctx.strokeStyle = 'silver';
-        this.ctx.lineWidth = 2;
-        this.ctx.strokeRect(x1, y1, 100, 100);
-        
-        // 목표1. 해당 칸만 콜리전체크 하도록 만든다
-        // 목표2. 다이어그램 최대크기 고려해서 그리드 범위만큼 콜리전체크로 바꾸기
+        this.map.clear();
     }
 
-    DrawBorder(diagram: diagramsType.Instance, color: string) {
-        // console.log(diagram, color);
-        const {x, y, w, h} = diagram;
+    AddBorder(x: number, y: number, w: number, h: number, color: string) {  
+         this.map.set('drag-border', {x, y, w, h, color});  
+    }
+    AddSquare(x: number, y: number, w: number, h: number, color: string) {  
+         this.map.set('drag-square', {x, y, w, h, color});  
+    }
+
+    DrawBorder(x: number, y: number, w: number, h: number, color: string) {
+        this.ctx.save();
         this.ctx.strokeStyle = color;
-        this.ctx.lineWidth = 6;
         this.ctx.strokeRect(x, y, w, h);
+        this.ctx.restore();
+    }
+
+    DrawSquare(x: number, y: number, w: number, h: number, color: string) {
+        this.ctx.save();
+        this.ctx.fillStyle = color;
+        this.ctx.fillRect(x, y, w, h);
+        this.ctx.restore();
     }
 }

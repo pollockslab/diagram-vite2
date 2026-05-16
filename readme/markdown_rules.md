@@ -1,7 +1,7 @@
-# : : : Markdown Rules 기본 문법 안내서 (2026.04.28 작성) : : :
+# : : : [Guide] Markdown Rules 기본 문법 안내서 (2026.04.28 작성) : : :
 ### *`* 본 페이지에서는 마크다운 기본 예제를 제공합니다.`*
 
-<br/><br/>
+<br/><br/><!-- 마크다운 주석 -->
 
 ## 1. 수평선 긋기 `<hr />` (셋 다 동일)
 1. --- 
@@ -10,7 +10,7 @@
 
 <br/><br/><br/>
 
-## 2. 글씨크기 (샾+공백+문장 입력)
+## 2. 글씨크기 (샾+공백+h1~6 입력)
 - # h1
 - ## h2
 - ### h3
@@ -75,24 +75,32 @@ let type2: null|'타입1'|'타입2' = null;
 1. *Top Down (TD) 방식*
 ```mermaid
 graph TD
+    style Start fill:#f96,stroke:#333
+    style End fill:#bbf,stroke:#333
+
     Start([시작]) --> Input[/입력 데이터/]
     Input --> DB[(데이터베이스)]
     DB --> Decision{분기 처리}
     Decision -- Yes --> Process[공정 처리]
     Decision -- No --> Note[-- 메모: 예외 상황]
-    Process --> End[종료]
+    Process --> End([종료])
     Note --> End
+
 ```
 2. *Left to Right (LR) 방식*
 ```mermaid
 graph LR
+    style Start fill:#f96,stroke:#333
+    style End fill:#bbf,stroke:#333
+
     Start([시작]) --> Input[/입력 데이터<br/>a: 시작값1<br/>b: 시작값2/]
     Input --> DB[(데이터베이스)]
     DB --> Decision{분기 처리}
     Decision -- Yes --> Process[공정 처리]
     Decision -- No --> Note[-- 메모: 예외 상황]
-    Process --> End[종료]
+    Process --> End([종료])
     Note --> End
+
 ```
 ### 주요 포함 요소 설명
 * `([ ])`: 알약(타원형) - 시작/종료
@@ -111,8 +119,15 @@ graph LR
 sequenceDiagram
     participant UI
     participant Worker
+    participant Others
+
     UI->>Worker: 액션 요청 (조회/저장)
     Worker-->>UI: 결과 데이터 반환
+    Others-->>Others: 되돌림표
+
+    Note left of Worker: 왼쪽 노트
+    Note right of Worker: 오른쪽 노트
+    Note over UI, Others: 오버 노트
 ```
 2. *간트 차트*
 ```mermaid

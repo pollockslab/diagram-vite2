@@ -50,7 +50,7 @@ export async function AddDiagram(type: DiagramsType.ClassName, data: Partial<any
 {
     if(!(type in Diagrams.Class)) {return;}
     const typeClass = (Diagrams.Class as any)[type];
-    console.log(typeClass)
+    
     // 1. 객체생성
     const instance = new typeClass({
         axis: {
@@ -60,8 +60,7 @@ export async function AddDiagram(type: DiagramsType.ClassName, data: Partial<any
         },
         data,
     });
-    console.log(instance);
-
+    
     // 2. Space에 넣기
     _SPCE.Insert(instance);
     console.log('확인', _SPCE.Select(instance.id));

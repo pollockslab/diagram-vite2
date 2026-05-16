@@ -12,17 +12,18 @@ const _FPS: LoopType.FPSConfig = {
 };
 
 export class Loop {
+    // [Filter] 루프 내에서, 원하는 순서대로 호출하기 위해 커맨드 타입을 나눔.
     private command: LoopType.Command = {
         resize      : new Map<string, LoopType.Call>(),
         collision   : new Map<string, LoopType.Call>(), 
         action      : new Map<string, LoopType.Call>(),
         storage     : new Map<string, LoopType.Call>(),
-        render      : new Map<string, LoopType.Call>(),
+        render      : new Map<string, LoopType.Call>(), // 최종결과를 그림
     };
     private status = {
-        remocon: 'Dummy' as LoopType.Action,
+        remocon : 'Dummy' as LoopType.Action,
+        fps     : 'Hz60' as LoopType.FPSKey,
         lastTime: 0 as number,
-        fps: 'Hz60' as LoopType.FPSKey,
     };
 
     constructor() {
@@ -44,6 +45,7 @@ export class Loop {
         this.status.fps = Hz;
     }
 
+    
     get remocon() {
         return this.status.remocon;
     }
@@ -71,22 +73,16 @@ export class Loop {
     }
 
     private Dummy () {
-        // 1. [Convert] 필요한 스케줄 추가
-        // _TRAN.render.Draw();
-
-        // 2. [Call] 예악작업 호출 후 제거
+        // 1. [Rule] 예약작업 호출 할 순서대로 배열에 입력
         // this.Calls(['resize', 'collision', 'render']);
+
+        // 2. [Convert] 필요한 스케줄 추가
+        // _TRAN.render.Draw();
     }
   
     private Pointer() {
-        // _TRAN.render.Draw();
-
-        // this.Calls(['resize', 'collision', 'render']);
-        // [Rule] 호출순서대로 배열에 입력
-        this.Calls([
-            'resize', 
-            'render'
-        ]);
+        // [Rule] 예약작업 호출 할 순서대로 배열에 입력
+        this.Calls(['resize', 'collision', 'render']);
     }
 
     private Multiselect() {

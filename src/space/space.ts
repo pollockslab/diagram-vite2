@@ -2,6 +2,7 @@ import * as Diagrams from '@/diagrams/diagrams'
 import * as DiagramsType from '@/diagrams/diagrams.type'
 import { SpaceGrid } from './space.grid'
 import * as SpaceType from './space.type'
+import * as SpaceCollision from './space.collision'
 
 /**
  * 좌표별로 관리해보자
@@ -13,6 +14,7 @@ export class Space {
     
     grid        = new SpaceGrid();
     children    = this.NewChildren();
+    collision   = SpaceCollision;
 
     constructor() {}
     

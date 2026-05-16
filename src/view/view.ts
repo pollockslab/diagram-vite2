@@ -118,7 +118,7 @@ export class View extends Diagrams.Class.Square
     Draw() {
         // !!!!!!! controller 에서 command 로 Move 보내는 형식으로 바꾼 이후에
         // 여기서 직접 Update 호출부분 삭제필요.
-
+        
         // [Background]
         this.background.Update(this.x, this.y, this.zoom);
         this.background.Draw();

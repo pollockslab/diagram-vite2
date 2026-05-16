@@ -25,7 +25,10 @@ export class Down {
         
         // }
 
-
+         // if(this.down.instance !== null && this.down.instance !== _VIEW) {
+        //     _TRAN.action.MoveFront(_VIEW, this.down.instance);
+        // }
+       
 
         // 캡처 시켰으니까 
     }

@@ -1,17 +1,15 @@
-import { _DPR, _VIEW, _REMO, _LOOP, _TRAN } from '@/main'
+import { _MNGR } from '@/main'
 import { Engines } from '@/engines/engines'
-import * as DiagramsType from '@/diagrams/diagrams.type'
 import * as ControllerType from './controller.type'
 import './controller.css'
-import * as ControllerCapture from './controller.capture'
 
 
 export class Controller {
 
-    panel    : HTMLDivElement;
-    down     = new ControllerCapture.Down();
-    hover    = new ControllerCapture.Hover();
-    select   = new ControllerCapture.Select();
+    panel   : HTMLDivElement;
+    down    : ControllerType.OffsetPos = this.Reset();
+    move    : ControllerType.OffsetPos = this.Reset();
+    up      : ControllerType.OffsetPos = this.Reset();
 
     constructor(args: { parentNode: HTMLElement }) {
 
@@ -31,101 +29,88 @@ export class Controller {
         });
 
         window.addEventListener('resize', () => {
-            _TRAN.render.Resize();
+            _MNGR.render.Resize();
         });
     }
 
     protected PanZoom = (size: number): void => {
-        _TRAN.render.Zoom(size);
+        _MNGR.render.Zoom(size);
     }
      
     protected PanStart = (offsetX: number, offsetY: number, timeStamp: number): void => {
-        this.down.Capture(offsetX, offsetY);
-        if(this.down.instance !== null && this.down.instance !== _VIEW) {
-            _TRAN.action.MoveFront(_VIEW, this.down.instance);
-        }
+        this.down = {offsetX, offsetY, timeStamp};
+        _MNGR.controller.Down();
     }
 
     protected PanMove = (offsetX: number, offsetY: number, timeStamp: number, isDown: boolean): void  => {
-    
+        this.move = {offsetX, offsetY, timeStamp};
         if(isDown) {
-            if(this.down === null) {return;}
-
-            const remocon = _REMO.remote.id;
-            if(remocon === null || remocon === 'pointer') {
-
-                const range = {
-                    w: _VIEW.SpaceLine(offsetX - this.down.offsetX),
-                    h: _VIEW.SpaceLine(offsetY - this.down.offsetY),
-                };
-
-                const target = this.down.target;
-                if(target.diagram === _VIEW) {
-                    // [Move] 맵 이동
-                    _VIEW.x = target.x - range.w;
-                    _VIEW.y = target.y - range.h;
-                    _TRAN.render.Draw();
-
-                }
-                else {
-                    if(target.edge === null) {
-                        // [Move] 다이어그램 이동
-                        target.diagram.x = target.x + range.w;
-                        target.diagram.y = target.y + range.h;
-                        _TRAN.render.Draw();
-                    }
-                    else {
-                        // 다이어그램 리사이즈
-                        // this.ResizeDiagram(xRange, yRange);
-                    }
-                }
-            }    
+            _MNGR.controller.Drag();
         }
-        // [Hover]
         else {
-            // _LOOP.state.isHover = { offsetX, offsetY };
-            this.hover.offsetX = offsetX;
-            this.hover.offsetY = offsetY;
-            _TRAN.collision.hover.Hover();
-
+            _MNGR.controller.Hover();
         }
+      
     }
-
-    // [PanEnd] 테스트하며 Command 에 넣고 전면수정 필요함.
+    
     protected PanEnd = (offsetX: number, offsetY: number, timeStamp: number): void => {
-        
-        const downTime = this.down?.timeStamp ?? 0;
-        const isClick = (timeStamp-downTime < 200)? true:false;
-        const remocon = _REMO.remote.id;
-
-        if(isClick && remocon !== null) {
-            const x = _VIEW.SpaceX(offsetX);
-            const y = _VIEW.SpaceY(offsetY);
-
-            // 다중선택시, 어쨋든 down 정보를 보내야되나 아니면 저짝에서 읽을까 싶은
-            _REMO.Action({x, y});
+        this.up = {offsetX, offsetY, timeStamp};
+        const rangeX = Math.abs(offsetX - this.down.offsetX);
+        const rangeY = Math.abs(offsetY - this.down.offsetY);
+        const isClick = 
+            (timeStamp-this.down.timeStamp < 100) 
+            && (rangeX < 4 && rangeY < 4);
+        if(isClick) {
+            _MNGR.controller.Click();
         }
-        
-        const loopArgs = new Map<string, any>();
-        // 모서리 클릭시 다이어그램 사이즈 조절 종료
-        console.log(this.down)
-        if(this.down?.target.edge !== null) {
-            loopArgs.set('target', this.down?.target.diagram);
+        else {
+            _MNGR.controller.Up();
         }
-        /////////////////////////////////
-        // 업됐으니까 끌고있던 다이어그램 정보 저장하는거 호출하자.
-        // 트랜잭션에 보내.
-
-
-
-
-
-        // (마무리) down 정보 초기화
-        this.down = null;
+        this.down = this.Reset();
+        this.move = this.Reset();
+        this.up   = this.Reset();
     }
 
     protected PanCancel = (): void => {
+        this.down = this.Reset();
+        this.move = this.Reset();
+        this.up   = this.Reset();
+    }
 
+    private Reset(): ControllerType.OffsetPos {
+        return {
+            offsetX     : 0,
+            offsetY     : 0,
+            timeStamp   : 0,
+        };
+    }
+
+    CursorStyle(type: string) {
+
+        const style: 'default'|'pointer'|'grabbing'|'crosshair'|'not-allowed'|'cell' = 'cell';
+        this.panel.style.cursor = style;
+
+        switch(type) {
+            case 'pointer': {
+                this.panel.style.cursor = 'default';
+                break;
+            }
+            case 'create': {
+                this.panel.style.cursor = 'cell';
+                break;
+            }
+            case 'delete': {
+                this.panel.style.cursor = 'not-allowed';
+                // 휴지통 모양이나 붉은색 X 아이콘을 커서로 사용
+                // canvas.style.cursor = `url('delete-icon.png') 12 12, auto`;
+                break;
+            }
+            default: {
+                this.panel.style.cursor = 'pointer';
+                break;
+            }
+
+        }
     }
 }
 

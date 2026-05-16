@@ -8,3 +8,11 @@ export namespace Pattern {
 
 
 export const ChildrenOrder = ['Axis', 'Line', 'Square', 'Point', 'Button'] as const;
+
+export interface EffectSquare {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    color: string;
+}
