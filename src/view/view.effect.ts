@@ -24,7 +24,6 @@ export class ViewEffect {
         const dpr = _DPR.value
         this.cav.width = w * dpr;
         this.cav.height = h * dpr;
-        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
     Update(x: number, y: number, zoom: number): void {
@@ -43,10 +42,11 @@ export class ViewEffect {
         
         const cavW = this.cav.width;
         const cavH = this.cav.height;
+        console.log(cavW, cavH)
         
         this.ctx.clearRect(viewX-cavW/2, viewY-cavH/2, cavW, cavH);
-        this.ctx.fillStyle = 'rgba(0,0,0,0.3)';
-        this.ctx.fillRect(viewX-cavW/2+10, viewY-cavH/2+10, cavW-20, cavH-20);
+        this.ctx.fillStyle = 'rgba(255,255,0,0.3)';
+        this.ctx.fillRect(viewX-cavW/4+100, viewY-cavH/4+100, cavW/2-200, cavH/2-200);
         // this.AddSquare(-40, -30, 100, 100, 'skyblue');
         
 

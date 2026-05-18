@@ -37,12 +37,12 @@ export const _MNGR = new Manager();
 
 // [Start] 프로그램 실행함수
 (async () => { 
-    _LOOP.remocon = 'Pointer';
-    const setting = await _STOR.Call('loadSetting', {});
+    // _LOOP.remocon = 'Pointer';
+    // const setting = await _STOR.Call('loadSetting', {});
     
-    if (setting?.openTabID) {
-        await _VIEW.LoadMap(setting.openTabID);
-    }
+    // if (setting?.openTabID) {
+    //     await _VIEW.LoadMap(setting.openTabID);
+    // }
 
     _MNGR.render.Draw();
 

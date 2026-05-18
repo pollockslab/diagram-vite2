@@ -6,6 +6,14 @@ export class ViewBoard {
 
     private cav: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
+     
+    // this.children = {
+    //     Axis:   [],
+    //     Line:   [],
+    //     Square: [],
+    //     Point:  [],
+    //     Button: [],
+    // };
 
     constructor(args: {parentNode: HTMLDivElement}) {
         // [Create] 보드 캔버스 생성.

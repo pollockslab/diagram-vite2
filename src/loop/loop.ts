@@ -21,7 +21,7 @@ export class Loop {
         render      : new Map<string, LoopType.Call>(), // 최종결과를 그림
     };
     private status = {
-        remocon : 'Dummy' as LoopType.Action,
+        remocon : 'Pointer' as LoopType.Action,
         fps     : 'Hz60' as LoopType.FPSKey,
         lastTime: 0 as number,
     };
