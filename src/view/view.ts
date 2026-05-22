@@ -25,6 +25,7 @@ export class View {
             y: 0,
             // w: 0,
             // h: 0,
+            z: 0,
         }
     };
     background  : ViewBackground;
