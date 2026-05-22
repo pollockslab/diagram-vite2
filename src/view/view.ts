@@ -8,8 +8,7 @@ import { ViewEffect } from './view.effect'
 import './view.css'
 
 
-export class View extends Diagrams.Class.Square
-{
+export class View {
     panel: HTMLDivElement;
     view = {
         zoom: {
@@ -21,13 +20,19 @@ export class View extends Diagrams.Class.Square
             width: 0,
             height: 0,
         },
+        space: {
+            x: 0,
+            y: 0,
+            // w: 0,
+            // h: 0,
+        }
     };
     background  : ViewBackground;
     board       : ViewBoard;
     effect      : ViewEffect;
     
     constructor(args: {parentNode: HTMLElement}) {
-        super();
+        
         
         // [Cover] 배경 담을 div 생성
         this.panel = document.createElement('div');
@@ -43,6 +48,7 @@ export class View extends Diagrams.Class.Square
         this.Resize();
     }
     
+    // [Value] zoom
     get zoom() {
         return this.view.zoom.size;
     }
@@ -52,6 +58,8 @@ export class View extends Diagrams.Class.Square
             zoom.size = size;
         }
     }
+
+    // [Value] offset
     get offsetW() {
         return this.view.offset.width;
     }
@@ -63,6 +71,24 @@ export class View extends Diagrams.Class.Square
     }
     set offsetH(offsetHeight: number) {
         this.view.offset.height = offsetHeight;
+    }
+
+    // [Value] space
+    get x() {
+        return this.view.space.x;
+    }
+    set x(size) {
+        // [Validation] 비정상적인 숫자일 때 0으로 초기화 하여 화면이탈 방지
+        // 예: NaN, Infinity, 부동소수점 이슈
+        this.view.space.x = (!Number.isFinite(size))? 0 : size;
+    }
+    get y() {
+        return this.view.space.y;
+    }
+    set y(size) {
+        // [Validation] 비정상적인 숫자일 때 0으로 초기화 하여 화면이탈 방지
+        // 예: NaN, Infinity, 부동소수점 이슈
+        this.view.space.y = (!Number.isFinite(size))? 0 : size;
     }
 
     Resize() {
