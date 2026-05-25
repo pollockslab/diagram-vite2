@@ -1,12 +1,9 @@
 
 import { _CTRL, _DPR, _SPCE  } from '@/main'
-import * as Diagrams from '@/diagrams/diagrams'
-
 import { ViewBackground } from './view.background'
 import { ViewBoard } from './view.board'
 import { ViewEffect } from './view.effect'
 import './view.css'
-import { Draw } from '@/manager/manager.render'
 
 
 export class View {
@@ -45,8 +42,8 @@ export class View {
         this.panel.appendChild(this.cav);
 
         // [Create] 배경 순차적 생성. (1. Background, 2. Board, 3. Effect)
-        this.background = new ViewBackground({parentNode: this.panel});
-        this.board      = new ViewBoard     ({parentNode: this.panel});
+        this.background = new ViewBackground();
+        this.board      = new ViewBoard     ();
         this.effect     = new ViewEffect    ();
 
         // [Resize] 배경 생성직후, 캔버스 초기화 위해 호출.
@@ -129,9 +126,6 @@ export class View {
         const dpr = _DPR.value
         this.cav.width = width * dpr;
         this.cav.height = height * dpr;
-
-        this.background.Resize(width, height, this.zoom);
-        this.board     .Resize(width, height);
     }
 
     SpaceX(offsetX: number): number {
@@ -148,47 +142,28 @@ export class View {
 
     ClearRect() {
         const dpr = _DPR.value;
-        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // 초기화
        
-        this.ctx.translate(this.w/2, this.h/2);
-        this.ctx.scale(this.zoom, this.zoom); 
-        this.ctx.translate(-this.x, -this.y);
+        this.ctx.translate(this.offsetW/2, this.offsetH/2); // 중앙으로
+        this.ctx.scale(this.zoom, this.zoom); // 줌 적용(space)
+        this.ctx.translate(-this.x, -this.y); // space x, y 만큼 이동
 
-        this.ctx.clearRect(this.x-this.cav.width/2, this.y-this.cav.height/2, this.cav.width, this.cav.height);
-
+        this.ctx.clearRect(this.x-this.w/2, this.y-this.h/2, this.w, this.h);
     }
 
     Draw() {
         this.ClearRect();
         
         // [Background]
-        this.background.Update(this.x, this.y, this.zoom);
-        this.background.Draw();
+        this.background.Draw(this.ctx, this.x, this.y, this.w, this.h);
 
         // [Board]
-        const wHalf = this.offsetW/2;
-        const hHalf = this.offsetH/2;
-        const start = {
-            x: this.x-wHalf,
-            y: this.y-hHalf,
-        };
-        const end = {
-            x: this.x+wHalf,
-            y: this.y+hHalf,
-        };
-        const children = _SPCE.SelectArea(start.x, start.y, end.x, end.y);
-        this.board.Update(this.x, this.y, this.zoom);
-        this.board.Draw(this.ctx, this.x, this.y, children);
+        this.board.Draw(this.ctx, this.x, this.y, this.w, this.h);
 
         // [Effect]
-        this.effect.AddSquare(-40, -30, 100, 100, 'skyblue');
+        // this.effect.AddSquare(0, 0, 100, 100, 'skyblue');
+        this.effect.AddPoint(0, 0, 'green');
         this.effect.Draw(this.ctx);
-
-
-        // test
-        this.ctx.fillStyle = 'rgba(255,0,150,0.3)';
-        this.ctx.fillRect(this.x-this.w/2, this.y-this.h/2, this.w/2, this.h/2);
-       
     }
 
 }

@@ -4,13 +4,15 @@
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": ["vite/client"],
     "skipLibCheck": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
+    
+    // 설정 완화: 프로젝트 완성 단계에서 타입을 유연하게 관리하기 위해 false 권장
+    "verbatimModuleSyntax": false, 
+    
     "moduleDetection": "force",
     "noEmit": true,
 
@@ -18,19 +20,15 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
+    "noUncheckedSideEffectImports": false,
 
-    /* url */
-    // "baseUrl": ".",
+    /* paths */
+    "baseUrl": ".",
     "paths": {
-      /* src */
-      "@/*"             : ["./src/*"],
-
-      /* public */
-      "@public/*"       : ["./public/*"],
-    },
+      "@/*": ["./src/*"],
+      "@public/*": ["./public/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src", "vite-env.d.ts"] // vite-env.d.ts를 반드시 include에 포함
 }

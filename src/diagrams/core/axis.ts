@@ -66,5 +66,5 @@ export class Axis implements DiagramsType.serialize.core.Axis {
         }
     }
 
-    Draw(ctx: CanvasRenderingContext2D) {}
+    Draw(_ctx?: CanvasRenderingContext2D) {}
 }

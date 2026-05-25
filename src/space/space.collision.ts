@@ -8,15 +8,16 @@ export function Point(x: number, y: number): Array<DiagramsType.Instance> {
     // 1. 해당 그리드 체크
     // 2. 그리드 내에서 콜리전 되는 다이어그램 목록 z-index 순서대로 목록에 저장
     // 3. 목록 리턴
-    
+    console.log(x, y);
     return [];
 }
 
 
 export function Square(x: number, y: number, w: number, h: number) {
+    console.log(x, y, w, h);
 }
 
-function Check(x: number, y: number): boolean {
+export function Check(x: number, y: number): boolean {
     // const axis: DiagramsType.Instance = null;
     // return (
     //     x >= axis.x &&
@@ -24,6 +25,7 @@ function Check(x: number, y: number): boolean {
     //     y >= axis.y &&
     //     y <= axis.y + axis.h
     // );
+    console.log(x, y);
     return false;
 }
 

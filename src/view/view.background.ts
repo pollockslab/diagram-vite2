@@ -12,18 +12,9 @@ import * as ViewType from './view.type'
         매 프레임(Draw)마다 계산 없이 저장된 스타일만 적용하여 부하를 최소화 함.
  */
 export class ViewBackground {
-
-    private cav: HTMLCanvasElement;
-    private ctx: CanvasRenderingContext2D;
     private pattern: ViewType.Pattern.Class = null;
 
-    constructor(args: {parentNode: HTMLDivElement}) { 
-        // [Create] 백그라운드 캔버스 생성.
-        this.cav = document.createElement('canvas');
-        this.ctx = this.cav.getContext('2d') as CanvasRenderingContext2D;
-        this.cav.id = 'background';
-        args.parentNode.appendChild(this.cav);
-
+    constructor() { 
         // [Config] 기본패턴 설정.
         this.Pattern('grid');
         // this.Pattern('rhombus');
@@ -53,24 +44,11 @@ export class ViewBackground {
         }
     }
 
-    Resize(w: number, h: number, zoom: number): void {
-        // [Optimize] 배경 해상도를 1.0으로 고정하여 최적화.
-        const dpr = 1;
-        this.cav.width = w * dpr;
-        this.cav.height = h * dpr;
-        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    Draw(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number): void {
+        if(!this.pattern) {return;}
+        this.pattern?.Draw(x, y, w, h, ctx);
 
-        // this.ctx.translate(w/2, h/2);
-        // this.ctx.scale(zoom, zoom); 
-        // this.ctx.translate(-x, -y);
-    }
-
-    Update(x: number, y: number, zoom: number): void {
-        this.pattern?.Update(x, y, this.cav.width, this.cav.height, zoom);
-    }
-
-    Draw(): void {
-        this.pattern?.Draw(this.cav.width, this.cav.height, this.ctx);
+        // 그냥 drawImage 같은걸로 못하는지 보자
     }
 }
 
@@ -144,22 +122,20 @@ export class Rhombus {
         return ctx.createPattern(cav, 'repeat');
     }
 
-    Update(x: number, y: number, w: number, h: number, zoom: number) {
-        UpdatePattern(
-            x, y, w, h, zoom, 
-            this.matrix, 
-            this.style
-        );
-    }
+    // Update(x: number, y: number, w: number, h: number, zoom: number) {
+    //     UpdatePattern(
+    //         x, y, w, h, zoom, 
+    //         this.matrix, 
+    //         this.style
+    //     );
+    // }
 
-    Draw(w: number, h: number, ctx: CanvasRenderingContext2D) {
+    Draw(x: number, y: number, w: number, h: number, ctx: CanvasRenderingContext2D) {
         if(!this.style) {return;}
-        
-        ctx.clearRect(0, 0, w, h);
-
+    
         ctx.save();
         ctx.fillStyle = this.style;
-        ctx.fillRect(0, 0, w, h);
+        ctx.fillRect(x - w/2, y - h/2, w, h);
         ctx.restore();
     }
 }
@@ -243,20 +219,20 @@ export class Dot3 {
         );
     }
 
-    Draw(w: number, h: number, ctx: CanvasRenderingContext2D) {
+    Draw(x: number, y: number, w: number, h: number, ctx: CanvasRenderingContext2D) {
         if(!this.under.style || !this.middle.style || !this.front.style) {return;}
         
-        ctx.clearRect(0, 0, w, h);
-
+        this.Update(x,y,w,h,1);
+      
         ctx.save();
         ctx.fillStyle = this.under.style;
-        ctx.fillRect(0, 0, w, h);
+        ctx.fillRect(x - w/2, y - h/2, w, h);
 
         ctx.fillStyle = this.middle.style;
-        ctx.fillRect(0, 0, w, h);
+        ctx.fillRect(x - w/2, y - h/2, w, h);
 
         ctx.fillStyle = this.front.style;
-        ctx.fillRect(0, 0, w, h);
+        ctx.fillRect(x - w/2, y - h/2, w, h);
         ctx.restore();
     }
 }
@@ -288,34 +264,29 @@ export class Grid {
         cav.height = size.h;
 
         ctx.save();
-        ctx.strokeStyle = 'rgb(54,63,63)';
+        // ctx.strokeStyle = 'rgb(54,63,63)';
+        ctx.strokeStyle = 'rgb(94, 94, 94)';
         ctx.beginPath();
-        ctx.moveTo(size.w/2, 0);
-        ctx.lineTo(size.w/2 , size.h);
-        ctx.moveTo(       0, size.h/2);
-        ctx.lineTo(size.w , size.h/2);
+        // ctx.moveTo(size.w/2, 0);
+        // ctx.lineTo(size.w/2 , size.h);
+        // ctx.moveTo(       0, size.h/2);
+        // ctx.lineTo(size.w , size.h/2);
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0 , size.h);
+        ctx.moveTo(0, size.h);
+        ctx.lineTo(size.w , size.h);
         ctx.stroke();
         ctx.restore();
 
         return ctx.createPattern(cav, 'repeat');
     }
 
-    Update(x: number, y: number, w: number, h: number, zoom: number) {
-        UpdatePattern(
-            x + 50, y + 50, w, h, zoom, 
-            this.matrix, 
-            this.style
-        );
-    }
-
-    Draw(w: number, h: number, ctx: CanvasRenderingContext2D) {
+    Draw(x: number, y: number, w: number, h: number, ctx: CanvasRenderingContext2D) {
         if(!this.style) {return;}
-        
-        ctx.clearRect(0, 0, w, h);
-
+      
         ctx.save();
         ctx.fillStyle = this.style;
-        ctx.fillRect(0, 0, w, h);
+        ctx.fillRect(x - w/2, y - h/2, w, h);
         ctx.restore();
     }
 }

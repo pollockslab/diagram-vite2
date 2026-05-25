@@ -2,12 +2,12 @@
 import './main.css'
 import { Dpr }          from '@/settings/settings'
 import { Storage }      from '@/storage/storage'
-import { Texteditor }   from '@/editor/texteditor'
-
 import { Space }        from '@/space/space'
+
 import { View }         from '@/view/view'
 import { Controller }   from '@/controller/controller'
 import { Remocon }      from '@/remocon/remocon'
+import { Settings }     from '@/settings/settings'
 
 import { Loop }         from '@/loop/loop'
 import { Transaction }  from '@/transaction/transaction'
@@ -15,18 +15,23 @@ import { Tester }       from '@/tester/tester'
 
 import { Manager }      from '@/manager/manager'
 
-// [Root] app: index.html 에서 작성한 엘리먼트.(웹다이어그램 최상위 엘리먼트)
-const app = document.getElementById('app') as HTMLElement;
 
-// [Tool] 싱글톤 방식. 전역변수에 기능별 객체를 저장. (예: _STOR 는 DB저장소 역할.)
+// [MainFrame] 웹다이어그램 모듈을 포함하는 공간.
+const divMainFrame = document.createElement('div');
+divMainFrame.id = 'div-main-frame';
+document.body.appendChild(divMainFrame);
+
+
+// [Tool] 싱글톤 모듈 방식. 기능별로 하나의 객체만 생성. (예: _STOR 는 DB저장소 역할.)
 export const _DPR  = new Dpr();
 export const _STOR = new Storage();
-export const _TEDI = new Texteditor();
-
 export const _SPCE = new Space();
-export const _VIEW = new View({parentNode: app});
-export const _CTRL = new Controller({parentNode: app});
-export const _REMO = new Remocon({parentNode: app});
+
+// [Level] div 순서대로 생성.
+export const _VIEW = new View({parentNode: divMainFrame});
+export const _CTRL = new Controller({parentNode: divMainFrame});
+export const _REMO = new Remocon({parentNode: divMainFrame});
+export const _SETT = new Settings({parentNode: divMainFrame});
 
 export const _LOOP = new Loop();
 export const _TRAN = new Transaction();

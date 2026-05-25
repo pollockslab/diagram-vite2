@@ -1,4 +1,4 @@
-import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _TRAN, _SPCE } from '@/main'
+import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _TRAN, _SPCE, _SETT } from '@/main'
 
 export function Action(id: string) {
     console.log(id);
@@ -9,7 +9,7 @@ export function Action(id: string) {
         }
         case 'setting': {
             _CTRL.CursorStyle('pointer');
-
+            _SETT.popup.Open();
             break;
         }
         case 'imagedownload': {

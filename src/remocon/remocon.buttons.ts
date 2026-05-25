@@ -6,7 +6,7 @@ import imgPointer from './img/pointer.png'
 import imgMultiSelect from './img/multiselect.png'
 import imgEditorText from './img/editortext.png'
 import imgPointerSpace from './img/remocon-pointer-space.png'
-import imgPointerDelete from './img/remocon-pointer-delete.png'
+// import imgPointerDelete from './img/remocon-pointer-delete.png'
 
 // Add Diagram
 import imgSquare from './img/square.png'

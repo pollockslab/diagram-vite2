@@ -1,4 +1,4 @@
-import { Grid } from './grid'
+// import { Grid } from './grid'
 
 export class ViewChildren {
 
@@ -16,7 +16,7 @@ export class ViewChildren {
          * 마우스 좌표(x,y)에 위치한 특정 Grid 셀(예: 100x100) 주변만 검사하여 
          * Collision(충돌) 함수 호출을 줄였습니다.
          */
-        grid = new Grid();
+        // grid = new Grid();
 
     constructor() {
 

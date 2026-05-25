@@ -103,15 +103,15 @@ export function Up() {
 }
 
 export function Click() {
-    const downX = _VIEW.SpaceX(_CTRL.down.offsetX);
-    const downY = _VIEW.SpaceY(_CTRL.down.offsetY);
+    // const downX = _VIEW.SpaceX(_CTRL.down.offsetX);
+    // const downY = _VIEW.SpaceY(_CTRL.down.offsetY);
     const upX   = _VIEW.SpaceX(_CTRL.up.offsetX);
     const upY   = _VIEW.SpaceY(_CTRL.up.offsetY);
 
-    const x = Math.min(downX, upX);
-    const y = Math.min(downY, upX);
-    const w = Math.abs(upX - downX);
-    const h = Math.abs(upY - downY);
+    // const x = Math.min(downX, upX);
+    // const y = Math.min(downY, upX);
+    // const w = Math.abs(upX - downX);
+    // const h = Math.abs(upY - downY);
     
     switch(_REMO.selected) {
         case 'square': {

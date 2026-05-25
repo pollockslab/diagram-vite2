@@ -3,7 +3,7 @@
 // 예시: 리모콘 버튼 클릭 이벤트 리스너
 const pasteButton = document.getElementById('paste-btn');
 
-pasteButton?.addEventListener('pointerdown', async (event: PointerEvent) => {
+pasteButton?.addEventListener('pointerdown', async (_event?: PointerEvent) => {
     // 1. 브라우저가 사용자 동작으로 인식하는 즉시 호출 (이벤트 핸들러 내부)
     try {
         const text = await navigator.clipboard.readText();

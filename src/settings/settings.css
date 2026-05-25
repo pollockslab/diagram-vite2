@@ -1,0 +1,20 @@
+
+.settings-row {
+    /* 1. 배치 */
+    position: relative; 
+    overflow: hidden;
+
+    /* 2. 크기 */
+    left: 0px;
+    top: 0px;
+    min-width: 300px;
+    height: auto;
+  
+    padding: 6px;
+
+    /* 3. 글자 */
+    /* 4. 배경 */
+    /* border: 1px solid red; */
+    /* 5. 효과 */
+}
+

@@ -17,9 +17,9 @@ export class Remocon {
         this.panel.id = 'remocon';
         args.parentNode.appendChild(this.panel);
         
-        this.reset   = new RemoconReset({parentNode: args.parentNode , panel: this.panel});
         this.display = new RemoconDisplay({parentNode: this.panel});
         this.buttons = new RemoconButtons({parentNode: this.panel});
+        this.reset   = new RemoconReset({parentNode: args.parentNode , panel: this.panel});
 
         this.selected = 'pointer';
     }

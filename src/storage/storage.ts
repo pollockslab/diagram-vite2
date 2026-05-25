@@ -1,4 +1,3 @@
-import IDBWorker from './idb.worker?worker'
 
 interface _IF_PENDING {
     resolve: any;
@@ -19,7 +18,7 @@ export class Storage
 
     // constructor(args: Record<string, any>={}) {
     constructor() {
-        this.worker = new IDBWorker();
+        this.worker = new Worker(new URL('./storage.worker.ts', import.meta.url));
         this.worker.onmessage = (e: MessageEvent) => this.Message(e.data);
     }
     

@@ -7,7 +7,6 @@
   width: 20px;
   height: 20px;
   
-  z-index: 3000;  
 
   /* 45도 각도로 빨간색과 투명(또는 다른색)을 절반씩 채움 */
   /* background: linear-gradient(135deg, rgb(179, 22, 22) 50%, transparent 50%); */
@@ -27,7 +26,6 @@
   left: 10px;
   background-color: rgb(50, 50, 50);
   border-radius: 10px;
-  z-index: 2000;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
 }
 

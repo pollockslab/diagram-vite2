@@ -2,6 +2,7 @@ import * as ManagerController from './manager.controller'
 import * as ManagerRemocon from './manager.remocon'
 import * as ManagerRender from './manager.render'
 import * as ManagerLoop from './manager.loop'
+import * as ManagerStorage from './manager.storage'
 
 
 // 실시간으로 프로그램 상태를 확인
@@ -10,6 +11,7 @@ export class Manager {
     remocon = ManagerRemocon;
     render = ManagerRender;
     loop = ManagerLoop;
+    storage = ManagerStorage;
 
     constructor() {
         // 1. 호출받아서 한다
