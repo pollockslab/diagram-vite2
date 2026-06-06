@@ -1,57 +1,33 @@
 
-interface _IF_PENDING {
-    resolve: any;
-    reject: any;
-}
-interface _IF_MESSAGE {
-    id: number,
-    ok: boolean,
-    result: any,
-    error: any
-}
-
 export class Storage 
 {
     private worker: Worker;
-    private seq: number = 0;
-    private pending: Map<number, _IF_PENDING> = new Map();
+    private idCount: number = 0;
+    private postList: Map<number, {resolve: any, reject: any}> = new Map();
 
-    // constructor(args: Record<string, any>={}) {
     constructor() {
-        this.worker = new Worker(new URL('./storage.worker.ts', import.meta.url));
-        this.worker.onmessage = (e: MessageEvent) => this.Message(e.data);
+        this.worker = new Worker(
+            new URL('./storage.worker.ts', import.meta.url), 
+            {type: 'module'}
+        );
+        this.worker.onmessage = (e: MessageEvent) => this.On(e.data);
     }
     
-    private Message(data: _IF_MESSAGE)
+    private On(data: {id: number, isCompleted: boolean, result: any, error: Error})
     {
-        const { id, ok, result, error } = data;
-        const pending = this.pending.get(id);
-        if(!pending) return;
+        const post = this.postList.get(data.id);
+        if(!post) { return; }
+        this.postList.delete(data.id);
 
-        this.pending.delete(id);
-
-        if(ok) {pending.resolve(result)}
-        else {
-            pending.reject(error);
-            console.warn(data);
-        }
+        if(data.isCompleted) { post.resolve(data.result); }
+        else                 { post.reject (data.error ); }
     }
-
-    /**
-     * Worker에 "업무 의도"를 전달하는 유일한 통로
-     * @param command worker command 이름
-     * @param payload command 데이터
-     * @returns Promise<any>
-     */
-    Call(command: string, payload: object): Promise<any> {
+    
+    Post(command: string, data: any): Promise<any> {
         return new Promise((resolve, reject) => {
-            const id:number = ++this.seq;
-            this.pending.set(id, { resolve, reject });
-            this.worker.postMessage({
-                id,
-                type: command,
-                payload
-            });
+            const id: number = this.idCount++;
+            this.postList.set(id, {resolve, reject});
+            this.worker.postMessage({id, command, data});
         });
     }
 }

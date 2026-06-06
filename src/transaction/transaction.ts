@@ -1,16 +1,18 @@
 
 import * as TransactionType     from './transaction.type'
-import * as TransactionAction   from './transaction.action'
-
 
 
 export class Transaction {
 
-    readonly action     = TransactionAction;
+    tabId: null|string = null;
     private logs = [] as TransactionType.Command[];
     private nowOrder = -1 as number;
     
     constructor() {}
+
+    InitLoad(tabId: string, ) {
+
+    }
 
     // 현재 상태를 저장
     Exec(commandID:string, mementos:TransactionType.Memento[])

@@ -152,6 +152,7 @@ export class View {
     }
 
     Draw() {
+        
         this.ClearRect();
         
         // [Background]

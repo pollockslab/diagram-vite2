@@ -10,6 +10,7 @@ export class Axis implements DiagramsType.serialize.core.Axis {
         id       : null as string | null,
         zIndex   : 0 as number,
         parentId : null as string | null,
+        tabId    : null as string | null,
     };
 
     constructor(args: Partial<any> = {}) {
@@ -22,6 +23,7 @@ export class Axis implements DiagramsType.serialize.core.Axis {
                 id          : this.id,
                 zIndex      : this.zIndex,
                 parentId    : this.parentId,
+                tabId       : this.tabId,
             },
         };
     } 
@@ -52,6 +54,13 @@ export class Axis implements DiagramsType.serialize.core.Axis {
     }
     set parentId(value) {
         this.axis.parentId = value;
+    }
+    
+    get tabId() {
+        return this.axis.tabId;
+    }
+    set tabId(value) {
+        this.axis.tabId = value;
     }
     
     SetData(args: Partial<any> = {}): void {  

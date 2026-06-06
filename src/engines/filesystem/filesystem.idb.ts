@@ -1,6 +1,6 @@
 
 export class FileSystemIDB {
-    idbName = 'wd-filesystem'
+    idbName = 'wd-filesystem';
     storeName = 'handles';
     db: null | IDBDatabase = null;
     constructor() {}

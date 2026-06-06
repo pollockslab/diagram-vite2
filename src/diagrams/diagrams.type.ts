@@ -16,6 +16,7 @@ export namespace serialize {
                 id       : string | null,
                 zIndex   : number,
                 parentId : string | null,
+                tabId    : string | null,
             },
         }
         export interface Line extends serialize.core.Axis{
@@ -102,6 +103,28 @@ export namespace serialize {
             }
         }
     }
+    export type Union = 
+        // [Core]
+          serialize.core.Axis 
+        | serialize.core.Line
+        | serialize.core.Point
+        | serialize.core.Square
+
+        // [Button]
+        | serialize.modules.button.Action
+
+        // [Line]
+        | serialize.modules.line.Arrow
+        | serialize.modules.line.Link
+
+        // [Point]
+        | serialize.modules.point.Pin
+
+        // [Square]
+        | serialize.modules.square.Drawmap
+        | serialize.modules.square.Group
+        | serialize.modules.square.Memo;
+
 }
 
 

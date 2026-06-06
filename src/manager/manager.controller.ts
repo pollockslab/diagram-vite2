@@ -1,5 +1,6 @@
 import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _TRAN, _SPCE, _MNGR } from '@/main'
 import * as DiagramsType from '@/diagrams/diagrams.type'
+import * as Diagrams from '@/diagrams/diagrams'
 
 const down = {
     list: [] as DiagramsType.Instance[],
@@ -19,6 +20,10 @@ export function Down() {
             // list.length <= 0 이면 맵을 클릭했다고 판단함.
             down.view.x = _VIEW.x;
             down.view.y = _VIEW.y;
+
+            // 다이어그램을 눌렀는지 확인해야돼.
+            console.log('콜리포인트', down.list);
+
             break;
         }
         case 'square': {
@@ -29,6 +34,7 @@ export function Down() {
 }
 
 export function Drag() {
+    
     switch(_REMO.selected) {
         case 'pointer': {
             const rangeW = _VIEW.SpaceLine(_CTRL.move.offsetX - _CTRL.down.offsetX);
@@ -36,9 +42,12 @@ export function Drag() {
             _VIEW.x = down.view.x - rangeW;
             _VIEW.y = down.view.y - rangeH;
             _MNGR.render.Draw();
+
+            // diagram 을 끌고 있을 경우 _MNGR.diagram.Update() 하지말고, 좌표만 저장해주기
             break;
         }
         case 'multiselect': {
+            _LOOP.Command('render', 'drag-square', _MNGR.loop.render.Drag);
             break;
         }
         case 'space':
@@ -77,6 +86,10 @@ export function Hover() {
             // 마우스 위치에 사각형 다이어그램 그림이나
             break;
         }
+        case 'multiselect': {
+            _MNGR.render.Draw();
+            break;
+        }
     }
 
 
@@ -95,7 +108,10 @@ export function Up() {
     
     switch(_REMO.selected) {
         case 'square': {
-            _TRAN.action.AddDiagram('Square', {x, y, w, h});
+            const instance = new Diagrams.Class.Square({
+                square: {x, y, w, h}
+            });
+            _MNGR.diagram.Insert(instance.serialize);
             _MNGR.render.Draw();
             break;
         }
@@ -107,7 +123,7 @@ export function Click() {
     // const downY = _VIEW.SpaceY(_CTRL.down.offsetY);
     const upX   = _VIEW.SpaceX(_CTRL.up.offsetX);
     const upY   = _VIEW.SpaceY(_CTRL.up.offsetY);
-
+    
     // const x = Math.min(downX, upX);
     // const y = Math.min(downY, upX);
     // const w = Math.abs(upX - downX);
@@ -115,8 +131,15 @@ export function Click() {
     
     switch(_REMO.selected) {
         case 'square': {
-            _TRAN.action.AddDiagram('Square', {x:upX, y:upY});
+            const instance = new Diagrams.Class.Square({
+                square: {x: upX, y: upY}
+            });
+            _MNGR.diagram.Insert(instance.serialize);
             _MNGR.render.Draw();
+            break;
+        }
+        case 'pointerdelete': {
+
             break;
         }
     }

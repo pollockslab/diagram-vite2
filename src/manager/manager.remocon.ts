@@ -1,7 +1,7 @@
 import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _TRAN, _SPCE, _SETT } from '@/main'
 
 export function Action(id: string) {
-    console.log(id);
+    // console.log(id);
     switch(id) {
         case 'square': {
             _CTRL.CursorStyle('create');

@@ -28,7 +28,7 @@ export class ViewEffect {
                 case 'drag-point': {
                     const { x, y, w, h, color } = item;
                     this.DrawPoint(ctx, x, y, color);
-                    console.log(w, h);
+                    // console.log(w, h);
                     break;
                 }
             }

@@ -9,41 +9,7 @@ export class SpaceGrid {
     };
     map = new Map<string, string[]>();
 
-    constructor() {
-
-        // const square = new Diagrams.Class.Square({
-        //     axis: {id: '테스트 스퀘어1', parentId: 'aaaa1234'},
-        //     square: {x: 0, w:400, h: 400},
-        //     ddt: {a1:1234},
-        //     d1: 111,
-        // });
-        // this.Update(square);
-        // const list = this.Select(square);
-        // console.log('square 목록: ', list);
-
-        // const point = new Diagrams.Class.Point({
-        //     axis: {id: '테스트 포인트1', parentId: 'aaaa1234'},
-        //     point: {x: -13, w:300, h: 400},
-        //     d1: 111,
-        // });
-        // this.Update(point);
-        // const list2 = this.Select(point);
-        // console.log('point 목록: ', list2);
-
-        // const line = new Diagrams.Class.Line({
-        //     axis: {id: '테스트 라인1', parentId: 'aaaa1234'},
-        //     line: {x1: -500, y1: 0, x2: 500, y2: 200},
-        //     ddt: {a1:1234},
-        //     d1: 111,
-        // });
-        // this.Update(line);
-        // const list3 = this.Select(line);
-        // console.log('line 목록: ', list3);
-
-        // // 범위찾기
-        // console.log(this.SelectArea(0, 0, 300, 300, 0));
-        // console.log(this.SelectArea(0, 0, 300, 300, 100));
-    }
+    constructor() {}
 
     ClearAll() {
         this.map.clear();
@@ -73,7 +39,11 @@ export class SpaceGrid {
             x: x2,
             y: y2,
         };
-
+        // const end = {
+        //     x: this.GetGridPoint(x2 - SQUARE_MAX_SIZE, this.size.w),
+        //     y: this.GetGridPoint(y2 - SQUARE_MAX_SIZE, this.size.h),
+        // };
+        // console.log(start, end)
         for(let x = start.x; x <= end.x; x += this.size.w) {
                 for(let y = start.y; y <= end.y; y += this.size.h) {
                 const key = `${x},${y}`;

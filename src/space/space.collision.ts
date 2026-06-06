@@ -1,4 +1,4 @@
-
+import { _SPCE } from '@/main'
 import * as DiagramsType from '@/diagrams/diagrams.type'
 
 // 멀티버스여서 좌표가 겹칠 수 있으나 서로 다른우주면 같은공간에서 겹치는게 아니기 때문에
@@ -8,7 +8,7 @@ export function Point(x: number, y: number): Array<DiagramsType.Instance> {
     // 1. 해당 그리드 체크
     // 2. 그리드 내에서 콜리전 되는 다이어그램 목록 z-index 순서대로 목록에 저장
     // 3. 목록 리턴
-    console.log(x, y);
+    console.log(x, y, _SPCE.grid.SelectArea(x, y, x, y));
     return [];
 }
 

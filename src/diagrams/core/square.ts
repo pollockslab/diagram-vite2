@@ -11,7 +11,6 @@ export class Square extends Axis implements DiagramsType.serialize.core.Square {
         h: 100 as number,
         // children
     };
-  
     capture = new Capture(this);
 
     constructor(args: Partial<any> = {}) {
@@ -55,14 +54,30 @@ export class Square extends Axis implements DiagramsType.serialize.core.Square {
         return this.square.w;
     }
     set w(size) {
-        if(100 <= size && size <= 1000) this.square.w = size;
+        if(size < 100) {
+            this.square.w = 100;
+        } 
+        else if(size > 1000) {
+            this.square.w = 1000;
+        }
+        else {
+            this.square.w = size;
+        }
     }
     
     get h() {
         return this.square.h;
     }
     set h(size) {
-        if(100 <= size && size <= 1000) this.square.h = size;
+        if(size < 100) {
+            this.square.h = 100;
+        } 
+        else if(size > 1000) {
+            this.square.h = 1000;
+        }
+        else {
+            this.square.h = size;
+        }
     }
     
     Snapshot() {
@@ -70,8 +85,18 @@ export class Square extends Axis implements DiagramsType.serialize.core.Square {
         ctx.clearRect(0, 0, this.w, this.h);
 
         ctx.save();
+
+        // [Shadow]
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+
+        // ctx.fillRect(0, 0, this.w-20, this.h-20);
+
+        // [Main]
         ctx.fillStyle = 'orange';
-        ctx.fillRect(0, 0, this.w, this.h);
+        ctx.fillRect(4, 4, this.w-8, this.h-8);
         ctx.restore();
     }
     
@@ -87,5 +112,7 @@ export class Square extends Axis implements DiagramsType.serialize.core.Square {
             this.w, 
             this.h,
         );
+
+        ctx.restore();
     }
 }

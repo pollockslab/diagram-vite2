@@ -41,26 +41,45 @@ export const _MNGR = new Manager();
 
 
 // [Start] 프로그램 실행함수
-(async () => { 
+export async function Init() { 
     // _LOOP.remocon = 'Pointer';
     // const setting = await _STOR.Call('loadSetting', {});
     
     // if (setting?.openTabID) {
     //     await _VIEW.LoadMap(setting.openTabID);
     // }
+    try {
+        // 1. DB open
+        await _STOR.Post('open', {});
 
+        // 2. settings init
+        await _MNGR.settings.Init();
+        if(!_SETT.openTabId) {
+            // idb 를 쓸 수 없으므로 서비스 이용불가.
+            alert('[IDB ERROR] 서비스를 이용하실 수 없습니다.');
+            return;
+        }
+        
+        // 3. loadMap
+        const isLoadMap = await _MNGR.space.Load(_SETT.openTabId);
+        if(!isLoadMap) {
+            // 맵 불러오기 실패. 서비스 이용불가.
+            alert('[IDB ERROR] 서비스를 이용하실 수 없습니다.');
+            return;
+        }
+
+        // 4. Transaction init
+        
+
+    }
+    catch(error) {
+        console.log('error', error);
+    }
+
+
+    
     _MNGR.render.Draw();
-
-    /// *** 트랜잭션.Init 을 만들자.
-    // 오류상황에서 메멘토 쌓인것들 다 정리후 Init 을 해도 좋고
-    // (Init 은 현재까지 저장된 상황을 다시 로딩.)
-
-    // console.log('임시로 테스트');
-    // _TRAN.action.AddDiagram('Square', {x:50, y:30});
-    // _TRAN.action.AddDiagram('Line', {x1:2000, y1:-1550, x2: 1000, y2: 700});
-    // _TRAN.action.AddDiagram('Point', {x:-50, y:-50});
-
-
-})();
+};
+Init();
 
 
