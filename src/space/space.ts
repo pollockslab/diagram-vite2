@@ -130,9 +130,6 @@ export class Space {
     }
 
     InitLoad(list: DiagramsType.serialize.Union[]) {
-        
-        console.log('list', list);
-
         for(const serialize of list)  {
             // [Instance] 다이어그램 생성
             const typeClass = (Diagrams.Class as any)[serialize.axis.type];

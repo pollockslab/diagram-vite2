@@ -1,4 +1,4 @@
-import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _TRAN, _SPCE, _STOR, _MNGR, _SETT } from '@/main'
+import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _SPCE, _STOR, _MNGR, _SETT } from '@/main'
 
 
 export async function Load(tabId: string) {
@@ -40,4 +40,8 @@ export async function Load(tabId: string) {
         
         return false;
     }
+}
+
+export async function Move(serialize: any) {
+    
 }

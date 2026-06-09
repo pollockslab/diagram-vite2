@@ -1,4 +1,4 @@
-import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _TRAN, _SPCE, _MNGR } from '@/main'
+import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _SPCE, _MNGR } from '@/main'
 import * as DiagramsType from '@/diagrams/diagrams.type'
 import * as Diagrams from '@/diagrams/diagrams'
 
@@ -22,7 +22,7 @@ export function Down() {
             down.view.y = _VIEW.y;
 
             // 다이어그램을 눌렀는지 확인해야돼.
-            console.log('콜리포인트', down.list);
+            // console.log('콜리포인트', down.list);
 
             break;
         }

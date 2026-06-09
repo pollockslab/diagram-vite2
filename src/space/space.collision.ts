@@ -8,7 +8,7 @@ export function Point(x: number, y: number): Array<DiagramsType.Instance> {
     // 1. 해당 그리드 체크
     // 2. 그리드 내에서 콜리전 되는 다이어그램 목록 z-index 순서대로 목록에 저장
     // 3. 목록 리턴
-    console.log(x, y, _SPCE.grid.SelectArea(x, y, x, y));
+    // console.log(x, y, _SPCE.grid.SelectArea(x, y, x, y));
     return [];
 }
 

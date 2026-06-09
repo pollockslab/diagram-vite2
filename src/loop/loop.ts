@@ -1,5 +1,5 @@
 import * as LoopType from './loop.type'
-import { _VIEW, _REMO, _TRAN, _CTRL } from '@/main';
+import { _VIEW, _REMO, _CTRL } from '@/main';
 
 // [Option] Loop의(rAF) 동작 속도를 제한하기 위한 주사율 변수.
 // (※ 뺄셈값은 주사율을 넘으면 프레임을 건너 뛸 수 있어 적용한 보정값.)

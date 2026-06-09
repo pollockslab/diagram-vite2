@@ -1,4 +1,4 @@
-import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _TRAN, _SPCE, _STOR, _MNGR, _SETT } from '@/main'
+import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _SPCE, _STOR, _MNGR, _SETT } from '@/main'
 import * as Diagrams from '@/diagrams/diagrams'
 
 // 이 함수를 호출하면 여러 정보를 거쳐서 셋팅한다라.
@@ -50,7 +50,7 @@ export async function AddTab() {
             id: tabId,
             openDiagramId: axis.id,
             favorite: [],
-            mementoStack: [],
+            mementos: [],
         };
         await _STOR.Post('tab-insert',  tab); 
         ret = tab;

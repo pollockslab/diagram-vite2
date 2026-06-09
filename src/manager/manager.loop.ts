@@ -1,4 +1,4 @@
-import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _TRAN, _SPCE } from '@/main'
+import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _SPCE } from '@/main'
 
 export const collision = {
     Hover: function(): void {

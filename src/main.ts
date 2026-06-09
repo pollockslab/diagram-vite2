@@ -10,7 +10,7 @@ import { Remocon }      from '@/remocon/remocon'
 import { Settings }     from '@/settings/settings'
 
 import { Loop }         from '@/loop/loop'
-import { Transaction }  from '@/transaction/transaction'
+import { Memento }      from '@/memento/memento'
 import { Tester }       from '@/tester/tester'
 
 import { Manager }      from '@/manager/manager'
@@ -34,7 +34,7 @@ export const _REMO = new Remocon({parentNode: divMainFrame});
 export const _SETT = new Settings({parentNode: divMainFrame});
 
 export const _LOOP = new Loop();
-export const _TRAN = new Transaction();
+export const _METO = new Memento();
 export const _TEST = new Tester();
 
 export const _MNGR = new Manager();
@@ -42,39 +42,46 @@ export const _MNGR = new Manager();
 
 // [Start] 프로그램 실행함수
 export async function Init() { 
-    // _LOOP.remocon = 'Pointer';
-    // const setting = await _STOR.Call('loadSetting', {});
-    
-    // if (setting?.openTabID) {
-    //     await _VIEW.LoadMap(setting.openTabID);
-    // }
     try {
         // 1. DB open
         await _STOR.Post('open', {});
-
-        // 2. settings init
-        await _MNGR.settings.Init();
-        if(!_SETT.openTabId) {
-            // idb 를 쓸 수 없으므로 서비스 이용불가.
-            alert('[IDB ERROR] 서비스를 이용하실 수 없습니다.');
-            return;
-        }
-        
-        // 3. loadMap
-        const isLoadMap = await _MNGR.space.Load(_SETT.openTabId);
-        if(!isLoadMap) {
-            // 맵 불러오기 실패. 서비스 이용불가.
-            alert('[IDB ERROR] 서비스를 이용하실 수 없습니다.');
-            return;
-        }
-
-        // 4. Transaction init
-        
-
     }
     catch(error) {
-        console.log('error', error);
+        console.error('error', error);
+        alert('[IDB ERROR] 서비스를 이용하실 수 없습니다.');
+        return
     }
+
+    // 2. settings init
+    await _MNGR.settings.Init();
+    if(!_SETT.openTabId) {
+        // idb 를 쓸 수 없으므로 서비스 이용불가.
+        alert('[IDB ERROR] 서비스를 이용하실 수 없습니다.');
+        return;
+    }
+
+    // 3. loadMap
+    const isLoadMap = await _MNGR.space.Load(_SETT.openTabId);
+    if(!isLoadMap) {
+        // 맵 불러오기 실패. 서비스 이용불가.
+        alert('[IDB ERROR] 서비스를 이용하실 수 없습니다.');
+        return;
+    }
+
+    // 4. Transaction init
+    await _MNGR.memento.Load(_SETT.openTabId);
+    /**
+     * 트랜잭션 어떻게 해
+     * old, now 라고 생각해보자
+     * 1. 사각형 추가: 
+     *  old: null, now: 사각형 객체
+     * 2. 사각형 이동:
+     *  old: 사각형, now: 사각형
+     * 3. 사각형 삭제:
+     *  old: 사각형, now: null
+     * 이걸 분간해서 _TRAN 모듈에 넣어주려면 매니저가 필요해
+     */
+
 
 
     

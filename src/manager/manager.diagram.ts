@@ -36,9 +36,14 @@ export function Select(id: string) {
 /**
  * (Ctrl + C) -> (Ctrl + V) 복사+붙여넣기때도 활용하기 위해 파라미터로 serialize 받아서 적용.
  * @param serialize 
+ * @param options {
+        isMementoPush?: boolean 메멘토 히스토리 입력유무(Redo, Undo 에 포함유무)
+   }
  */
-export async function Insert(serialize: any) {
-    console.log('실행')
+export async function Insert(
+    serialize: any,
+    options: { isMementoPush?: boolean } = {}
+) {     
     // [New] 다이어그램 생성
     serialize.axis.parentId = _SPCE.id;
     serialize.axis.tabId = _SPCE.tabId;
@@ -51,17 +56,35 @@ export async function Insert(serialize: any) {
         await _STOR.Post('diagram-insert', diagram.serialize);
     }
     catch(error) {
-        console.error('[ERROR]: ', error);
+        console.error('[INSERT ERROR]: ', error);
         // [Space] 다이어그램 삭제.
         _SPCE.Delete(diagram.serialize);
+        return;
+    }
+
+    // [Memento] 추가
+    const isMementoPush = options.isMementoPush ?? true;
+    if(isMementoPush) {
+        await _MNGR.memento.Exec('diagram-insert', undefined, diagram.serialize);
     }
 }
 
-export function Update() {
+export async function Update(
+    serialize: any,
+    options: { isMementoPush?: boolean } = {}
+) { 
 
+    // [Memento] 추가
+    // const isMementoPush = options.isMementoPush ?? true;
+    // if(isMementoPush) {
+    //     await _MNGR.memento.Exec('diagram-insert', undefined, diagram.serialize);
+    // }
 }
 
-export function Delete(serialize: DiagramsType.serialize.Union) {
+export async function Delete(
+    serialize: any,
+    options: { isMementoPush?: boolean } = {}
+) { 
     // try {
     //     // [DB] 스토리지 저장.
     //     await _STOR.Post('diagram-delete', serializeSpace);
@@ -71,6 +94,13 @@ export function Delete(serialize: DiagramsType.serialize.Union) {
     //     console.error('[ERROR]: ', error);
     //     // [Space] 다이어그램 삭제.
     //     _SPCE.Delete(serializeSpace);
+    // }
+
+
+    // [Memento] 추가
+    // const isMementoPush = options.isMementoPush ?? true;
+    // if(isMementoPush) {
+    //     await _MNGR.memento.Exec('diagram-insert', undefined, diagram.serialize);
     // }
 }
 
@@ -85,7 +115,7 @@ export function Cover(serialize: any): undefined | DiagramsType.Instance {
     // [New] 새 정보 생성. 
     serialize.axis.id = crypto.randomUUID(); // [UUID] 새 아이디 생성.
     serialize.axis.zIndex = Date.now();
-    serialize.axis.type = serialize.axis.type ?? 'axis';
+    serialize.axis.type = serialize.axis.type ?? 'Axis';
 
     try {
         // [Instance] 다이어그램 생성
