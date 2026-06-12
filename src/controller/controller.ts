@@ -58,7 +58,7 @@ export class Controller {
         const rangeX = Math.abs(offsetX - this.down.offsetX);
         const rangeY = Math.abs(offsetY - this.down.offsetY);
         const isClick = 
-            (timeStamp-this.down.timeStamp < 100) 
+            (timeStamp-this.down.timeStamp < 200) 
             && (rangeX < 4 && rangeY < 4);
         if(isClick) {
             _MNGR.controller.Click();

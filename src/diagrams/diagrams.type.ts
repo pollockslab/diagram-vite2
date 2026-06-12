@@ -124,7 +124,6 @@ export namespace serialize {
         | serialize.modules.square.Drawmap
         | serialize.modules.square.Group
         | serialize.modules.square.Memo;
-
 }
 
 

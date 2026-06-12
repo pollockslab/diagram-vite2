@@ -1,4 +1,4 @@
-import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _SPCE, _SETT } from '@/main'
+import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _SPCE, _SETT, _METO, _MNGR } from '@/main'
 
 export function Action(id: string) {
     // console.log(id);
@@ -17,11 +17,17 @@ export function Action(id: string) {
             break;
         }
         case 'undo': {
+            console.log('undo');
             _CTRL.CursorStyle('create');
+            _METO.Undo();
+            _MNGR.render.Draw();
             break;
         }
         case 'redo': {
+            console.log('redo');
             _CTRL.CursorStyle('delete');
+            _METO.Redo();
+            _MNGR.render.Draw();
             break;
         }
         default: {

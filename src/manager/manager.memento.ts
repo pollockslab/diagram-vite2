@@ -1,4 +1,6 @@
-import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _METO , _SPCE, _STOR, _MNGR, _SETT } from '@/main'
+import { _METO , _STOR, _SETT } from '@/main'
+import * as MementoType from '@/memento/memento.type'
+
 
 /**
  * [List] 트랜잭션 목록
@@ -8,23 +10,15 @@ import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _METO , _SPCE, _STOR, _MNGR, _SETT } 
  */
 
 
-export async function Load(tabId: string) {
-    const tab = await _STOR.Post('tab-select', tabId);
+export async function Load() {
+    const tab = await _STOR.Post('tab-select', _SETT.openTabId);
     if(!tab || !tab.mementos) {return false;}
-
-    console.log('여기', tab);
 
     _METO.InitLoad(tab.mementos);
 }
 
-export async function Exec(commandID:string, old: any, now: any) {
-    console.log(commandID, old, now);
-
-    // _METO.Exec(commandID, old, now);
-    // 매번 디비에 저장할꺼면 뭣하러 모듈을 만들어
-
-
-    
-
+export async function Exec(command: MementoType.Command, list: MementoType.work[]) {
+    // console.log(command, list);
+    _METO.Exec(command, list);
 }
 

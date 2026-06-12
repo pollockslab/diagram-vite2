@@ -44,5 +44,3 @@ export const Class = {
 
 
 export const Edge = [null,'e','w','s','n','es','en','ws','wn'] as const;
-
-

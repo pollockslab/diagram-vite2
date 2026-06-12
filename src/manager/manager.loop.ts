@@ -1,14 +1,29 @@
-import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _SPCE } from '@/main'
+import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _SPCE, _MNGR } from '@/main'
+import * as Diagrams from '@/diagrams/diagrams'
 
 export const collision = {
     Hover: function(): void {
         
-        // 1. 콜리전 체크
-        // 2. 모서리 체크
+        const moveX = _VIEW.SpaceX(_CTRL.move.offsetX);
+        const moveY = _VIEW.SpaceY(_CTRL.move.offsetY);
 
-        // 요것들 어디모듈에 붙일건지. 스페이스
+        // [Grid] (x, y) 좌표에 있는 다이어그램 조회
+        const point = _SPCE.collision.Point(moveX, moveY);
+        if(point.length <= 0) {return;}
         
+        // [Edge] 모서리 체크
+
+        // [View] 보더 추가
+        const front = point[point.length-1];
+        if (front instanceof Diagrams.Class.Line) {
+        }
+        else if(front instanceof Diagrams.Class.Square) {
+            _VIEW.effect.AddBorder(front.x, front.y, front.w, front.h, 'hotpink');
+        }
+        else if(front instanceof Diagrams.Class.Point) {
+        }
     },
+    
 }
 export const render = {
     Draw: function(): void {

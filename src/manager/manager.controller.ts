@@ -2,32 +2,51 @@ import { _DPR, _VIEW, _CTRL, _REMO, _LOOP, _SPCE, _MNGR } from '@/main'
 import * as DiagramsType from '@/diagrams/diagrams.type'
 import * as Diagrams from '@/diagrams/diagrams'
 
-const down = {
+export const down = {
     list: [] as DiagramsType.Instance[],
     view: {
         x: 0,
         y: 0,
     },
+    dia: {
+        x: 0, 
+        y: 0.
+    }
 };
 
 export function Down() {
+    
+    _CTRL.CursorStyle('pointer');
+
+    down.list = [];
+    const spaceX = _VIEW.SpaceX(_CTRL.down.offsetX);
+    const spaceY = _VIEW.SpaceY(_CTRL.down.offsetY);
+    down.list = _SPCE.collision.Point(spaceX, spaceY);
+
+    console.log('여기2', down.list.length)
     switch(_REMO.selected) {
         case 'pointer': {
-            _CTRL.CursorStyle('pointer');
-            const spaceX = _VIEW.SpaceX(_CTRL.down.offsetX);
-            const spaceY = _VIEW.SpaceY(_CTRL.down.offsetY);
-            down.list = _SPCE.collision.Point(spaceX, spaceY);
-            // list.length <= 0 이면 맵을 클릭했다고 판단함.
+            if(down.list.length > 0) {
+                const diagram = down.list[down.list.length-1];
+                diagram.zIndex = Date.now();
+                _MNGR.diagram.Update(diagram);
+               
+                if (diagram instanceof Diagrams.Class.Line) {
+                }
+                else if(diagram instanceof Diagrams.Class.Square) {
+                    down.dia.x = diagram.x;
+                    down.dia.y = diagram.y;
+                }
+                else if(diagram instanceof Diagrams.Class.Point) {
+                }
+            }
             down.view.x = _VIEW.x;
             down.view.y = _VIEW.y;
-
-            // 다이어그램을 눌렀는지 확인해야돼.
-            // console.log('콜리포인트', down.list);
-
             break;
         }
-        case 'square': {
-            
+        case 'pointerdelete': {
+            if(down.list.length <= 0) {break;}
+
             break;
         }
     }
@@ -39,10 +58,24 @@ export function Drag() {
         case 'pointer': {
             const rangeW = _VIEW.SpaceLine(_CTRL.move.offsetX - _CTRL.down.offsetX);
             const rangeH = _VIEW.SpaceLine(_CTRL.move.offsetY - _CTRL.down.offsetY);
-            _VIEW.x = down.view.x - rangeW;
-            _VIEW.y = down.view.y - rangeH;
-            _MNGR.render.Draw();
+               
 
+            if(down.list.length <= 0) {
+                _VIEW.x = down.view.x - rangeW;
+                _VIEW.y = down.view.y - rangeH;
+            }
+            else {
+                const diagram = down.list[down.list.length-1];
+                if (diagram instanceof Diagrams.Class.Line) {
+                }
+                else if(diagram instanceof Diagrams.Class.Square) {
+                    diagram.x = down.dia.x + rangeW;
+                    diagram.y = down.dia.y + rangeH;
+                }
+                else if(diagram instanceof Diagrams.Class.Point) {
+                }
+            }
+            _MNGR.render.Draw();
             // diagram 을 끌고 있을 경우 _MNGR.diagram.Update() 하지말고, 좌표만 저장해주기
             break;
         }
@@ -76,10 +109,18 @@ export function Hover() {
     // this.hover.offsetX = offsetX;
     // this.hover.offsetY = offsetY;
     // _TRAN.collision.hover.Hover();
+
+   
+
+
     switch(_REMO.selected) {
         case 'pointer': {
             // 커서 다이어그램 콜리전체크. 모서리(크기변경모양), 몸통(보더)
+            // _LOOP.Command('collision', 'hover', _MNGR.loop.collision.Hover);
+            // [Collision] 
+            // 이걸 effect 만 새로 그리게? 불가능하지
             _LOOP.Command('collision', 'hover', _MNGR.loop.collision.Hover);
+            _MNGR.render.Draw();
             break;
         }
         case 'square': {
@@ -107,6 +148,13 @@ export function Up() {
     const h = Math.abs(upY - downY);
     
     switch(_REMO.selected) {
+        case 'pointer':
+            const diagram = down.list[down.list.length-1];
+            if(down.list.length > 0) {
+                _MNGR.diagram.Update(diagram);
+            }
+            _MNGR.render.Draw();
+            break;
         case 'square': {
             const instance = new Diagrams.Class.Square({
                 square: {x, y, w, h}
@@ -118,7 +166,7 @@ export function Up() {
     }
 }
 
-export function Click() {
+export async function Click() {
     // const downX = _VIEW.SpaceX(_CTRL.down.offsetX);
     // const downY = _VIEW.SpaceY(_CTRL.down.offsetY);
     const upX   = _VIEW.SpaceX(_CTRL.up.offsetX);
@@ -128,6 +176,9 @@ export function Click() {
     // const y = Math.min(downY, upX);
     // const w = Math.abs(upX - downX);
     // const h = Math.abs(upY - downY);
+
+
+
     
     switch(_REMO.selected) {
         case 'square': {
@@ -139,7 +190,13 @@ export function Click() {
             break;
         }
         case 'pointerdelete': {
-
+            if(down.list.length > 0) {
+                const diagram = down.list[down.list.length-1];
+                console.log(diagram)
+                await _MNGR.diagram.Delete(diagram);
+                _MNGR.render.Draw();
+                
+            }
             break;
         }
     }

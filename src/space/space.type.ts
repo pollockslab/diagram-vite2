@@ -1,8 +1,10 @@
 import * as DiagramsType from '@/diagrams/diagrams.type'
 
-export interface Children {
-    none    : DiagramsType.Instance[],
-    line    : DiagramsType.Instance[],
-    square  : DiagramsType.Instance[],
-    point   : DiagramsType.Instance[],
-};
+
+export type LayerName = 'Axis'|'Line'|'Square'|'Point';
+export interface Layer {
+    Axis  : DiagramsType.Instance[],
+    Line  : DiagramsType.Instance[],
+    Square: DiagramsType.Instance[],
+    Point : DiagramsType.Instance[],
+}

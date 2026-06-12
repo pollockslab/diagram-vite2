@@ -1,4 +1,4 @@
-import { IndexedDB } from "@/engines/indexeddb/indexeddb";
+import { IndexedDB } from "../engines/indexeddb/indexeddb";
 import { Schema } from './SCHEMA'
 
 

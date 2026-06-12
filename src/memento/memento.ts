@@ -1,12 +1,11 @@
 import { _MNGR } from '@/main'
-
 import * as MementoType     from './memento.type'
 
-// 현재 상태를 저장
-// 비포니, 애프터니 저장할 필요 없는게, 다이어그램 상태는 변경됐어.
-// 그래서 그 상태에서 undo 를 하면 undo 스택 마지막을 now 로 올리고,
-// before 로 다시 만들 뿐이야. 현재가 before가 된걸 메모리로 가지고 있을
-// 필요가 없다. 커맨드ID도 diagram-insert, space-move 정도 
+/**
+ * [Class] Memento
+ * @description 작업정보를 실시간으로 저장하고, 
+ *  필요 시 복원하는 기능을 하는 클래스. (Ctrl+Z, Ctrl+Y 기능)
+ */
 export class Memento {
     history: MementoType.Memento[] = [];
     nowOrder = -1;
@@ -22,8 +21,8 @@ export class Memento {
         history: MementoType.Memento[],
         nowOrder : number
     }) {
-        this.history = args.history;
-        this.nowOrder  = args.nowOrder;
+        this.history = args.history ?? [];
+        this.nowOrder  = args.nowOrder ?? -1;
     }
  
     /**
@@ -42,9 +41,10 @@ export class Memento {
      */
     Exec(command: MementoType.Command, list: MementoType.work[]) {
 
+        console.log(list)
         // [Now] 미래 시점으로 1 증가
         this.nowOrder++;
-
+        
         // [Redo] 미래 데이터 제거
         this.history.splice(this.nowOrder);
         
@@ -78,16 +78,16 @@ export class Memento {
     }
 
     // [Commit] Now 데이터를 after -> before 로 실행.
-    async Before() {
+    private async Before() {
         const now = this.history[this.nowOrder];
-
+        console.log(now)
         switch(now.command) {
             case 'diagram':
                 for(const work of now.list) {
                     
                     if(work.after !== null && work.before === null) {
                         // [Delete] 다이어그램 삭제
-                        await _MNGR.diagram.Delete(work.after, {isMementoPush: false});
+                        await _MNGR.diagram.DeleteBySerialize(work.after, {isMementoPush: false});
                     }
                     else if(work.after === null && work.before !== null) {
                         // [Insert] 다이어그램 생성
@@ -95,27 +95,27 @@ export class Memento {
                     }
                     else if(work.after !== null && work.before !== null) {
                         // [Update] 다이어그램 수정
-                        await _MNGR.diagram.Update(work.before, {isMementoPush: false});
+                        await _MNGR.diagram.UpdateBySerialize(work.before, {isMementoPush: false});
                     }
                 }
                 break;
             case 'space-move':
                 if(now.list.length <= 0) {break;}
                 
-                const work = now.list[0];
+                // const work = now.list[0];
 
-                // [Validaion] 이동할 다이어그램 존재 확인
-                if(work.after === null || work.before === null) {break;}
+                // // [Validaion] 이동할 다이어그램 존재 확인
+                // if(work.after === null || work.before === null) {break;}
 
-                // [Space] 맵 이동
-                await _MNGR.space.Move(work.before);
+                // // [Space] 맵 이동
+                // await _MNGR.space.Move(work.before);
 
                 break;
         }
     }
 
-     // [Commit] Now 데이터를 before -> after 로 실행.
-    async After() {
+    // [Commit] Now 데이터를 before -> after 로 실행.
+    private async After() {
         const now = this.history[this.nowOrder];
 
         switch(now.command) {
@@ -124,7 +124,7 @@ export class Memento {
                     
                     if(work.before !== null && work.after === null) {
                         // [Delete] 다이어그램 삭제
-                        await _MNGR.diagram.Delete(work.before, {isMementoPush: false});
+                        await _MNGR.diagram.DeleteBySerialize(work.before, {isMementoPush: false});
                     }
                     else if(work.before === null && work.after !== null) {
                         // [Insert] 다이어그램 생성
@@ -132,20 +132,20 @@ export class Memento {
                     }
                     else if(work.before !== null && work.after !== null) {
                         // [Update] 다이어그램 수정
-                        await _MNGR.diagram.Update(work.after, {isMementoPush: false});
+                        await _MNGR.diagram.UpdateBySerialize(work.after, {isMementoPush: false});
                     }
                 }
                 break;
             case 'space-move':
                 if(now.list.length <= 0) {break;}
                 
-                const work = now.list[0];
+                // const work = now.list[0];
 
-                // [Validaion] 이동할 다이어그램 존재 확인
-                if(work.after === null || work.before === null) {break;}
+                // // [Validaion] 이동할 다이어그램 존재 확인
+                // if(work.after === null || work.before === null) {break;}
 
-                // [Space] 맵 이동
-                await _MNGR.space.Move(work.after);
+                // // [Space] 맵 이동
+                // await _MNGR.space.Move(work.after);
 
                 break;
         }
