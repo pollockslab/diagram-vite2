@@ -1,21 +1,44 @@
+import { _VIEW, _CTRL, _LOOP, _MNGR } from '@/main'
+import * as Diagrams from '@/diagrams/diagrams'
 
+export async function Down() {
+    console.log('hi!')
+}
 
-export function Down() {
+export async function Drag() {
+    _LOOP.Command('render', 'drag-square', _MNGR.loop.render.Drag);
+}
+
+export async function Hover() {
 
 }
 
-export function Drag() {
+export async function Up() {
+    const downX = _VIEW.SpaceX(_CTRL.down.offsetX);
+    const downY = _VIEW.SpaceY(_CTRL.down.offsetY);
+    const upX   = _VIEW.SpaceX(_CTRL.up.offsetX);
+    const upY   = _VIEW.SpaceY(_CTRL.up.offsetY);
 
+    const x = Math.min(downX, upX);
+    const y = Math.min(downY, upY);
+    const w = Math.abs(upX - downX);
+    const h = Math.abs(upY - downY);
+
+
+    const instance = new Diagrams.Class.Square({
+        square: {x, y, w, h}
+    });
+    _MNGR.diagram.Insert(instance.serialize);
+    _MNGR.render.Draw();
 }
 
-export function Hover() {
+export async function Click() {
+    const upX   = _VIEW.SpaceX(_CTRL.up.offsetX);
+    const upY   = _VIEW.SpaceY(_CTRL.up.offsetY);
 
-}
-
-export function Up() {
-
-}
-
-export function Click() {
-
+    const instance = new Diagrams.Class.Square({
+        square: {x: upX, y: upY}
+    });
+    _MNGR.diagram.Insert(instance.serialize);
+    _MNGR.render.Draw();
 }
