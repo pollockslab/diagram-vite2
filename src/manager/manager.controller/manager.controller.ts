@@ -42,6 +42,7 @@ export async function Down() {
 }
 
 export async function Drag() {
+    console.log('감자')
     await RemoconButtons[_REMO.selected]?.Drag?.();    
 }
 
