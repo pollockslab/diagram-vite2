@@ -14,6 +14,7 @@ export const down = {
     view: {
         x: 0,
         y: 0,
+        
     },
     dia: {
         x: 0, 
