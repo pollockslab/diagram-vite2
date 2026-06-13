@@ -5,4 +5,5 @@ export interface ControllerAction {
     Hover?  : () => Promise<void>;
     Up?     : () => Promise<void>;
     Click?  : () => Promise<void>;
+    
 }
