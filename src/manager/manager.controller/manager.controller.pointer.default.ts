@@ -67,12 +67,11 @@ export async function Click() {
 }
 
 export async function Dblclick() {
-    console.log('여기')
     const down = _MNGR.controller.down;
     
     if(down.list.length > 0) {
         const diagram = down.list[down.list.length-1];
-        _MNGR.editor.Open(diagram);
+        _EDIT.Open(diagram);
     }
 
 }

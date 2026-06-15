@@ -1,0 +1,57 @@
+
+#editor-square > div {
+    position: relative;
+    width: 500px;
+    height: 100px;
+    background-color: hotpink;
+    padding: 10px;
+}
+
+
+
+/* [ColorPicker] */
+#editor-square color-picker {
+    display: inline-block;
+    position: relative;
+    width: 150px;
+    height: 200px;
+    border: 1px solid red;
+    border-radius: 10px;
+
+    box-sizing: border-box;
+    background-color: antiquewhite;
+}
+
+#editor-square color-slot {
+    display: inline-block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    margin: 1px;
+    box-sizing: border-box;
+}
+#editor-square color-slot:hover {
+    border: 1px solid white;
+}
+
+/* [FontSizePicker] */
+#editor-square fontsize-picker {
+    position: relative;
+            display: inline-block;
+            font-family: sans-serif;
+}
+.size-input {
+            width: 90px;
+            padding: 6px 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .size-input:focus {
+            border-color: #007fff;
+            box-shadow: 0 0 0 2px rgba(0, 127, 255, 0.2);
+        }

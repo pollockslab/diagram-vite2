@@ -3,7 +3,7 @@ import { _MNGR } from '@/main';
 export class EditorUI {
     constructor(args: {parentNode: HTMLElement}) {
         this.AddInput(args.parentNode, '저장폴더 설정: ', 'text', '경로찾기', () => {
-            _MNGR.storage.restoreDirectory();// 스토리지 갱신까지 됨
+            // _MNGR.storage.restoreDirectory();// 스토리지 갱신까지 됨
         });
     }
 

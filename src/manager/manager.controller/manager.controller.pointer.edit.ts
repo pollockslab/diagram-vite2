@@ -17,15 +17,8 @@ export async function Up() {
 
 export async function Click() {
     const down = _MNGR.controller.down;
-    // 배경클릭이면 부모로 한단계 오르기
-    // 사각형 클릭이면 사각형 들어가자
-    // console.log(down);
-    if(Date.now()-t1 < 200) {
-        console.log('더블클릭');
+    if(down.list.length > 0) {
+        const diagram = down.list[down.list.length-1];
+        _EDIT.Open(diagram);
     }
-    t1 = Date.now();
-    // _EDIT.Open();
 }
-// Dblclick() {
-// }
-// 우클릭은

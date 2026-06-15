@@ -30,7 +30,7 @@ export class ControllerKeyboard {
                         _REMO.selected = 'add-square';
                         break;
                     case 'x': // 삭제버튼
-                        _REMO.selected = 'pointer-remove';
+                        _REMO.selected = 'pointer-delete';
                         break;
                 }
             }
