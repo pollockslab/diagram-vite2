@@ -44,7 +44,7 @@ export class EventPan {
     private zoom = { 
         distance: 0,
         size: {
-            mouse: 0.005, // 맥북 트랙패드 휠 제스쳐 시(두 손가락 아래로 드래그) 마우스 이벤트로 동작. 
+            mouse: 0.002, // 맥북 트랙패드 휠 제스쳐 시(두 손가락 아래로 드래그) 마우스 이벤트로 동작. 
             touch: 0.002,
         },
     };

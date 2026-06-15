@@ -1,8 +1,6 @@
 import { _LOOP, _MNGR } from '@/main'
 
 export async function Down() {
-    console.log('hi!')
-    
 }
 
 export async function Drag() {
@@ -16,9 +14,9 @@ export async function Hover() {
 }
 
 export async function Up() {
-    console.log('up')
+    
 }
 
 export async function Click() {
-    console.log('d click!')
+   
 }

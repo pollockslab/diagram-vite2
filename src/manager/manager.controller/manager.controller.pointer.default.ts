@@ -1,7 +1,9 @@
-import { _CTRL, _VIEW, _LOOP, _MNGR } from '@/main'
+import { _CTRL, _VIEW, _LOOP, _MNGR, _EDIT } from '@/main'
 import * as Diagrams from '@/diagrams/diagrams'
 
-
+const click = {
+    timeStamp: 0
+};
 
 export async function Down() {
     const down = _MNGR.controller.down;
@@ -62,5 +64,15 @@ export async function Up() {
 }
 
 export async function Click() {
-    console.log('p click!')
+}
+
+export async function Dblclick() {
+    console.log('여기')
+    const down = _MNGR.controller.down;
+    
+    if(down.list.length > 0) {
+        const diagram = down.list[down.list.length-1];
+        _MNGR.editor.Open(diagram);
+    }
+
 }

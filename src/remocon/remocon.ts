@@ -21,7 +21,7 @@ export class Remocon {
         this.buttons = new RemoconButtons({parentNode: this.panel});
         this.reset   = new RemoconReset({parentNode: args.parentNode , panel: this.panel});
 
-        this.selected = 'pointer';
+        this.selected = 'pointer-default';
     }
 
     get selected() {

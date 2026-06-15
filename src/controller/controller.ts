@@ -57,13 +57,21 @@ export class Controller {
     }
     
     protected PanEnd = (offsetX: number, offsetY: number, timeStamp: number): void => {
-        this.up = {offsetX, offsetY, timeStamp};
+        
         const rangeX = Math.abs(offsetX - this.down.offsetX);
         const rangeY = Math.abs(offsetY - this.down.offsetY);
         const isClick = 
             (timeStamp-this.down.timeStamp < 200) 
             && (rangeX < 4 && rangeY < 4);
-        if(isClick) {
+        const isDblclick = 
+            (timeStamp-this.up.timeStamp < 200) 
+            && isClick;
+
+        this.up = {offsetX, offsetY, timeStamp};
+        if(isDblclick) {
+            _MNGR.controller.Dblclick();
+        }
+        else if(isClick) {
             _MNGR.controller.Click();
         }
         else {
@@ -71,7 +79,6 @@ export class Controller {
         }
         this.down = this.Reset();
         this.move = this.Reset();
-        this.up   = this.Reset();
     }
 
     protected PanCancel = (): void => {

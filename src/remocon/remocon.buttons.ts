@@ -35,16 +35,16 @@ export class RemoconButtons {
         this.panel = args.parentNode;
 
         this.AddText('Pointer');
-        this.selected = this.AddButton('pointer', 'passive',"포인터", imgPointer);
-        this.AddButton('multiselect', 'passive',"다중선택", imgMultiSelect);
-        this.AddButton('editortext', 'passive',"텍스트편집", imgEditorText);
-        this.AddButton('space', 'passive',"스페이스", imgPointerSpace);
-        this.AddButton('pointerdelete', 'passive',"도형삭제", imgRemove);
+        this.selected = this.AddButton('pointer-default', 'passive',"포인터", imgPointer);
+        this.AddButton('pointer-multiselect', 'passive',"다중선택", imgMultiSelect);
+        this.AddButton('pointer-edit', 'passive',"텍스트편집", imgEditorText);
+        this.AddButton('pointer-space', 'passive',"스페이스", imgPointerSpace);
+        this.AddButton('pointer-delete', 'passive',"도형삭제", imgRemove);
 
         this.AddLine();
         this.AddText('Add Diagram');
-        this.AddButton('square', 'passive',"사각형 추가", imgSquare);
-        this.AddButton('picture', 'passive',"그림 추가", imgPicture);
+        this.AddButton('add-square', 'passive',"사각형 추가", imgSquare);
+        this.AddButton('add-picture', 'passive',"그림 추가", imgPicture);
 
         this.AddLine();
         this.AddText('Files & System');
@@ -130,7 +130,7 @@ export class RemoconButtons {
         let now = this.buttons[id];
 
         if(now.type !== 'passive') {
-            now = this.buttons['pointer'];
+            now = this.buttons['pointer-default'];
         }
 
         old?.button.classList.remove('button-select');

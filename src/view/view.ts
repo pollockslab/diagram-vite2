@@ -11,7 +11,7 @@ export class View {
     pos = {
         zoom: {
             size: 1,
-            min : 0.5, 
+            min : 0.1, 
             max : 2,
         },
         offset: {

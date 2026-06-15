@@ -7,6 +7,7 @@ import * as ManagerDiagram      from './manager.diagram'
 import * as ManagerSettings     from './manager.settings'
 import * as ManagerSpace        from './manager.space'
 import * as ManagerMemento      from './manager.memento'
+import * as ManagerEditor       from './manager.editor'
 
 
 // 실시간으로 프로그램 상태를 확인
@@ -20,6 +21,7 @@ export class Manager {
     settings    = ManagerSettings;
     space       = ManagerSpace;
     memento     = ManagerMemento;
+    editor      = ManagerEditor;
 
     constructor() {}
 }

@@ -15,6 +15,8 @@ import { Tester }       from '@/tester/tester'
 
 import { Manager }      from '@/manager/manager'
 
+import { Editor }       from '@/editor/editor'
+
 
 // [MainFrame] 웹다이어그램 모듈을 포함하는 공간.
 const divMainFrame = document.createElement('div');
@@ -32,12 +34,14 @@ export const _VIEW = new View({parentNode: divMainFrame});
 export const _CTRL = new Controller({parentNode: divMainFrame});
 export const _REMO = new Remocon({parentNode: divMainFrame});
 export const _SETT = new Settings({parentNode: divMainFrame});
+export const _EDIT = new Editor({parentNode: divMainFrame});
 
 export const _LOOP = new Loop();
 export const _METO = new Memento();
 export const _TEST = new Tester();
 
 export const _MNGR = new Manager();
+
 
 
 // [Start] 프로그램 실행함수

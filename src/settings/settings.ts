@@ -28,12 +28,11 @@ export class Settings {
         this.popup = new EnginesPopup({parentNode: args.parentNode});    
         this.popup.title.innerText = '환경설정';
         
-        this.ui = new SettingsUI({parentNode: this.popup.panel})
+        this.ui = new SettingsUI({parentNode: this.popup.panel});
         // this.popup.Open();
     }
 
     get serialize(): SettingsType.Settings {
-
         return {
             id: this.id,
             openTabId: this.tab.id,
