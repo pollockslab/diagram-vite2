@@ -40,4 +40,8 @@ export class ColorPicker {
             console.log('클릭');
         });
     }
+
+    // 메인에서는 글자이 
+    // <font color='rgb(0,0,100)' size='15px' >글문장abcd123</font> 
+    // <font 
 }

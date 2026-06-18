@@ -115,6 +115,9 @@ export class EventPan {
                 const deltaY = this.zoom.distance - dist;
                 this.zoom.distance = dist;
                 this.callers.zoom?.(-deltaY * this.zoom.size.touch);
+
+                // 터치 환경에서(갤럭시 내 폰) 마지막 줌이 up 보다 나중에 발동하는지, 두 손을 다 떼면 마지막 확장길이만큼,
+                // 마지막에 뗀 손쪽으로 점프함
                 break;
         }
     }
