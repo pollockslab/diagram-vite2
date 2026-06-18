@@ -39,7 +39,7 @@ export class ColorPickerList {
 
     }
 
-    Add(args: {thema?: {title: string, color: string}, colorList: string[]}) {
+    private Add(args: {thema?: {title: string, color: string}, colorList: string[]}) {
         // [Title]
 
 

@@ -33,5 +33,10 @@ colorpicker-list > palette > palette-slot {
     width: 20px;
     height: 20px;
     line-height: 20px;
+    box-sizing: border-box;
+}
+
+colorpicker-list > palette > palette-slot:hover {
+    border: 2px solid white;
 }
 
