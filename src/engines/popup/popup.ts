@@ -27,7 +27,7 @@ export class Popup {
 
         // [Event]
         this.background.addEventListener('click', () => {
-            // this.Close();
+            this.Close();
         });
         btnClose.addEventListener('click', () => {
             this.Close();

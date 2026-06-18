@@ -1,4 +1,7 @@
 
+
+import { Engines } from '@/engines/engines'
+
 import './main.css'
 import { Dpr }          from '@/settings/settings'
 import { Storage }      from '@/storage/storage'
@@ -17,6 +20,7 @@ import { Manager }      from '@/manager/manager'
 
 import { Editor }       from '@/editor/editor'
 
+import { ColorPicker } from '@/engines/colorpicker/colorpicker';
 
 // [MainFrame] 웹다이어그램 모듈을 포함하는 공간.
 const divMainFrame = document.createElement('div');
@@ -76,6 +80,16 @@ export async function Init() {
 
     // 5. Draw    
     _MNGR.render.Draw();
+
+
+    // [Example]
+    const co1 = new ColorPicker({
+        parentNode: document.body,
+        popupNode: document.body,
+        style: 'co1',
+    });     
+    console.log(co1);
+    
 };
 Init();
 
