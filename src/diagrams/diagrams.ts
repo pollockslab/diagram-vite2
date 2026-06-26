@@ -43,4 +43,9 @@ export const Class = {
 } as const;
 
 
-export const Edge = [null,'e','w','s','n','es','en','ws','wn'] as const;
+export const Edge = [null,
+    'e','w','s','n', // 동, 서, 남, 북
+    'es','en','ws','wn', // 동남, 동북, 서남, 서북
+    'ns','ew', // 남서, 동서
+    'nesw','nwse' // 북동-남서, 북서-남동
+] as const;

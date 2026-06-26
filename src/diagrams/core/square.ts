@@ -1,7 +1,7 @@
-import { _DPR } from '@/main'
+import { _DPR, _SNAP } from '@/main'
 import * as DiagramsType from '@/diagrams/diagrams.type'
 import { Axis } from '@/diagrams/core/axis'
-import { Capture } from './square.capture'
+
 
 export class Square extends Axis implements DiagramsType.serialize.core.Square {
     square = {
@@ -9,17 +9,11 @@ export class Square extends Axis implements DiagramsType.serialize.core.Square {
         y: 0 as number,
         w: 100 as number,
         h: 100 as number,
-        // children
     };
-    capture = new Capture(this);
+    imageBitmap: null | ImageBitmap = null;
 
-    constructor(args: Partial<any> = {}) {
-        super();
-        this.SetData(args);
-        this.axis.type = 'Square';
-        this.capture.InitCapture(0);
-        this.Snapshot();
-    }
+    constructor() {super();}
+
     get serialize(): DiagramsType.serialize.core.Square {
         return {
             ...super.serialize,
@@ -79,9 +73,13 @@ export class Square extends Axis implements DiagramsType.serialize.core.Square {
             this.square.h = size;
         }
     }
+
+    Init() {
+        this.Snapshot();
+    }
     
-    Snapshot() {
-        const ctx = this.capture.ctx;
+    async Snapshot() {
+        const ctx = _SNAP.ctx;
         ctx.clearRect(0, 0, this.w, this.h);
 
         ctx.save();
@@ -92,17 +90,20 @@ export class Square extends Axis implements DiagramsType.serialize.core.Square {
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
 
-        // ctx.fillRect(0, 0, this.w-20, this.h-20);
-
-        // [Main]
+        // [Panel]
         ctx.fillStyle = 'orange';
         ctx.fillRect(4, 4, this.w-8, this.h-8);
         ctx.restore();
+
+        // [Copy]
+        this.imageBitmap = await _SNAP.CreateBitmap(0, 0, this.w*_DPR.value, this.h*_DPR.value);
     }
     
     Draw(ctx: CanvasRenderingContext2D) {
+        if(!this.imageBitmap) {return;}
+        
         ctx.drawImage(
-            this.capture.cav,
+            this.imageBitmap,
             0, 
             0, 
             this.w*_DPR.value, 
@@ -112,7 +113,6 @@ export class Square extends Axis implements DiagramsType.serialize.core.Square {
             this.w, 
             this.h,
         );
-
-        ctx.restore();
     }
 }
+

@@ -32,12 +32,12 @@ wd-popup > popup-panel {
 
     /* 3. 글자 */
     /* 4. 배경 */
-    /* background-color: rgb(75, 75, 75); */
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
+    
     /* 5. 효과 */
 }
 
 wd-popup > popup-panel > button {
     float: right;
-    margin: 4px;
+    margin-left: 4px;
 }

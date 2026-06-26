@@ -9,13 +9,8 @@ export class Line extends Axis implements DiagramsType.serialize.core.Line {
         x2: 0 as number,
         y2: 0 as number,
     };
-
-    constructor(args: Partial<any> = {}) 
-    {
-        super();
-        this.SetData(args);
-        this.axis.type = 'Line';
-    }
+    
+    constructor() {super();}
 
     get serialize(): DiagramsType.serialize.core.Line {
         return {

@@ -3,12 +3,13 @@ import * as Diagrams from '@/diagrams/diagrams'
 import * as DiagramsType from '@/diagrams/diagrams.type'
 
 import { EditorSquare } from './editor.square/editor.square'
-
+import { EditorConvertor } from './editor.convertor/editor.convertor'
 
 export class Editor {
     ui: {
         square: EditorSquare,
     };   
+    convertor = new EditorConvertor();
 
     constructor(args: {parentNode: HTMLElement}) {
         this.ui = {

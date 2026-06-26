@@ -3,7 +3,7 @@ import { _MNGR, _METO, _REMO } from '@/main'
 export class ControllerKeyboard {
     constructor() {
         window.addEventListener('keyup', (e) => {
-
+            if(e.target !== document.body) {return;}
             // console.log(e.key, e.ctrlKey);
             
             if(e.ctrlKey) {

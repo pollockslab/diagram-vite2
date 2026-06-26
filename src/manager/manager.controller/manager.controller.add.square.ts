@@ -2,8 +2,6 @@ import { _VIEW, _CTRL, _LOOP, _MNGR } from '@/main'
 import * as Diagrams from '@/diagrams/diagrams'
 
 export async function Down() {
-    console.log('hi!')
-    
 }
 
 export async function Drag() {
@@ -26,8 +24,12 @@ export async function Up() {
     const h = Math.abs(upY - downY);
 
 
-    const instance = new Diagrams.Class.Square({
-        square: {x, y, w, h}
+    // const instance = Diagrams.Class.Square.create({
+    //     square: {x, y, w, h}
+    // });
+    const instance = Diagrams.Class.Memo.create({
+        square: {x, y, w, h},
+        memo: {backgroundColor: 'green', text: '그린'},
     });
     _MNGR.diagram.Insert(instance.serialize);
     _MNGR.render.Draw();
@@ -37,9 +39,14 @@ export async function Click() {
     const upX   = _VIEW.SpaceX(_CTRL.up.offsetX);
     const upY   = _VIEW.SpaceY(_CTRL.up.offsetY);
 
-    const instance = new Diagrams.Class.Square({
-        square: {x: upX, y: upY}
+    // const instance = new Diagrams.Class.Square({
+    //     square: {x: upX, y: upY}
+    // });
+    const instance = Diagrams.Class.Memo.create({
+        square: {x: upX, y: upY},
+        memo: {backgroundColor: 'green', text: '그린'},
     });
+
     _MNGR.diagram.Insert(instance.serialize);
     _MNGR.render.Draw();
 }

@@ -18,16 +18,40 @@ export class ElementCustom {
     static create(args: {
         tag: string, 
         parentElement: HTMLElement,
+        id? : string,
         style? : string,
+        textContent? : string,
+        innerText? : string,
+        innerHTML? : string,
+        type? : string,
+        value? : string,
     }): HTMLElement {
 
         const element = document.createElement(args.tag);
-        if(args.style !== undefined) {
+        if(args.id) {
+            element.id = args.id;
+        }
+        if(args.style) {
             // [Split] 빈공간을 기준으로 배열로 나누어 각각 스타일 적용.
             const classList = args.style.split(' ').filter(Boolean);
             if(classList.length > 0) {
                 element.classList.add(...classList);
             }
+        }
+        if(args.textContent) {
+            element.textContent = args.textContent;
+        }
+        if(args.innerText) {
+            element.innerText = args.innerText;
+        }
+        if(args.innerHTML) {
+            element.innerHTML = args.innerHTML;
+        }
+        if(args.type && element instanceof HTMLInputElement) {
+            element.type = args.type;
+        }
+        if(args.value && element instanceof HTMLInputElement) {
+            element.value = args.value;
         }
         args.parentElement.appendChild(element);
         return element;

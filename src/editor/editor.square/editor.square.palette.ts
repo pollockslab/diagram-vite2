@@ -1,23 +1,34 @@
 import { ElementCustom as E} from '@/engines/element.custom'
 import { ColorPicker } from '@/engines/colorpicker/colorpicker';
 import { Selectbox } from '@/engines/selectbox/selectbox'
+import * as COLOR_LIST from '../COLOR_LIST'
 
 
 export class EditorSquarePalette {
 
     backgroundColor: ColorPicker;
     fontSize: Selectbox;
+    color: ColorPicker;
+    bold: HTMLElement;
+    italic: HTMLElement;
 
     constructor(args: {parentNode: HTMLElement}) {
-        const div = E.create({tag: 'div', parentElement: args.parentNode});
-        // div.textContent = '[팔레트]';
-
+        const div = E.create({tag: 'square-palette', parentElement: args.parentNode});
+        
+        // [BackgroundColor]
+        E.create({'tag': 'a', parentElement: div, textContent: 'Back:'});
         this.backgroundColor = new ColorPicker({
             parentNode: div,
-            popupNode: args.parentNode,
-        });     
-        const a1 = E.create({'tag': 'a', parentElement: div});
-        a1.textContent = 'px:'
+            colorList: [...COLOR_LIST.rainbow.colorList, ...COLOR_LIST.pastel.colorList,],
+            callers: {
+                changed(color: string) {
+                    console.log(color);
+                }
+            }
+        });
+
+        // [FontSize]
+        E.create({'tag': 'a', parentElement: div, textContent: 'Size:'});
         this.fontSize = new Selectbox({
             parentNode: div,
             popupNode: args.parentNode,
@@ -41,30 +52,25 @@ export class EditorSquarePalette {
                 },
             }
         }); 
+
+        // [Color]
+        E.create({'tag': 'a', parentElement: div, textContent: 'Color:'});
+        this.color = new ColorPicker({
+            parentNode: div,
+            colorList: [...COLOR_LIST.rainbow.colorList, ...COLOR_LIST.pastel.colorList,],
+            callers: {
+                changed(color: string) {
+                    console.log(color);
+                }
+            }
+        });
+
+        // [Bold]
+        E.create({'tag': 'a', parentElement: div, textContent: 'Bold:'});
+        this.bold = E.create({'tag': 'input', type:'checkbox', parentElement: div});
+
+        // [Italic]
+        E.create({'tag': 'a', parentElement: div, textContent: 'Italic:'});
+        this.italic = E.create({'tag': 'input', type:'checkbox', parentElement: div});
     }
 }
-
-// // 픽커 팝업으로 띄워야되는데.
-// class ColorPicker {
-
-//     selected = 'black';
-//     div: HTMLElement;
-
-//     constructor(args: {parentNode: HTMLElement}) {
-//         this.div = E.create({tag: 'color-picker', parentElement: args.parentNode});
-//         ['black', 'white', 'red', 
-//          'orange', 'yellow', 'green', 
-//          'blue', 'navy', 'purple'].forEach((value) => {
-//             this.AddColor(value);
-//          });
-//     }
-
-//     AddColor(color: string) {
-//         const slot = E.create({tag: 'color-slot', parentElement: this.div});
-//         slot.style.backgroundColor = color;
-//         // slot.textContent = color;
-//         slot.addEventListener('click', (e) => {
-//             this.selected = color;
-//         });
-//     }
-// }

@@ -5,6 +5,30 @@ import * as DiagramsType from '@/diagrams/diagrams.type'
 
 
 /**
+ * [Function] Cover
+ * @description 다이어그램 데이터를 인스턴스로 변환(생성)합니다.
+ * @param serialize { axis: { type?: 'axis' | 'square' | 'point', ... } }
+ * @returns 생성된 다이어그램 인스턴스 또는 실패 시 undefined
+ */
+export function Cover(serialize: any): undefined | DiagramsType.Instance {
+    
+    // [New] 새 정보 생성. 
+    serialize.axis.id = serialize.axis.id ?? crypto.randomUUID(); // [UUID] 새 아이디 생성.
+    serialize.axis.type = serialize.axis.type ?? 'Axis';
+
+    try {
+        // [Instance] 다이어그램 생성
+        const typeClass = (Diagrams.Class as any)[serialize.axis.type];
+        const instance = typeClass.create(serialize);
+        return instance;
+    }
+    catch(error) {
+        console.error(`[Cover ERROR] 인스턴스 생성 실패: ${serialize.axis.type}`, error);
+        return undefined;
+    }
+}
+
+/**
  * (Ctrl + C) -> (Ctrl + V) 복사+붙여넣기때도 활용하기 위해 파라미터로 serialize 받아서 적용.
  * @param serialize 
  * @param options {
@@ -18,10 +42,11 @@ export async function Insert(
     // [New] 다이어그램 생성
     serialize.axis.parentId = _SPCE.id;
     serialize.axis.tabId = _SPCE.tabId;
+    serialize.axis.zIndex = Date.now();
     const diagram = Cover(serialize);
     if(!diagram) {return;}
     _SPCE.Insert(diagram);
-
+    console.log(diagram.serialize)
     try {
         // [DB] 스토리지 저장.
         await _STOR.Post('diagram-insert', diagram.serialize);
@@ -64,7 +89,7 @@ export async function Update(
         _SPCE.Delete(diagram);
         return;
     }
-    console.log('old', old)
+    
     // [Memento] 추가
     const isMementoPush = options.isMementoPush ?? true;
     if(isMementoPush) {
@@ -122,32 +147,4 @@ export async function DeleteBySerialize(
     if(diagram) {
         Delete(diagram, options);
     }
-}
-
-
-/**
- * [Function] Cover
- * @description 다이어그램 데이터를 인스턴스로 변환(생성)합니다.
- * @param serialize { axis: { type?: 'axis' | 'square' | 'point', ... } }
- * @returns 생성된 다이어그램 인스턴스 또는 실패 시 undefined
- */
-export function Cover(serialize: any): undefined | DiagramsType.Instance {
-    
-    // [New] 새 정보 생성. 
-    serialize.axis.id = crypto.randomUUID(); // [UUID] 새 아이디 생성.
-    serialize.axis.zIndex = Date.now();
-    serialize.axis.type = serialize.axis.type ?? 'Axis';
-
-    try {
-        // [Instance] 다이어그램 생성
-        const typeClass = (Diagrams.Class as any)[serialize.axis.type];
-        const instance = new typeClass(serialize);
-
-        return instance;
-    }
-    catch(error) {
-        console.error(`[Cover ERROR] 인스턴스 생성 실패: ${serialize.axis.type}`, error);
-        return undefined;
-    }
-    
 }

@@ -7,13 +7,8 @@ export class Point extends Axis implements DiagramsType.serialize.core.Point {
         x       : 0 as number,
         y       : 0 as number,
     };
-
-    constructor(args: Partial<any> = {}) 
-    {
-        super();
-        this.SetData(args);
-        this.axis.type = 'Point';
-    }
+    
+    constructor() {super();}
 
     get serialize(): DiagramsType.serialize.core.Point
     {

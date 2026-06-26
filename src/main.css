@@ -37,12 +37,6 @@ body {
   touch-action: none;
 }
 
-.co1 {
-  position: absolute;
-  top: 500px;
-  left: 200px;
-}
-
 #tedi {
     position: absolute;
     left: 0px;

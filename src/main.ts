@@ -4,6 +4,7 @@ import { Engines } from '@/engines/engines'
 
 import './main.css'
 import { Dpr }          from '@/settings/settings'
+import { Snapshot }     from './snapshot/snapshot'
 import { Storage }      from '@/storage/storage'
 import { Space }        from '@/space/space'
 
@@ -20,7 +21,6 @@ import { Manager }      from '@/manager/manager'
 
 import { Editor }       from '@/editor/editor'
 
-import { ColorPicker } from '@/engines/colorpicker/colorpicker';
 
 // [MainFrame] 웹다이어그램 모듈을 포함하는 공간.
 const divMainFrame = document.createElement('div');
@@ -30,6 +30,7 @@ document.body.appendChild(divMainFrame);
 
 // [Tool] 싱글톤 모듈 방식. 기능별로 하나의 객체만 생성. (예: _STOR 는 DB저장소 역할.)
 export const _DPR  = new Dpr();
+export const _SNAP = new Snapshot();
 export const _STOR = new Storage();
 export const _SPCE = new Space();
 
@@ -80,16 +81,6 @@ export async function Init() {
 
     // 5. Draw    
     _MNGR.render.Draw();
-
-
-    // [Example]
-    const co1 = new ColorPicker({
-        parentNode: document.body,
-        popupNode: document.body,
-        style: 'co1',
-    });     
-    console.log(co1);
-    
 };
 Init();
 

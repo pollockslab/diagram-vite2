@@ -1,23 +1,20 @@
-import { ColorPickerList } from './colorpicker.list';
+import { ColorPickerDatalist } from './colorpicker.datalist';
 import './colorpicker.css'
 
 export class ColorPicker {
     parentNode: HTMLElement;
     cover: HTMLElement;
-    input: HTMLElement;
-    colorList: ColorPickerList;
-    private callers: any;
+    input: HTMLInputElement;
 
     constructor(args: {
         parentNode: HTMLElement,
-        popupNode: HTMLElement,
         style?: string,
+        colorList?: string[],
         callers?: {
-            changed?: (key: string) => void, 
+            changed?: (color: string) => void, 
         },
     }) {
         this.parentNode = args.parentNode;
-        this.callers = args.callers;
 
         // [Cover]
         this.cover = document.createElement('wd-colorpicker');
@@ -26,22 +23,28 @@ export class ColorPicker {
         }
 
         // [Input]
-        this.input = document.createElement('colorpicker-input');
+        this.input = document.createElement('input');
+        this.input.type = 'color';
         this.cover.appendChild(this.input);
 
-        // [ColorList]
-        this.colorList = new ColorPickerList({popupNode: args.popupNode})
+        // [Datalist]
+        if(args.colorList) {
+            new ColorPickerDatalist({
+                parentNode: this.parentNode,
+                inputNode: this.input,
+                colorList: args.colorList
+            });
+        }
 
         // [Cover]
         this.parentNode.appendChild(this.cover);
 
         // [Event]
-        this.input.addEventListener('click', (e) => {
-            console.log('클릭');
+        this.input.addEventListener('change', () => {
+            const color = this.input.value;
+            if(color) {
+                args.callers?.changed?.(color);
+            }
         });
     }
-
-    // 메인에서는 글자이 
-    // <font color='rgb(0,0,100)' size='15px' >글문장abcd123</font> 
-    // <font 
 }

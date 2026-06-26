@@ -1,4 +1,4 @@
-import * as Diagrams from '@/diagrams/diagrams'
+import { _MNGR } from '@/main'
 import * as DiagramsType from '@/diagrams/diagrams.type'
 import { SpaceStore } from './space.store'
 import { SpaceGrid } from './space.grid'
@@ -29,9 +29,10 @@ export class Space {
         
         // [Diagrams] 다이어그램 생성
         const diagrams = [];
-        for(const serialize of serializeList)  {
-            const typeClass = (Diagrams.Class as any)[serialize.axis.type];
-            const instance = new typeClass(serialize);
+        for(const serialize of serializeList) {
+            const instance = _MNGR.diagram.Cover(serialize);
+            if(!instance) {continue;}
+            // console.log(instance)
             diagrams.push(instance);
         }
 

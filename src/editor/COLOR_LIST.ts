@@ -3,15 +3,15 @@
 export const rainbow = {
     thema: {title: 'Rainbow', color: 'red'},
     colorList: [
-        'red',
-        'orange',
-        'yellow',
-        'green',
-        'blue',
-        'navy',
-        'purple',
-        'black',
-        'white'
+        '#000000', // black
+        '#FFFFFF', // white
+        '#FF0000', // red
+        '#FFA500', // orange
+        '#FFFF00', // yellow
+        '#008000', // green
+        '#0000FF', // blue
+        '#000080', // navy
+        '#800080'  // purple
     ]
 };
 

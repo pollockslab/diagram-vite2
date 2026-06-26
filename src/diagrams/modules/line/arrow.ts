@@ -8,12 +8,8 @@ export class Arrow extends Line implements DiagramsType.serialize.modules.line.A
         backgroundColor : 'orange',
         text            : '',
     };
-
-    constructor(args: Partial<any> = {}) {
-        super();
-        this.SetData(args);
-        this.axis.type = 'Arrow';
-    }
+    
+    constructor() {super();}
 
     get serialize(): DiagramsType.serialize.modules.line.Arrow {
         return {

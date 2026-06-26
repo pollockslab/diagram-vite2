@@ -64,6 +64,7 @@ export async function Up() {
 }
 
 export async function Click() {
+    _MNGR.render.Draw();
 }
 
 export async function Dblclick() {

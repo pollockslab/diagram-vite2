@@ -9,11 +9,7 @@ export class Group extends Square implements DiagramsType.serialize.modules.squa
         text            : '',
     };
 
-    constructor(args: Partial<any> = {}) {
-        super();
-        this.SetData(args);
-        this.axis.type = 'Group';
-    }
+    constructor() {super();}
 
     get serialize(): DiagramsType.serialize.modules.square.Group {
         return {

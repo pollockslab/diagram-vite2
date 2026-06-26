@@ -12,14 +12,22 @@ export class EditorSquare {
     parentNode: HTMLElement;
     popup: EnginesPopup;
     palette: EditorSquarePalette;
-    textarea: EditorSquareTextarea  
+    textarea: EditorSquareTextarea;
+    diagram: null | DiagramsType.Instance = null;
 
     constructor(args: {parentNode: HTMLElement}) {
         this.parentNode = args.parentNode;
 
-        this.popup = new EnginesPopup({parentNode: this.parentNode});    
-        this.popup.panel.id = 'editor-square';
-        this.popup.title.innerText = '편집창';
+        this.popup = new EnginesPopup({
+            parentNode: this.parentNode,
+            id: 'editor-square',
+            title: '편집모드',
+            callers: {
+                save: () => this.Save(),
+                close: () => this.Close(),
+            },
+        });    
+        
         
 
         // [Palette] 글꼴 및 색상지정 팔레트
@@ -31,12 +39,38 @@ export class EditorSquare {
     }
 
     Open(diagram: DiagramsType.Instance) {
-        console.log(diagram);
+        
         // [Input] 정보 입력
+        this.diagram = diagram;
+        if(this.diagram instanceof Diagrams.Class.Memo) {
+            this.textarea.innerHTML = this.diagram.text;
+        }
 
         // [Popup] 팝업 오픈
         this.popup.Open();
     }
 
+    Save() {
+        console.log('Save', this.textarea.innerHTML);
+        // [Text] 텍스트 입력
+        if(this.diagram instanceof Diagrams.Class.Memo 
+            && this.diagram.text !== this.textarea.innerHTML
+        ) {
+            this.diagram.text = this.textarea.innerHTML;
+            this.diagram.Snapshot();
+            
+            // [Update] 다이어그램 저장    
+            _MNGR.diagram.Update(this.diagram);
+            _MNGR.render.Draw();
+        }
+
+        // [Close] 팝업 닫기 
+        this.popup.Close();
+    }
+
+    Close() {
+        // [Close] 팝업 닫기 
+        this.popup.Close();
+    }
     
 }

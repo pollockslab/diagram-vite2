@@ -13,9 +13,8 @@ export class Axis implements DiagramsType.serialize.core.Axis {
         tabId    : null as string | null,
     };
 
-    constructor(args: Partial<any> = {}) {
-        this.SetData(args);
-    }
+    constructor() {}
+
     get serialize(): DiagramsType.serialize.core.Axis {
         return {
             axis: {
@@ -62,6 +61,16 @@ export class Axis implements DiagramsType.serialize.core.Axis {
     set tabId(value) {
         this.axis.tabId = value;
     }
+
+    static create(args: Partial<any> = {}) {
+        const instance = new this();
+        instance.SetData(args);
+        instance.axis.type = this.name as DiagramsType.ClassName;
+        instance.Init();
+        return instance;
+    }
+
+    Init() {}
     
     SetData(args: Partial<any> = {}): void {  
         for(const any in args) {

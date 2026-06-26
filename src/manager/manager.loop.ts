@@ -8,13 +8,16 @@ export const collision = {
         const moveY = _VIEW.SpaceY(_CTRL.move.offsetY);
 
         // [Grid] (x, y) 좌표에 있는 다이어그램 조회
-        const point = _SPCE.collision.Point(moveX, moveY);
-        if(point.length <= 0) {return;}
+        const front = _SPCE.collision.PointFront(moveX, moveY);
+        if(!front) {return;}
         
         // [Edge] 모서리 체크
+        const edge = _SPCE.collision.Edge(front, moveX, moveY);
+        if(edge !== null) {
+            console.log(edge);
+        }
 
         // [View] 보더 추가
-        const front = point[point.length-1];
         if (front instanceof Diagrams.Class.Line) {
         }
         else if(front instanceof Diagrams.Class.Square) {

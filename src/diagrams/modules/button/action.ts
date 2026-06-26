@@ -10,12 +10,8 @@ export class Action extends Square implements DiagramsType.serialize.modules.but
         call            : '',
         imageSrc        : '',
     };
-
-    constructor(args: Partial<any> = {}) {
-        super();
-        this.SetData(args);
-        this.axis.type = 'Action';
-    }
+    
+    constructor() {super();}
 
     get serialize(): DiagramsType.serialize.modules.button.Action {
         return {

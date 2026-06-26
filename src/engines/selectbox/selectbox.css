@@ -73,4 +73,5 @@ wd-selectbox-datalist > datalist-data:hover {
     background-color: var(--wd-background-color--hover);
 
     /* 5. 효과 */ 
+    cursor: pointer;
 }
