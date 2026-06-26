@@ -2,25 +2,22 @@ import { _SPCE } from '@/main'
 import * as Diagrams from '@/diagrams/diagrams'
 import * as DiagramsType from '@/diagrams/diagrams.type'
 import * as SpaceType from './space.type'
+import { Space } from './space'
 
 const edge = {
     arrow: new Set(['e','w','s','n','es','en','ws','wn']),
     cursor: new Map<string, string>([
         // 단방향 (상하좌우)
-        ['n', 'ns-resize'],
-        ['s', 'ns-resize'],
         ['e', 'ew-resize'],
         ['w', 'ew-resize'],
-        
-        // 쌍방향 축 축약형 대응
-        ['ns', 'ns-resize'],
-        ['ew', 'ew-resize'],
+        ['s', 'ns-resize'],
+        ['n', 'ns-resize'],
         
         // 대각선 방향 (북동-남서, 북서-남동)
-        ['ne', 'nesw-resize'],
-        ['sw', 'nesw-resize'],
-        ['nw', 'nwse-resize'],
-        ['se', 'nwse-resize'],
+        ['es', 'nesw-resize'],
+        ['en', 'nwse-resize'],
+        ['ws', 'nwse-resize'],
+        ['wn', 'nesw-resize'],
     ]),
 } 
 
@@ -72,130 +69,31 @@ export function PointFront(x: number, y: number): undefined | DiagramsType.Insta
     }
 }
 
-export function Edge3(diagram: DiagramsType.Instance, x: number, y: number)
-: undefined | 
-{
-    arrow : DiagramsType.Edge,
-    cursor: DiagramsType.Edge 
-} {
-    // [Validation] Square 를 상속받은 다이어그램이 아니면 리턴
-    if(!(diagram instanceof Diagrams.Class.Square)) {return;}
-
-    const isArrow = {
-        w: false,
-        e: false,
-        n: false, 
-        s: false,
-    };
-    
-    // [Validaion] 사각형 외각선에서 안쪽으로 10픽셀 사이에 포인트가 있는지 확인
-    let copy = '';
-
-    // [West]
-    if(Math.abs(x -  diagram.x             ) <= 5) {copy += 'e';}
-    // [East]
-    if(Math.abs(x - (diagram.x + diagram.w)) <= 5) {copy += 'w';}
-    // [North]
-    if(Math.abs(y -  diagram.y             ) <= 5) {copy += 'n';}
-    // [South]
-    if(Math.abs(y - (diagram.y + diagram.h)) <= 5) {copy += 's';}
-    
-    // [Copy]
-    const arrow = (!edge.arrow.has(copy))? null : copy;
-
-    // 2. 커서까지 포함해서 보내자
-    let cursor: DiagramsType.Edge = null;
-    if(arrow === 'e' || arrow === 'w') {cursor = 'ew'}
-    else if(arrow === 'n' || arrow === 's') {cursor = 'ns'}
-    else if(arrow === 'es' || arrow === 'wn') {cursor = 'nwse'}
-    else if(arrow === 'en' || arrow == 'ws') {cursor = 'nesw'}
-
-    return {
-arrow, cursor};
-}
-
-export function Edge2(diagram: DiagramsType.Instance, x: number, y: number)
-: undefined | 
-{
-    arrow : DiagramsType.Edge,
-    cursor: DiagramsType.Edge 
-} {
-    // [Validation] Square 를 상속받은 다이어그램이 아니면 리턴
-    if(!(diagram instanceof Diagrams.Class.Square)) {return;}
-
-    // const arrow = {
-    //     w: false,
-    //     e: false,
-    //     n: false, 
-    //     s: false,
-    // };
-    
-    // // [Validaion] 사각형 외각선에서 안쪽으로 10픽셀 사이에 포인트가 있는지 확인
-    // // [West]
-    // if(Math.abs(x -  diagram.x             ) <= 5) {arrow.w = true;}
-    // // [East]
-    // if(Math.abs(x - (diagram.x + diagram.w)) <= 5) {arrow.e = true;}
-    // // [North]
-    // if(Math.abs(y -  diagram.y             ) <= 5) {arrow.n = true;}
-    // // [South]
-    // if(Math.abs(y - (diagram.y + diagram.h)) <= 5) {arrow.s = true;}
-
-    
-    // [Validaion] 사각형 외각선에서 안쪽으로 10픽셀 사이에 포인트가 있는지 확인
-    let copy = '';
-
-    // [West]
-    if(Math.abs(x -  diagram.x             ) <= 5) {copy += 'e';}
-    // [East]
-    if(Math.abs(x - (diagram.x + diagram.w)) <= 5) {copy += 'w';}
-    // [North]
-    if(Math.abs(y -  diagram.y             ) <= 5) {copy += 'n';}
-    // [South]
-    if(Math.abs(y - (diagram.y + diagram.h)) <= 5) {copy += 's';}
-    
-    // [Copy]
-    const arrow: DiagramsType.Edge = (copy === '')? null : copy as DiagramsType.Edge;
-
-    // 2. 커서까지 포함해서 보내자
-    let cursor: DiagramsType.Edge = null;
-    if(arrow === 'e' || arrow === 'w') {cursor = 'ew'}
-    else if(arrow === 'n' || arrow === 's') {cursor = 'ns'}
-    else if(arrow === 'es' || arrow === 'wn') {cursor = 'nwse'}
-    else if(arrow === 'en' || arrow == 'ws') {cursor = 'nesw'}
-
-    return {
-arrow, cursor};
-}
-
 export function Edge(diagram: DiagramsType.Instance, x: number, y: number)
-: undefined | {arrow : DiagramsType.Edge, cursor: DiagramsType.Edge} {
+: undefined | SpaceType.Edge {
     // [Validation] Square 를 상속받은 다이어그램이 아니면 리턴
     if(!(diagram instanceof Diagrams.Class.Square)) {return;}
 
-    // [Arrow]
-    let arrow: DiagramsType.Edge = null;
-    let copy = '';
-
-    // [Validaion] 사각형 외각선에서 안쪽으로 10픽셀 사이에 포인트가 있는지 확인
+    // [Arrow] 사각형 외각선에서 안쪽으로 10픽셀 사이에 포인트가 있는지 확인
+    let temp = '';
     // [West]
-    if(Math.abs(x -  diagram.x             ) <= 5) {copy += 'e';}
+    if(Math.abs(x -  diagram.x             ) <= 5) {temp += 'w';}
     // [East]
-    if(Math.abs(x - (diagram.x + diagram.w)) <= 5) {copy += 'w';}
+    if(Math.abs(x - (diagram.x + diagram.w)) <= 5) {temp += 'e';}
     // [North]
-    if(Math.abs(y -  diagram.y             ) <= 5) {copy += 'n';}
+    if(Math.abs(y -  diagram.y             ) <= 5) {temp += 'n';}
     // [South]
-    if(Math.abs(y - (diagram.y + diagram.h)) <= 5) {copy += 's';}
+    if(Math.abs(y - (diagram.y + diagram.h)) <= 5) {temp += 's';}
+    console.log('d')
+    // [Validation] 0x0 크기의 사각형을 비교할 경우. 상하좌우 위치가 겹쳐서 오류. (예: ewns)
+    if(!edge.arrow.has(temp)) {return;}
+    const arrow = temp as SpaceType.EdgeArrow;
 
-    for(const edge of Diagrams.Edge) {
-        if(edge === copy) {arrow = copy;}
-    }
-   
-    // [Cursor]
-    let cursor: DiagramsType.Edge = null;
-    if(arrow === 'e' || arrow === 'w') {cursor = 'ew'}
-    else if(arrow === 'n' || arrow === 's') {cursor = 'ns'}
-    else if(arrow === 'es' || arrow === 'wn') {cursor = 'nwse'}
-    else if(arrow === 'en' || arrow == 'ws') {cursor = 'nesw'}
+    // [Cursor] 양방향 화살표 커서모양 확인
+console.log('temp', arrow)
+    const cursor = edge.cursor.get(arrow) as SpaceType.EdgeCursor;
+    console.log('dddddd,', cursor)
+    if(!cursor) {return;}
 
     return {arrow, cursor};
 }

@@ -1,7 +1,5 @@
 import * as Diagrams from './diagrams'
 
-
-export type Edge        = typeof Diagrams.Edge[number];
 export type ClassName   = keyof typeof Diagrams.Class;
 export type Instance    = InstanceType< typeof Diagrams.Class[ClassName] >;
 

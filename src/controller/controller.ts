@@ -1,4 +1,5 @@
 import { _MNGR } from '@/main'
+import * as SpaceType from '@/space/space.type'
 import { Engines } from '@/engines/engines'
 import * as ControllerType from './controller.type'
 import { ControllerKeyboard } from './controller.keyboard'
@@ -6,6 +7,32 @@ import './controller.css'
 
 
 new ControllerKeyboard();
+const cursorStyles = new Set([
+  // 기본
+  'auto', 'default', 'none',
+  // 링크/텍스트
+  'pointer', 'text', 'vertical-text',
+  // 상태/처리중
+  'wait', 'progress',
+  // 이동/드래그
+  'move', 'grab', 'grabbing',
+  // 리사이즈(단방향)
+  'e-resize', 'w-resize', 'n-resize', 's-resize',
+  // 리사이즈(대각선)
+  'ne-resize', 'nw-resize', 'se-resize', 'sw-resize',
+  // 리사이즈(양방향)
+  'ew-resize', 'ns-resize', 'nesw-resize', 'nwse-resize',
+  // 선택/정밀
+  'crosshair', 'cell',
+  // 도움/금지
+  'help', 'not-allowed',
+  // 드래그 앤 드롭 힌트
+  'alias', 'copy',
+  // 스크롤/패닝
+  'all-scroll', 'col-resize', 'row-resize',
+  // 기타
+  'context-menu', 'zoom-in', 'zoom-out'
+]);
 
 export class Controller {
 
@@ -95,32 +122,10 @@ export class Controller {
         };
     }
 
-    CursorStyle(type: string) {
-
-        const style: 'default'|'pointer'|'grabbing'|'crosshair'|'not-allowed'|'cell' = 'cell';
-        this.panel.style.cursor = style;
-
-        switch(type) {
-            case 'pointer': {
-                this.panel.style.cursor = 'default';
-                break;
-            }
-            case 'create': {
-                this.panel.style.cursor = 'cell';
-                break;
-            }
-            case 'delete': {
-                this.panel.style.cursor = 'not-allowed';
-                // 휴지통 모양이나 붉은색 X 아이콘을 커서로 사용
-                // canvas.style.cursor = `url('delete-icon.png') 12 12, auto`;
-                break;
-            }
-            default: {
-                this.panel.style.cursor = 'pointer';
-                break;
-            }
-
-        }
+    CursorStyle(type?: string|undefined) {
+        if(type === undefined) {this.panel.style.cursor = 'default';}
+        else if(cursorStyles.has(type)) {this.panel.style.cursor = type;}
+        else {this.panel.style.cursor = 'default';}
     }
 }
 

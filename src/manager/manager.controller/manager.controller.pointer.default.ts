@@ -1,12 +1,19 @@
-import { _CTRL, _VIEW, _LOOP, _MNGR, _EDIT } from '@/main'
+import { _CTRL, _VIEW, _LOOP, _MNGR, _EDIT, _SPCE } from '@/main'
 import * as Diagrams from '@/diagrams/diagrams'
+import * as SpaceType from '@/space/space.type'
 
 const click = {
     timeStamp: 0
 };
+const edge = {
+    down: undefined as undefined | SpaceType.Edge
+}
 
 export async function Down() {
     const down = _MNGR.controller.down;
+    const downX = _VIEW.SpaceX(_CTRL.down.offsetX);
+    const downY = _VIEW.SpaceY(_CTRL.down.offsetY);
+        
     if(down.list.length > 0) {
         const diagram = down.list[down.list.length-1];
         diagram.zIndex = Date.now();
@@ -16,12 +23,16 @@ export async function Down() {
         else if(diagram instanceof Diagrams.Class.Square) {
             down.dia.x = diagram.x;
             down.dia.y = diagram.y;
+
+            // [Edge]
+            edge.down = _SPCE.collision.Edge(diagram, downX, downY);
         }
         else if(diagram instanceof Diagrams.Class.Point) {
         }
     }
     down.view.x = _VIEW.x;
     down.view.y = _VIEW.y;
+
 }
 
 export async function Drag() {
@@ -39,8 +50,25 @@ export async function Drag() {
         if (diagram instanceof Diagrams.Class.Line) {
         }
         else if(diagram instanceof Diagrams.Class.Square) {
-            diagram.x = down.dia.x + rangeW;
-            diagram.y = down.dia.y + rangeH;
+            if(edge.down && edge.down.arrow) {
+
+                console.log('늘리기1111')
+                switch(edge.down.arrow) {
+                    case 'e':
+                        break;
+                    case 'w':
+
+                console.log('늘리기',rangeW)
+                // 늘어나는데. 다이어그램   Snapshot 을 루프로 신청해야됨
+                        diagram.x = down.dia.x + rangeW;
+                        diagram.w += rangeW;
+                        break;
+                }
+            }
+            else {
+                diagram.x = down.dia.x + rangeW;
+                diagram.y = down.dia.y + rangeH;
+            }
         }
         else if(diagram instanceof Diagrams.Class.Point) {
         }

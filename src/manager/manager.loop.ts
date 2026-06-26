@@ -9,12 +9,18 @@ export const collision = {
 
         // [Grid] (x, y) 좌표에 있는 다이어그램 조회
         const front = _SPCE.collision.PointFront(moveX, moveY);
-        if(!front) {return;}
+        if(!front) {
+            _CTRL.CursorStyle();
+            return;
+        }
         
         // [Edge] 모서리 체크
         const edge = _SPCE.collision.Edge(front, moveX, moveY);
         if(edge !== null) {
-            console.log(edge);
+            _CTRL.CursorStyle(edge?.cursor as string);
+        }
+        else {
+            _CTRL.CursorStyle();
         }
 
         // [View] 보더 추가
@@ -51,5 +57,19 @@ export const render = {
         _VIEW.effect.AddBorder(x, y, w, h, 'rgba(59, 130, 246, 1)');
         
         _VIEW.Draw();
+    },
+    Snapshot_Controller: function(): void {
+        const down = _MNGR.controller.down;
+        if(down.list.length >= 0) {
+            const diagram = down.list[down.list.length-1];
+            if (diagram instanceof Diagrams.Class.Line) {
+            }
+            else if(diagram instanceof Diagrams.Class.Square) {
+               diagram.Snapshot();
+               _VIEW.Draw();
+            }
+            else if(diagram instanceof Diagrams.Class.Point) {
+            }
+        }
     }
 }

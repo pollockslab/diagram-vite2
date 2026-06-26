@@ -4,32 +4,32 @@ export class ControllerKeyboard {
     constructor() {
         window.addEventListener('keyup', (e) => {
             if(e.target !== document.body) {return;}
-            // console.log(e.key, e.ctrlKey);
+            console.log(e.code, e.ctrlKey);
             
             if(e.ctrlKey) {
-                switch(e.key) {
-                    case 'y':
+                switch(e.code) {
+                    case 'KeyY':
                         _METO.Redo();
                         _MNGR.render.Resize();
                         break;
-                    case 'z':
+                    case 'KeyZ':
                         _METO.Undo();
                         _MNGR.render.Resize();
                         break;
                 }
             }
             else {
-                switch(e.key) {
-                    case 'a': // 포인터 선택
+                switch(e.code) {
+                    case 'KeyA': // 포인터 선택
                         _REMO.selected = 'pointer-default';
                         break;
-                    case 'e': // 사각형 편집
+                    case 'KeyE': // 사각형 편집
                         _REMO.selected = 'pointer-edit';
                         break;
-                    case 'd': // 사각형 생성
+                    case 'KeyD': // 사각형 생성
                         _REMO.selected = 'add-square';
                         break;
-                    case 'x': // 삭제버튼
+                    case 'KeyX': // 삭제버튼
                         _REMO.selected = 'pointer-delete';
                         break;
                 }
