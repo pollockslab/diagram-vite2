@@ -34,7 +34,7 @@ export const _SNAP = new Snapshot();
 export const _STOR = new Storage();
 export const _SPCE = new Space();
 
-// [Level] div 순서대로 생성.
+// [Level] DIV 순서대로 생성.
 export const _VIEW = new View({parentNode: divMainFrame});
 export const _CTRL = new Controller({parentNode: divMainFrame});
 export const _REMO = new Remocon({parentNode: divMainFrame});
