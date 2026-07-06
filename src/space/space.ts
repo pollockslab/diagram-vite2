@@ -13,13 +13,19 @@ import * as SpaceCollision from './space.collision'
  */
 export class Space {
     
+    diagram : null | DiagramsType.Instance = null;
     id      : string = 'super';
     tabId   : string = 'super';   
     
     store       = new SpaceStore();
     grid        = new SpaceGrid();
     collision   = SpaceCollision;
-
+a // diagram 에 space 맵 다이어그램 객체 넣고 거기에서 id, tabId 매번넣고
+// 목록을 거기서 불러오자. 저장도 하고, 수정도 하고. 좌표 바뀌면 좌표를 저장해야되는데
+// 근데 redo undo 가 까다롭나? 까다로울게 뭐있나.
+// 그럼 grid 를 시리얼라이즈 해서 저장시킬수 있어야해
+// 게다가 포인트나, 선은 필요 없으니 사각형만 할까 생각하다가
+// 그냥 axis 에 구현해놓는게 나을수도 있겠다
     constructor() {}
     
     InitLoad(seiralizeSpace: DiagramsType.serialize.Union, serializeList: DiagramsType.serialize.Union[]) {
