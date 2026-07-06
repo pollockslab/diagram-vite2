@@ -60,6 +60,8 @@ export class Loop {
     }
 
     Command(layerKey: LoopType.CommandKey, mapKey: string, call: LoopType.Call) {
+        // 파라미터 받을꺼면 call 넣지말고 객체.call, 객체.파라미터 로 바꿔야 넣을 수 있는데
+        // 다이어그램을 파라미터로 받고 찰나에 수정하거나 삭제되면 받는게 맞는지 애매해짐
         this.command[layerKey].set(mapKey, call);
     }
     private Calls(mapKeys: LoopType.CommandKey[]) {

@@ -29,3 +29,7 @@ export type EdgeCursor =
     'nesw-resize'|
     'nesw-resize'|
     'nwse-resize';
+
+export interface Serialize {
+
+}

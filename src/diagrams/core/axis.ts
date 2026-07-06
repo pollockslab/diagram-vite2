@@ -1,7 +1,9 @@
 
 import { _DPR } from '@/main'
+import { AxisGrid } from './axis.grid';
 import * as DiagramsType from '@/diagrams/diagrams.type'
 
+export const gridSize = {x: 100, y: 100};
 
 export class Axis implements DiagramsType.serialize.core.Axis {
 
@@ -12,6 +14,12 @@ export class Axis implements DiagramsType.serialize.core.Axis {
         parentId : null as string | null,
         tabId    : null as string | null,
     };
+    space = {
+        grid: {
+            
+        },
+    };
+
 
     constructor() {}
 
@@ -23,6 +31,19 @@ export class Axis implements DiagramsType.serialize.core.Axis {
                 zIndex      : this.zIndex,
                 parentId    : this.parentId,
                 tabId       : this.tabId,
+            },
+            // space 는 코어.axis 에서는 못하고 점,선,면 에서 넣어야되겠는데. 그럼
+            // 오버라이드 함수로 만들어야겠지
+            space: {
+                grid: {
+                    id: '',
+                    list: [
+                        {x: 100, y: 100},
+                        {x: 100, y: 200},
+                        {x: 200, y: 200},
+                        {x: 200, y: 100},
+                    ],
+                }
             },
         };
     } 
@@ -83,6 +104,8 @@ export class Axis implements DiagramsType.serialize.core.Axis {
             }
         }
     }
+
+    SetSpace() {}
 
     Draw(_ctx?: CanvasRenderingContext2D) {}
 }

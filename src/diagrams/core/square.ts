@@ -1,6 +1,6 @@
 import { _DPR, _SNAP } from '@/main'
 import * as DiagramsType from '@/diagrams/diagrams.type'
-import { Axis } from '@/diagrams/core/axis'
+import { Axis, gridSize } from '@/diagrams/core/axis'
 
 
 export class Square extends Axis implements DiagramsType.serialize.core.Square {
@@ -97,6 +97,19 @@ export class Square extends Axis implements DiagramsType.serialize.core.Square {
 
         // [Copy]
         this.imageBitmap = await _SNAP.CreateBitmap(0, 0, this.w*_DPR.value, this.h*_DPR.value);
+    }
+
+    // [Override]
+    SetSpace() {
+        // 사각형이 차지하는 그리드 목록 다 포함시켜야 하는데
+        // 좌표 간격을 어디에서 지정할껀데. axis 에 관련이 있나
+        // space.grid 에서 간격을 읽어오는것도 이상함
+        gridSize.x, gridSize.y
+         // Math.abs() 였나 . 음수상관없잖아
+         // 예) -36 이면 -100 을 구해야 함
+
+         function abc(c) { if(c < 0) { return parseInt((c-100)/100)*100; } else { return parseInt(c/100)*100; } }
+
     }
     
     Draw(ctx: CanvasRenderingContext2D) {

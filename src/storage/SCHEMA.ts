@@ -9,6 +9,14 @@ export const Schema = [
             { name: 'tabId', keyPath: 'axis.tabId' },
         ]
     },
+    {   // [space] 컬럼: id | grid (space.grid.serialize)
+        // 이거 안쓰고 지워야함 (클로드코드가 없애야한다고 결론냄)
+        name: 'space',
+        keyPath: 'id',
+        indexList: [
+            { name: 'key', keyPath: '' },
+        ]
+    },
     {   // [tab] 컬럼: id | openDiagramId | favorite | mementoStack
         // 탭을 상단에 보여주던 안보여주고 스페이스 생길때마다 추가하든
         // 나중에 바꿀 수 있다.
