@@ -61,6 +61,7 @@ export class EventPan {
         },
     }) {
         this.panel = args.panel;
+        this.panel.style.touchAction = 'none';
         this.callers = args.callers;
 
         this.panel.addEventListener('wheel'         , this.OnWheel, { passive: false }); 
