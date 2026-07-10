@@ -1,5 +1,5 @@
 export const Schema = [
-    {   // [diagram] 컬럼: id | serialize
+    {   // [diagram] 컬럼: serialize(.axis, .square, .point, ...)
         name: 'diagram',
         keyPath: 'axis.id',
         indexList: [

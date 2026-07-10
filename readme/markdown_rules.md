@@ -154,3 +154,16 @@ xychart-beta
     y-axis "부하(ms)" 0 --> 100
     bar [45, 25, 20, 10]
 ```
+
+
+5. *그 외 다이어그램 예제 1*
+```mermaid
+graph TD
+    Root[ProjectRoot] --> Src[src]
+    Src --> Engines[engines]
+    Engines --> Pan[event.pan.ts]
+    Engines --> Loop[loop.ts]
+    Src --> Main[main.ts]
+    Root --> Docs[docs]
+    Docs --> API[api-summary.md]
+```

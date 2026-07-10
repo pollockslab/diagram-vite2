@@ -107,9 +107,10 @@ export class Square extends Axis implements DiagramsType.serialize.core.Square {
         gridSize.x, gridSize.y
          // Math.abs() 였나 . 음수상관없잖아
          // 예) -36 이면 -100 을 구해야 함
-
-         function abc(c) { if(c < 0) { return parseInt((c-100)/100)*100; } else { return parseInt(c/100)*100; } }
-
+        
+        function snapToGrid(value: number, gridSize: number): number {
+            return Math.floor(value / gridSize) * gridSize;
+        }
     }
     
     Draw(ctx: CanvasRenderingContext2D) {

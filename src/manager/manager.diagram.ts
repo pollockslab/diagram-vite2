@@ -50,6 +50,11 @@ export async function Insert(
     try {
         // [DB] 스토리지 저장.
         await _STOR.Post('diagram-insert', diagram.serialize);
+
+        // 여기에 Space 추가
+
+        // 그 외 테이블. 더 추가
+        
     }
     catch(error) {
         console.error('[INSERT ERROR]: ', error);
