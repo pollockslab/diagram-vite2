@@ -51,6 +51,13 @@ export const _MNGR = new Manager();
 
 // [Start] 프로그램 실행함수
 export async function Init() { 
+    // 여기서 이러지 말고 매니저에서 한번에 긁어오게 만들어보자
+    // 아니면 여기서 실행해도 될듯
+    // 1. 직관적인건 main.Init
+    // 2. 효율적인거(다른곳에서, 오류났을때) 는 
+    // 매니저가 나을지 이곳이 나을지
+
+
     try {
         // 1. DB open
         await _STOR.Post('open', {});

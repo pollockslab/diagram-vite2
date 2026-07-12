@@ -3,6 +3,7 @@ import * as DiagramsType from '@/diagrams/diagrams.type'
 import { SpaceStore } from './space.store'
 import { SpaceGrid } from './space.grid'
 import * as SpaceCollision from './space.collision'
+import * as SpaceType from './space.type'
 
 
 /**
@@ -12,25 +13,19 @@ import * as SpaceCollision from './space.collision'
  * 어떻게 최적화해서 안보여줄지 (이건 잘 모르겠음. 일단 다 그린느걸로)
  */
 export class Space {
-    
-    diagram : null | DiagramsType.Instance = null;
-    id      : string = 'super';
-    tabId   : string = 'super';   
-    
+    space = {
+        id: {
+            space: 'super',
+            tab: 'super',
+        },
+    };
     store       = new SpaceStore();
     grid        = new SpaceGrid();
     collision   = SpaceCollision;
-// diagram 에 space 맵 다이어그램 객체 넣고 거기에서 id, tabId 매번넣고
-// 목록을 거기서 불러오자. 저장도 하고, 수정도 하고. 좌표 바뀌면 좌표를 저장해야되는데
-// 근데 redo undo 가 까다롭나? 까다로울게 뭐있나.
-// 그럼 grid 를 시리얼라이즈 해서 저장시킬수 있어야해
-// 게다가 포인트나, 선은 필요 없으니 사각형만 할까 생각하다가
-// 그냥 axis 에 구현해놓는게 나을수도 있겠다
+
     constructor() {}
 
-    get serialize() {
-
-
+    get serialize(): SpaceType.serialize.Space {
         /**
          * 예시로 들면, 학생, 학생의 책가방 테이블을 따로 만들면
          *  1. 학생을 지우면 책가방도 지워야 한다
@@ -43,9 +38,33 @@ export class Space {
          *  무한확장인데 다이어그램 이동했는데 스페이스 디비에 업데이트 하면
          *  그리드 무한확장인데 어떻게 매번 다시저장하나. 비포 에프타 그리드만 수정해야
          */
-        return '';
+        return {
+            id: {
+                space: this.spaceID,
+                tab: this.tabID,
+            },
+            grid: {},
+        };
+    }
+    set serialize(value: SpaceType.serialize.Space) {
+        console.log(value);
+    }
+
+    get spaceID() {
+        return this.space.id.space;
+    }
+    set spaceID(value: string) {
+        this.space.id.space = value;
+    }
+
+    get tabID() {
+        return this.space.id.tab;
+    }
+    set tabID(value: string) {
+        this.space.id.tab = value;
     }
     
+    // 기능 분리하자 ( Init, 하고 나머지 Insert 로 넣기)
     InitLoad(seiralizeSpace: DiagramsType.serialize.Union, serializeList: DiagramsType.serialize.Union[]) {
         // [Space] 기본정보 수정
         this.id = seiralizeSpace.axis.id ?? 'super';

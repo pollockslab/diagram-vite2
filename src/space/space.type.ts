@@ -30,6 +30,16 @@ export type EdgeCursor =
     'nesw-resize'|
     'nwse-resize';
 
-export interface Serialize {
-
+export namespace serialize {
+    export interface Space {
+            id: {
+            space: string,
+            tab: string,
+        },
+        // grid => 'x,y': 다이어그램 아이디 배열
+        grid: Record<string, string[]>,
+    }
+    export interface Grid {
+        list: Record<string, string[]>,
+    }
 }

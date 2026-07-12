@@ -25,9 +25,11 @@
 > | No.   | Level 1   | Level 2   | DataType  | Memo |
 > | :---: | :---      | :---      | :---:     | :--- | 
 > | 1     | id        | diagram   | String    | 다이어그램 ID |
-> | 2     | id        | space     | String    | 스페이스(부모) ID |
+> | 2     | id        | space     | String    | 스페이스 ID (부모) |
 > | 3     | id        | tab       | String    | 탭 ID |
-> | 4     | type      |           | String    | 다이어그램 Type |
+> | 4     | type      |           | DiagramName    | 다이어그램 Type |
+> | 5     | zIndex    |           | Number    | 화면에 그려질 순서 |
+
 <br/>
 
 ### Line: {...Axis, Line}
@@ -66,6 +68,7 @@
 > | No.   | Level 1   | Level 2     | DataType  | Memo |
 > | :---: | :---      | :---        | :---:     | :--- | 
 > | 1     | id        | space       | String    | 스페이스 ID |
+> | 1     | id        | tab         | String    | 탭 ID (부모) |
 > | 2     | grid      | `${x},${y}` | String    | 다이어그램 ID 목록 |
 > | 3     | grid      | `...+`      | String    | ㄴ 목록 개수만큼 증가 |
 <br/>

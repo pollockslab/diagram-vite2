@@ -1,18 +1,18 @@
 
 import { _DPR } from '@/main'
-import { AxisGrid } from './axis.grid';
 import * as DiagramsType from '@/diagrams/diagrams.type'
 
-export const gridSize = {x: 100, y: 100};
 
 export class Axis implements DiagramsType.serialize.core.Axis {
 
     axis = {
-        type     : 'Axis' as DiagramsType.ClassName,
-        id       : null as string | null,
-        zIndex   : 0 as number,
-        parentId : null as string | null,
-        tabId    : null as string | null,
+        id      : {
+            diagram : null as DiagramsType.ID,
+            space   : null as DiagramsType.ID,
+            tab     : null as DiagramsType.ID,
+        },
+        type    : 'Axis' as DiagramsType.ClassName,
+        zIndex  : 0 as number,
     };
 
     constructor() {}
@@ -20,48 +20,50 @@ export class Axis implements DiagramsType.serialize.core.Axis {
     get serialize(): DiagramsType.serialize.core.Axis {
         return {
             axis: {
-                type        : this.type,
-                id          : this.id,
-                zIndex      : this.zIndex,
-                parentId    : this.parentId,
-                tabId       : this.tabId,
+                id      : {
+                    diagram : this.diagramID,
+                    space   : this.spaceID,
+                    tab     : this.tabID,
+                },
+                type    : this.type,
+                zIndex  : this.zIndex,
             },
         };
     } 
 
+    get diagramID() {
+        return this.axis.id.diagram;
+    }
+    set diagramID(value: DiagramsType.ID) {
+        this.axis.id.diagram = value;
+    }
+
+    get spaceID() {
+        return this.axis.id.space;
+    }
+    set spaceID(value: DiagramsType.ID) {
+        this.axis.id.space = value;
+    }
+    
+    get tabID() {
+        return this.axis.id.tab;
+    }
+    set tabID(value: DiagramsType.ID) {
+        this.axis.id.tab = value;
+    }
+
     get type() {
         return this.axis.type;
     }
-    set type(value) {
+    set type(value: DiagramsType.ClassName) {
         this.axis.type = value;
     }
 
-    get id() {
-        return this.axis.id;
-    }
-    set id(value) {
-        this.axis.id = value;
-    }
-    
     get zIndex() {
         return this.axis.zIndex;
     }
-    set zIndex(value) {
+    set zIndex(value: number) {
         this.axis.zIndex = value;
-    }
-
-    get parentId() {
-        return this.axis.parentId;
-    }
-    set parentId(value) {
-        this.axis.parentId = value;
-    }
-    
-    get tabId() {
-        return this.axis.tabId;
-    }
-    set tabId(value) {
-        this.axis.tabId = value;
     }
 
     static create(args: Partial<any> = {}) {

@@ -26,7 +26,7 @@ export class SpaceGrid {
         const x1 = this.GetGridPos(x, this.size.w);
         const y1 = this.GetGridPos(y, this.size.h);
         const x2 = this.GetGridPos(x+w, this.size.w);
-        const y2 = this.GetGridPos(y+h, this.size.w);
+        const y2 = this.GetGridPos(y+h, this.size.h);
 
         const idSet = new Set<string>();
 
@@ -119,14 +119,14 @@ export class SpaceGrid {
 
             // [SlotKeys] 제거
             const slotKeys = this.slot.get(id);
-            if(!slotKeys) {return;}
+            if(!slotKeys) {continue;}
             
             this.slot.delete(id);
 
             // [Grid] 제거
             for(const key of slotKeys) {
                 const slot = this.grid.get(key);
-                if(!slot) {return;}
+                if(!slot) {continue;}
 
                 const i = slot?.findIndex(findID => findID === id);
                 if(i !== -1) {

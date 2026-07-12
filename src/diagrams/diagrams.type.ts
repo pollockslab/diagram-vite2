@@ -1,5 +1,6 @@
 import * as Diagrams from './diagrams'
 
+export type ID          = null | string;
 export type ClassName   = keyof typeof Diagrams.Class;
 export type Instance    = InstanceType< typeof Diagrams.Class[ClassName] >;
 
@@ -10,19 +11,21 @@ export namespace serialize {
     export namespace core {  
         export interface Axis {
             axis: {
-                type     : ClassName,
-                id       : string | null,
-                zIndex   : number,
-                parentId : string | null,
-                tabId    : string | null,
+                id      : {
+                    diagram : ID,
+                    space   : ID,
+                    tab     : ID,
+                },
+                type    : ClassName,
+                zIndex  : number,
             },
         }
         export interface Line extends serialize.core.Axis{
             line: {
-                x1       : number,
-                y1       : number,
-                x2       : number,
-                y2       : number,
+                x1      : number,
+                y1      : number,
+                x2      : number,
+                y2      : number,
             },
         }
         export interface Point extends serialize.core.Axis{
@@ -33,10 +36,10 @@ export namespace serialize {
         }
         export interface Square extends serialize.core.Axis{
             square: {
-                x       : number,
-                y       : number,
-                w       : number,
-                h       : number,
+                left    : number,
+                top     : number,
+                width   : number,
+                height  : number,
             },
         }
     }

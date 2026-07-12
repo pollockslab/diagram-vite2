@@ -39,7 +39,7 @@ export class Memo extends Square implements DiagramsType.serialize.modules.squar
         const fontSize = 16;
         const guideLine = {x:20, y:20}
         
-        ctx.clearRect(0, 0, this.w, this.h);
+        ctx.clearRect(0, 0, this.width, this.height);
         
         ctx.save();
 
@@ -51,7 +51,7 @@ export class Memo extends Square implements DiagramsType.serialize.modules.squar
 
         // [Panel]
         ctx.fillStyle = this.memo.backgroundColor;
-        ctx.fillRect(4, 4, this.w-8, this.h-8);
+        ctx.fillRect(4, 4, this.width-8, this.height-8);
 
         ctx.font = `${fontSize}px sans-serif`;
         ctx.fillStyle = 'white';
@@ -92,6 +92,7 @@ export class Memo extends Square implements DiagramsType.serialize.modules.squar
         ctx.restore();
 
         // [Copy]
-        this.imageBitmap = await _SNAP.CreateBitmap(0, 0, this.w*_DPR.value, this.h*_DPR.value);
+        this.imageBitmap = await _SNAP.CreateBitmap(
+            0, 0, this.width*_DPR.value, this.height*_DPR.value);
     }
 }
