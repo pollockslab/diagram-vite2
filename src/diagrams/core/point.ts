@@ -38,6 +38,15 @@ export class Point extends Axis implements DiagramsType.serialize.core.Point {
         // 예: NaN, Infinity, 부동소수점 이슈
         this.point.y = (!Number.isFinite(size))? 0 : size;
     }
+
+    GetAnchorPoints(_width?: number, _height?: number): {x: number, y: number}[] {
+        if(typeof _width !== 'number' || typeof _height !== 'number') {
+            return [];
+        }
+        const floorX = Math.floor(this.x/_width)*_width;
+        const floorY = Math.floor(this.y/_height)*_height;
+        return [{x: floorX, y: floorY}];
+    }
     
     Draw(ctx: CanvasRenderingContext2D) {
 

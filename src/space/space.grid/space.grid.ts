@@ -13,6 +13,7 @@ export class SpaceGrid {
         this.slot.clear();
     }
 
+    // [FIXME] 다이어그램 코어모듈에서 GetPos 함수를 제공하는게 맞아보이는데
     SelectByPoint(x: number, y: number): string[] {
         const x1 = this.GetGridPos(x, this.size.w);
         const y1 = this.GetGridPos(y, this.size.h);

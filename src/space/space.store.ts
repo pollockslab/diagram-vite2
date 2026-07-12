@@ -7,7 +7,10 @@ const layerNames: SpaceType.LayerName[] = ['Axis', 'Line', 'Square', 'Point'];
 export class SpaceStore {
 
     store: Map<string, DiagramsType.Instance> = new Map();
+    // 이미지나 음악파일도 로드필요(스페이스에서 쓰이는거)
+    // 다이어그램 내에서 쓰니까 여기서 하는게 맞고 다른곳에서 재사용 하게두면 안되고
 
+    
     constructor() {}
 
     Init() {

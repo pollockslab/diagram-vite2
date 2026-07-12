@@ -75,6 +75,10 @@ export class Axis implements DiagramsType.serialize.core.Axis {
     }
 
     Init() {}
+
+    GetAnchorPoints(_width?: number, _height?: number): {x: number, y: number}[] {
+        return [];
+    }
     
     SetData(args: Partial<any> = {}): void {  
         for(const any in args) {

@@ -20,12 +20,17 @@ export namespace serialize {
                 zIndex  : number,
             },
         }
+        // [FIXME] 이럴꺼면 포인트 기준으로 다각형 형태 사각형도 4point 낫지않나
         export interface Line extends serialize.core.Axis{
             line: {
-                x1      : number,
-                y1      : number,
-                x2      : number,
-                y2      : number,
+                a: {
+                    x: number,
+                    y: number,
+                },
+                b: {
+                    x: number,
+                    y: number,
+                },
             },
         }
         export interface Point extends serialize.core.Axis{
