@@ -1,33 +1,27 @@
+import { IndexedDB } from '@/engines/indexeddb/indexeddb';
+import * as IndexeddbType from '@/engines/indexeddb/indexeddb.type'
+import { objectStores } from './indexeddb.objectstores'
 
-export class Storage 
-{
-    private worker: Worker;
-    private idCount: number = 0;
-    private postList: Map<number, {resolve: any, reject: any}> = new Map();
+const _DB = new IndexedDB({
+    name: 'wd-storage',
+    version: 1,
+    objectStores: objectStores,
+});
+_DB.OnVersionChange = () => {
+    alert('새 IDB 버전이 있습니다. 페이지를 새로고침 해 주세요.');
+}; 
+_DB.OnBlocked = () => {
+    alert('이전 탭에서 낮은 버전의 상태를 유지중입니다. 이전 탭을 닫아주세요.');
+};
 
-    constructor() {
-        this.worker = new Worker(
-            new URL('./storage.worker.ts', import.meta.url), 
-            {type: 'module'}
-        );
-        this.worker.onmessage = (e: MessageEvent) => this.On(e.data);
-    }
-    
-    private On(data: {id: number, isCompleted: boolean, result: any, error: Error})
-    {
-        const post = this.postList.get(data.id);
-        if(!post) { return; }
-        this.postList.delete(data.id);
+export class Storage {
+    constructor() {}
 
-        if(data.isCompleted) { post.resolve(data.result); }
-        else                 { post.reject (data.error ); }
-    }
-    
-    Post(command: string, data: any): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const id: number = this.idCount++;
-            this.postList.set(id, {resolve, reject});
-            this.worker.postMessage({id, command, data});
-        });
+    Transaction<T>(
+        storeNames  : string[],
+        txMode      : IDBTransactionMode,
+        call        : IndexeddbType.TransactionCallback<T>,
+    ): Promise<T> {
+        return _DB.Transaction(storeNames, txMode, call);
     }
 }

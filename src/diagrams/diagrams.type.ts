@@ -11,26 +11,37 @@ export namespace serialize {
     export namespace core {  
         export interface Axis {
             axis: {
-                id      : {
-                    diagram : ID,
-                    space   : ID,
-                    tab     : ID,
-                },
-                type    : ClassName,
+                id      : ID,
                 zIndex  : number,
+                version : number,
+            },
+            type: ClassName,
+            parent: {
+                diagram: {
+                    id: ID,
+                },
+                tab: {
+                    id: ID,
+                },
+            },
+        }
+        export interface Chain extends serialize.core.Axis{
+            chain: {
+                diagram1: {
+                    id: ID,
+                },
+                diagram2: {
+                    id: ID,
+                },
             },
         }
         // [FIXME] 이럴꺼면 포인트 기준으로 다각형 형태 사각형도 4point 낫지않나
         export interface Line extends serialize.core.Axis{
             line: {
-                a: {
-                    x: number,
-                    y: number,
-                },
-                b: {
-                    x: number,
-                    y: number,
-                },
+                x1: number,
+                y1: number,
+                x2: number,
+                y2: number,
             },
         }
         export interface Point extends serialize.core.Axis{
@@ -39,8 +50,8 @@ export namespace serialize {
                 y       : number,
             },
         }
-        export interface Square extends serialize.core.Axis{
-            square: {
+        export interface Rect extends serialize.core.Axis{
+            rect: {
                 left    : number,
                 top     : number,
                 width   : number,
@@ -52,7 +63,7 @@ export namespace serialize {
     export namespace modules {
         // [Button]
         export namespace button {
-            export interface Action extends serialize.core.Square{
+            export interface Action extends serialize.core.Rect{
                 action: {
                     backgroundColor : string,
                     text            : string,
@@ -87,21 +98,21 @@ export namespace serialize {
                 },
             }
         }
-        // [Square]
-        export namespace square {
-            export interface Memo extends serialize.core.Square{
+        // [Rect]
+        export namespace rect {
+            export interface Memo extends serialize.core.Rect{
                 memo: {
                     backgroundColor : string,
                     text            : string,
                 },
             }
-            export interface Group extends serialize.core.Square{
+            export interface Group extends serialize.core.Rect{
                 group: {
                     backgroundColor : string,
                     text            : string,
                 },
             }
-            export interface Drawmap extends serialize.core.Square{
+            export interface Drawmap extends serialize.core.Rect{
                 drawmap: {
                     backgroundColor : string,
                     text            : string,
@@ -114,7 +125,7 @@ export namespace serialize {
           serialize.core.Axis 
         | serialize.core.Line
         | serialize.core.Point
-        | serialize.core.Square
+        | serialize.core.Rect
 
         // [Button]
         | serialize.modules.button.Action
@@ -126,10 +137,10 @@ export namespace serialize {
         // [Point]
         | serialize.modules.point.Pin
 
-        // [Square]
-        | serialize.modules.square.Drawmap
-        | serialize.modules.square.Group
-        | serialize.modules.square.Memo;
+        // [Rect]
+        | serialize.modules.rect.Drawmap
+        | serialize.modules.rect.Group
+        | serialize.modules.rect.Memo;
 }
 
 

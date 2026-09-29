@@ -3,77 +3,93 @@ import { _DPR } from '@/main'
 import * as DiagramsType from '@/diagrams/diagrams.type'
 
 
-export class Axis implements DiagramsType.serialize.core.Axis {
-
-    axis = {
-        id      : {
-            diagram : null as DiagramsType.ID,
-            space   : null as DiagramsType.ID,
-            tab     : null as DiagramsType.ID,
+export class Axis {
+    id     : DiagramsType.ID = null;
+    zIndex : number = 0;
+    version: number = 0;
+    type   : DiagramsType.ClassName = this.constructor.name as DiagramsType.ClassName;
+    parent = {
+        diagram: {
+            id: null as DiagramsType.ID,
         },
-        type    : 'Axis' as DiagramsType.ClassName,
-        zIndex  : 0 as number,
+        tab    : {
+            id: null as DiagramsType.ID,
+        },
     };
 
     constructor() {}
 
+    static get origin(): DiagramsType.serialize.core.Axis {
+        return {
+            axis: {
+                id      : null,
+                zIndex  : 0,
+                version : 0,
+            },
+            type: this.name as DiagramsType.ClassName,
+            parent: {
+                diagram: {
+                    id: null,
+                },
+                tab: {
+                    id: null,
+                },
+            },
+        }
+    }
     get serialize(): DiagramsType.serialize.core.Axis {
         return {
             axis: {
-                id      : {
-                    diagram : this.diagramID,
-                    space   : this.spaceID,
-                    tab     : this.tabID,
-                },
-                type    : this.type,
+                id      : this.id,
                 zIndex  : this.zIndex,
+                version : this.version,
+            },
+            type    : this.type,
+            parent: {
+                diagram: {
+                    id: this.parentDiagramID,
+                },
+                tab: {
+                    id: this.parentTabID,
+                },
             },
         };
     } 
+    set serialize(data: DiagramsType.serialize.core.Axis) {
+        // [Axie]
+        this.id      = data.axis.id;
+        this.zIndex  = data.axis.zIndex;
+        this.version = data.axis.version;
 
-    get diagramID() {
-        return this.axis.id.diagram;
-    }
-    set diagramID(value: DiagramsType.ID) {
-        this.axis.id.diagram = value;
-    }
+        // [Type]
+        this.type = data.type;
 
-    get spaceID() {
-        return this.axis.id.space;
-    }
-    set spaceID(value: DiagramsType.ID) {
-        this.axis.id.space = value;
-    }
-    
-    get tabID() {
-        return this.axis.id.tab;
-    }
-    set tabID(value: DiagramsType.ID) {
-        this.axis.id.tab = value;
+        // [Parent]
+        this.parentDiagramID = data.parent.diagram.id;
+        this.parentTabID     = data.parent.tab.id;
     }
 
-    get type() {
-        return this.axis.type;
+    get parentDiagramID() {
+        return this.parent.diagram.id;
     }
-    set type(value: DiagramsType.ClassName) {
-        this.axis.type = value;
+    set parentDiagramID(data: DiagramsType.ID) {
+        this.parent.diagram.id = data;
     }
-
-    get zIndex() {
-        return this.axis.zIndex;
+    get parentTabID() {
+        return this.parent.tab.id;
     }
-    set zIndex(value: number) {
-        this.axis.zIndex = value;
+    set parentTabID(data: DiagramsType.ID) {
+        this.parent.tab.id = data;
     }
 
     static create(args: Partial<any> = {}) {
         const instance = new this();
         instance.SetData(args);
-        instance.axis.type = this.name as DiagramsType.ClassName;
         instance.Init();
         return instance;
     }
 
+    // NOTE: 자식 클래스에서 오버라이드 위한 더미함수.
     Init() {}
 
     GetAnchorPoints(_width?: number, _height?: number): {x: number, y: number}[] {
@@ -91,8 +107,6 @@ export class Axis implements DiagramsType.serialize.core.Axis {
             }
         }
     }
-
-    SetSpace() {}
 
     Draw(_ctx?: CanvasRenderingContext2D) {}
 }

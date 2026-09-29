@@ -4,7 +4,7 @@ export class ControllerKeyboard {
     constructor() {
         window.addEventListener('keyup', (e) => {
             if(e.target !== document.body) {return;}
-            console.log(e.code, e.ctrlKey);
+            // console.log(e.code, e.ctrlKey);
             
             if(e.ctrlKey) {
                 switch(e.code) {

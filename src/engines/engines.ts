@@ -7,6 +7,8 @@ import { FileSystem } from './filesystem/filesystem';
 import { IndexedDB } from './indexeddb/indexeddb';
 import { Selectbox } from './selectbox/selectbox';
 import { ColorPicker } from './colorpicker/colorpicker';
+import { MultiKeyMap } from './multikeymap/multikeymap';
+import * as Common from './common';
 
 export const Engines = {
     ElementCustom,
@@ -16,5 +18,7 @@ export const Engines = {
     IndexedDB,
     Selectbox,
     ColorPicker,
+    MultiKeyMap,
+    Common,
 }
 

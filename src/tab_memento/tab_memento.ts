@@ -1,24 +1,58 @@
 import { _MNGR } from '@/main'
-import * as MementoType     from './memento.type'
+import * as TabMementoType from './tab_memento.type'
+
 
 /**
  * [Class] Memento
  * @description 작업정보를 실시간으로 저장하고, 
  *  필요 시 복원하는 기능을 하는 클래스. (Ctrl+Z, Ctrl+Y 기능)
  */
-export class Memento {
-    history: MementoType.Memento[] = [];
-    nowOrder = -1;
+export class TabMemento {
+    // [Config] 히스토리 최대 보관 개수. 초과 시 오래된 것부터 제거.
+    static readonly MAX_HISTORY_SIZE = 50;
+
+    id: TabMementoType.ID = null; 
+    history: TabMementoType.History[] = [];
+    nowOrder: number = -1;
     
     constructor() {}
+
+    static get origin(): TabMementoType.TabMemento {
+        return {
+            tab_memento: {
+                id: null,
+                history: [],
+                nowOrder: -1,
+            },
+        };
+    }
+    get serialize(): TabMementoType.TabMemento {
+        return {
+            tab_memento: {
+                id: this.id,
+                history: this.history,
+                nowOrder: this.nowOrder,
+            },
+        };
+    }
+    set serialize(data: TabMementoType.TabMemento) {
+        this.id = data.tab_memento.id;
+        this.history = data.tab_memento.history;
+        this.nowOrder = data.tab_memento.nowOrder;
+    }
+
+    Init() {
+        this.serialize = TabMemento.origin;
+
+    }
 
     /**
      * [Function] InitLoad
      * @description 탭 변경 시, 호출하여 메멘토 초기화.
-     * @param args: {history: MementoType.Memento[], order: number}
+     * @param args: {history: TabMementoType.Memento[], order: number}
      */
     InitLoad(args: {
-        history: MementoType.Memento[],
+        history: TabMementoType.History[],
         nowOrder : number
     }) {
         this.history = args.history ?? [];
@@ -29,7 +63,7 @@ export class Memento {
      * [Function] Exec
      * @description 명령 저장
      * @param command 'diagram' | 'space-move'
-     * @param list [
+     * @param works [
         {
             before: diagram.serialize,
             after : diagram.serialize
@@ -39,9 +73,9 @@ export class Memento {
             after : diagram.serialize
         },...(배열)]
      */
-    Exec(command: MementoType.Command, list: MementoType.work[]) {
+    Exec(command: TabMementoType.Command, works: TabMementoType.work[]) {
 
-        console.log(list)
+        console.log(works)
         // [Now] 미래 시점으로 1 증가
         this.nowOrder++;
         
@@ -49,7 +83,30 @@ export class Memento {
         this.history.splice(this.nowOrder);
         
         // [Exec] 새로운 데이터 추가
-        this.history.push({command, list})
+        this.history.push({command, works});
+
+        // [Limit] 최대 크기 초과 시 가장 오래된 항목부터 제거
+        this.TrimHistory();
+    }
+
+    /**
+     * [Function] TrimHistory
+     * @description 히스토리가 최대 크기를 초과하면 오래된 항목을 제거하고,
+     *  잘라낸 개수만큼 nowOrder도 함께 보정한다.
+     * @returns 실제로 잘라냈으면 true, 아니면 false
+     */
+    TrimHistory(): boolean {
+        const overflow = this.history.length - TabMemento.MAX_HISTORY_SIZE;
+        if(overflow <= 0) { return false; }
+
+        this.history.splice(0, overflow);
+        this.nowOrder -= overflow;
+
+        // [Safety] 혹시 모를 음수 방지.
+        if(this.nowOrder < -1) {
+            this.nowOrder = -1;
+        }
+        return true;
     }
 
     /**
@@ -83,7 +140,7 @@ export class Memento {
         console.log(now)
         switch(now.command) {
             case 'diagram':
-                for(const work of now.list) {
+                for(const work of now.works) {
                     
                     if(work.after !== null && work.before === null) {
                         // [Delete] 다이어그램 삭제
@@ -100,7 +157,7 @@ export class Memento {
                 }
                 break;
             case 'space-move':
-                if(now.list.length <= 0) {break;}
+                if(now.works.length <= 0) {break;}
                 
                 // const work = now.list[0];
 
@@ -120,7 +177,7 @@ export class Memento {
 
         switch(now.command) {
             case 'diagram':
-                for(const work of now.list) {
+                for(const work of now.works) {
                     
                     if(work.before !== null && work.after === null) {
                         // [Delete] 다이어그램 삭제
@@ -137,7 +194,7 @@ export class Memento {
                 }
                 break;
             case 'space-move':
-                if(now.list.length <= 0) {break;}
+                if(now.works.length <= 0) {break;}
                 
                 // const work = now.list[0];
 

@@ -105,10 +105,10 @@ export class EventPan {
                 break;
             case 2:
                 const values = this.pointers.values();
-                const p1 = values.next().value;
-                const p2 = values.next().value;
-                if(!p1 || !p2) {break;}
-                const dist = this.GetPointerDistance(p1, p2);
+                const pointer1 = values.next().value;
+                const pointer2 = values.next().value;
+                if(!pointer1 || !pointer2) {break;}
+                const dist = this.GetPointerDistance(pointer1, pointer2);
                 if (this.zoom.distance === 0) {
                     this.zoom.distance = dist;
                     break; 

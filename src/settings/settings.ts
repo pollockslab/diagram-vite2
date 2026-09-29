@@ -1,57 +1,61 @@
-import { Popup as EnginesPopup } from '@/engines/popup/popup'
-import { _MNGR, _STOR } from '@/main';
+import { _MNGR } from '@/main';
 import { SettingsUI } from './settings.ui';
 import * as SettingsType from './settings.type'
 import './settings.css'
 
-
-
+// [Rule] 셋팅정보는, IDB.settings(objectStore)의 키가 `1`인 행만 사용.
+const SETTINGS_LOAD_KEY = '1';
 export class Settings {
-    parentNode: HTMLElement;
-    popup: EnginesPopup;
-    ui: SettingsUI;
-
-    // [Info] Settings 기본정보
-    id = 1;
-    tab: SettingsType.Tab = {
-        id           : null, // tabId
-        openDiagramId: null,
-        favorite: [],
-        mementos: {
-            history: [],
-            nowOrder : -1,
+    
+    parentNode  : HTMLElement;
+    ui          : SettingsUI;
+    
+    id: SettingsType.ID = null;
+    open = {
+        tab: {
+            id: null as SettingsType.ID,
         },
     };
 
     constructor(args: {parentNode: HTMLElement}) {
         this.parentNode = args.parentNode;
-        this.popup = new EnginesPopup({parentNode: args.parentNode});    
-        this.popup.title.innerText = '환경설정';
-        
-        this.ui = new SettingsUI({parentNode: this.popup.panel});
-        // this.popup.Open();
+        this.ui = new SettingsUI({parentNode: this.parentNode});
+    }
+
+    static get origin(): SettingsType.Settings {
+        return {
+            settings: {
+                id: null,
+            },
+            open: {
+                tab: {
+                    id: null,
+                },
+            },
+        }
     }
 
     get serialize(): SettingsType.Settings {
         return {
-            id: this.id,
-            openTabId: this.tab.id,
+            settings: {
+                id: this.id,
+            },
+            open: {
+                tab: {
+                    id: this.open.tab.id,
+                },
+            },
         };
     }
-    get openTabId() {
-        return this.tab.id;
+    set serialize(data: SettingsType.Settings) {
+        this.id = data.settings.id;
+        this.open.tab.id = data.open.tab.id;
     }
-    set openTabId(data) {
-        this.tab.id = data;
+    get loadKey() {
+        return SETTINGS_LOAD_KEY;
     }
-}
 
-export class Dpr {
-    value: number = 1;
-    constructor() {
-        this.Update();
-    }
-    Update(): void {
-        this.value = Math.round(window.devicePixelRatio) || 1;
+    Init() {
+        this.serialize = Settings.origin;
     }
 }

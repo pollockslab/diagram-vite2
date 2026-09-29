@@ -1,15 +1,19 @@
+import * as ManagerMain         from './manager.main'
 import * as ManagerController   from './manager.controller/manager.controller'
 import * as ManagerRemocon      from './manager.remocon'
 import * as ManagerRender       from './manager.render'
 import * as ManagerLoop         from './manager.loop'
-import * as ManagerDiagram      from './manager.diagram'
+import * as ManagerDiagram      from './manager.diagram/manager.diagram'
 import * as ManagerSettings     from './manager.settings'
-import * as ManagerSpace        from './manager.space'
-import * as ManagerMemento      from './manager.memento'
+import * as ManagerSpace        from './manager.space/manager.space'
+import * as ManagerSpaceGrid    from './manager.space/manager.space.grid'
+import * as ManagerTabMemento   from './manager.tab_memento'
+import * as ManagerTab          from './manager.tab'
 
 
 // 실시간으로 프로그램 상태를 확인
 export class Manager {
+    main        = ManagerMain;
     controller  = ManagerController;
     remocon     = ManagerRemocon;
     render      = ManagerRender;
@@ -17,7 +21,9 @@ export class Manager {
     diagram     = ManagerDiagram;
     settings    = ManagerSettings;
     space       = ManagerSpace;
-    memento     = ManagerMemento;
+    space_grid  = ManagerSpaceGrid;
+    tab_memento = ManagerTabMemento;
+    tab         = ManagerTab;
 
     constructor() {}
 }

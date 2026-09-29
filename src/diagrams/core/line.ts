@@ -2,70 +2,83 @@ import { _DPR } from '@/main'
 import * as DiagramsType from '../diagrams.type'
 import { Axis } from './axis'
 
-export class Line extends Axis implements DiagramsType.serialize.core.Line {
+export class Line extends Axis {
     line = {
-        a: {    
-            x: 0 as number,
-            y: 0 as number, 
-        },
-        b: {    
-            x: 0 as number,
-            y: 0 as number, 
-        },
+        x1: 0,
+        y1: 0,
+        x2: 0,
+        y2: 0,
     };
     
     constructor() {super();}
 
+    static get origin(): DiagramsType.serialize.core.Line {
+        return {
+            ...super.origin,
+            line: {
+                x1: 0,
+                y1: 0,
+                x2: 0,
+                y2: 0,
+            },
+        };
+    }
     get serialize(): DiagramsType.serialize.core.Line {
         return {
             ...super.serialize,
             line: {
-                a: {
-                    x: this.aX,
-                    y: this.aY,
-                },
-                b: {
-                    x: this.bX,
-                    y: this.bY,
-                },
-            } 
+                x1: this.x1,
+                y1: this.y1,
+                x2: this.x2,
+                y2: this.y2,
+            },
         };
     }
+    set serialize(data: DiagramsType.serialize.core.Line) {
+        // [Axis]
+        super.serialize = data;
 
-    get aX() {
-        return this.line.a.x;
-    }
-    set aX(size) {
-        // [Validation] 비정상적인 숫자일 때 0으로 초기화 하여 화면이탈 방지
-        // 예: NaN, Infinity, 부동소수점 이슈
-        this.line.a.x = (!Number.isFinite(size))? 0 : size;
-    }
-
-    get aY() {
-        return this.line.a.y;
-    }
-    set aY(size) {
-        // [Validation] 비정상적인 숫자일 때 0으로 초기화 하여 화면이탈 방지
-        // 예: NaN, Infinity, 부동소수점 이슈
-        this.line.a.y = (!Number.isFinite(size))? 0 : size;
+        // [Line]
+        this.x1 = data.line.x1;
+        this.y1 = data.line.y1;
+        this.x2 = data.line.x2;
+        this.y2 = data.line.y2;
     }
 
-    get bX() {
-        return this.line.b.x;
+    get x1() {
+        return this.line.x1;
     }
-    set bX(size) {
+    set x1(size) {
         // [Validation] 비정상적인 숫자일 때 0으로 초기화 하여 화면이탈 방지
         // 예: NaN, Infinity, 부동소수점 이슈
-        this.line.b.x = (!Number.isFinite(size))? 0 : size;
+        this.line.x1 = (!Number.isFinite(size))? 0 : size;
     }
 
-    get bY() {
-        return this.line.b.y;
+    get y1() {
+        return this.line.y1;
     }
-    set bY(size) {
+    set y1(size) {
         // [Validation] 비정상적인 숫자일 때 0으로 초기화 하여 화면이탈 방지
         // 예: NaN, Infinity, 부동소수점 이슈
-        this.line.b.y = (!Number.isFinite(size))? 0 : size;
+        this.line.y1 = (!Number.isFinite(size))? 0 : size;
+    }
+
+    get x2() {
+        return this.line.x2;
+    }
+    set x2(size) {
+        // [Validation] 비정상적인 숫자일 때 0으로 초기화 하여 화면이탈 방지
+        // 예: NaN, Infinity, 부동소수점 이슈
+        this.line.x2 = (!Number.isFinite(size))? 0 : size;
+    }
+
+    get y2() {
+        return this.line.y2;
+    }
+    set y2(size) {
+        // [Validation] 비정상적인 숫자일 때 0으로 초기화 하여 화면이탈 방지
+        // 예: NaN, Infinity, 부동소수점 이슈
+        this.line.y2 = (!Number.isFinite(size))? 0 : size;
     }
 
     GetAnchorPoints(_width?: number, _height?: number): {x: number, y: number}[] {

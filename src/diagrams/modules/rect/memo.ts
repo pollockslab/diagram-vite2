@@ -1,9 +1,9 @@
 
 import { _DPR, _SNAP } from '@/main'
 import * as DiagramsType from '@/diagrams/diagrams.type'
-import { Square } from '@/diagrams/core/square'
+import { Rect } from '@/diagrams/core/rect'
 
-export class Memo extends Square implements DiagramsType.serialize.modules.square.Memo {
+export class Memo extends Rect implements DiagramsType.serialize.modules.rect.Memo {
     memo = {
         backgroundColor : 'orange',
         text            : '',
@@ -11,7 +11,7 @@ export class Memo extends Square implements DiagramsType.serialize.modules.squar
 
     constructor() {super();}
 
-    get serialize(): DiagramsType.serialize.modules.square.Memo {
+    get serialize(): DiagramsType.serialize.modules.rect.Memo {
         return {
             ...super.serialize,
             memo: {

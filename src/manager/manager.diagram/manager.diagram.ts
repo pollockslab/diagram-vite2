@@ -1,7 +1,9 @@
 // [Diagram] 다이어그램 거래 모음
-import { _VIEW, _REMO, _LOOP, _SPCE, _STOR, _MNGR } from '../main';
+import { _VIEW, _REMO, _LOOP, _SPCE, _STOR, _MNGR } from '@/main';
 import * as Diagrams from '@/diagrams/diagrams'
 import * as DiagramsType from '@/diagrams/diagrams.type'
+import * as IndexeddbType from '@/engines/indexeddb/indexeddb.type'
+import * as Common from '@/engines/common'
 
 
 /**
@@ -14,7 +16,7 @@ export function Cover(serialize: any): undefined | DiagramsType.Instance {
     
     // [New] 새 정보 생성. 
     serialize.axis.id = serialize.axis.id ?? crypto.randomUUID(); // [UUID] 새 아이디 생성.
-    serialize.axis.type = serialize.axis.type ?? 'Axis';
+    serialize.type = serialize.axis.type ?? 'Axis';
 
     try {
         // [Instance] 다이어그램 생성
@@ -40,8 +42,8 @@ export async function Insert(
     options: { isMementoPush?: boolean } = {}
 ) {     
     // [New] 다이어그램 생성
-    serialize.axis.parentId = _SPCE.id;
-    serialize.axis.tabId = _SPCE.tabId;
+    serialize.axis.id.space = _SPCE.spaceID;
+    serialize.axis.id.tab = _SPCE.tabID;
     serialize.axis.zIndex = Date.now();
     const diagram = Cover(serialize);
     if(!diagram) {return;}
@@ -72,6 +74,33 @@ export async function Insert(
         };
         await _MNGR.memento.Exec('diagram', [work]);
     }
+}
+
+export async function InsertTX(
+    cmd: IndexeddbType.StoreCommand, 
+    data: {type: DiagramsType.ClassName; [key: string]: unknown},
+): Promise<DiagramsType.Instance> {
+    const typeClass = Diagrams.Class[data.type];
+    if(!typeClass) {throw new Error(`Diagram type not found: '${data.type}'`);}
+    const diagram = new typeClass();
+
+    // [Patch] Origin(다이어그램 초기값) 규격에, 데이터 덮어쓰기.
+    const serialize = Common.PatchObjectDeep(typeClass.origin, data);
+
+    // [Sync] 다이어그램에 값 반영.
+    diagram.serialize = serialize;
+
+    // [New] 아이디 없다면 생성. 
+    if(!diagram.id) {
+        diagram.id = crypto.randomUUID();
+    }
+    // [Upgrade] 저장할 때마다 버전 증가. (변경 추적용. Update 시 버전이 튀면 오류로 판단)
+    diagram.version++;
+
+    // [Insert] DB에 다이어그램 저장.
+    await cmd.Add('diagram', diagram.serialize);
+
+    return diagram;
 }
 
 export async function Update(

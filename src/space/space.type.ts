@@ -1,6 +1,7 @@
 import * as DiagramsType from '@/diagrams/diagrams.type'
 
-
+export type ID        = null | string;
+export type GridList  = Record<string, string[]>; // grid => 'x,y': 다이어그램 아이디 배열
 export type LayerName = 'Axis'|'Line'|'Square'|'Point';
 export interface Layer {
     Axis  : DiagramsType.Instance[],
@@ -9,37 +10,22 @@ export interface Layer {
     Point : DiagramsType.Instance[],
 }
 
-export interface Edge {
-    arrow: EdgeArrow,
-    cursor: EdgeCursor,
-}
-export type EdgeArrow = 
-    'e'|'w'|'s'|'n'|        // 동, 서, 남, 북
-    'es'|'en'|'ws'|'wn';    // 동남, 동북, 서남, 서북
-      
-export type EdgeCursor = 
-    // 단방향 (상하좌우)
-    'ew-resize'|
-    'ew-resize'|
-    'ns-resize'|
-    'ns-resize'|
-        
-    // 대각선 방향 (북동-남서, 북서-남동)
-    'nwse-resize'|
-    'nesw-resize'|
-    'nesw-resize'|
-    'nwse-resize';
-
 export namespace serialize {
-    export interface Space {
-            id: {
-            space: string,
-            tab: string,
-        },
-        // grid => 'x,y': 다이어그램 아이디 배열
-        grid: Record<string, string[]>,
-    }
     export interface Grid {
-        list: Record<string, string[]>,
+        space_grid: {
+            id   : ID;
+            x1000: number;
+            y1000: number;
+        };
+        children: {
+            diagram: {
+                list: string[];
+            };
+        };
+        self: {
+            diagram: {
+                id: ID;
+            };
+        };
     }
 }

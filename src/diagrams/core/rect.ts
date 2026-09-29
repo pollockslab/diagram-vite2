@@ -3,8 +3,8 @@ import * as DiagramsType from '@/diagrams/diagrams.type'
 import { Axis } from '@/diagrams/core/axis'
 
 
-export class Square extends Axis implements DiagramsType.serialize.core.Square {
-    square = {
+export class Rect extends Axis {
+    rect = {
         left    :   0 as number,
         top     :   0 as number,
         width   : 100 as number,
@@ -14,63 +14,84 @@ export class Square extends Axis implements DiagramsType.serialize.core.Square {
 
     constructor() {super();}
 
-    get serialize(): DiagramsType.serialize.core.Square {
+    static get origin(): DiagramsType.serialize.core.Rect {
+        return {
+            ...super.origin,
+            rect: {
+                left    : 0,
+                top     : 0,
+                width   : 100,
+                height  : 100,
+            },
+        };
+    }
+    get serialize(): DiagramsType.serialize.core.Rect {
         return {
             ...super.serialize,
-            square: {
+            rect: {
                 left    : this.left,
                 top     : this.top,
                 width   : this.width,
                 height  : this.height,
-            } 
+            },
         };
+    }
+    set serialize(data: DiagramsType.serialize.core.Rect) {
+        // [Axis]
+        super.serialize = data; 
+
+        // [Rect]
+        this.left      = data.rect.left;
+        this.top       = data.rect.top;
+        this.width     = data.rect.width;
+        this.height    = data.rect.height;
     }
 
     get left() {
-        return this.square.left;
+        return this.rect.left;
     }
     set left(size: number) {
         // [Validation] 비정상적인 숫자일 때 0으로 초기화 하여 화면이탈 방지
         // 예: NaN, Infinity, 부동소수점 이슈
-        this.square.left = (!Number.isFinite(size))? 0 : size;
+        this.rect.left = (!Number.isFinite(size))? 0 : size;
     }
 
     get top() {
-        return this.square.top;
+        return this.rect.top;
     }
     set top(size) {
         // [Validation] 비정상적인 숫자일 때 0으로 초기화 하여 화면이탈 방지
         // 예: NaN, Infinity, 부동소수점 이슈
-        this.square.top = (!Number.isFinite(size))? 0 : size;
+        this.rect.top = (!Number.isFinite(size))? 0 : size;
     }
 
     get width() {
-        return this.square.width;
+        return this.rect.width;
     }
     set width(size: number) {
         if(size < 100) {
-            this.square.width = 100;
+            this.rect.width = 100;
         } 
         else if(size > 1000) {
-            this.square.width = 1000;
+            this.rect.width = 1000;
         }
         else {
-            this.square.width = size;
+            this.rect.width = size;
         }
     }
     
     get height() {
-        return this.square.height;
+        return this.rect.height;
     }
     set height(size: number) {
         if(size < 100) {
-            this.square.height = 100;
+            this.rect.height = 100;
         } 
         else if(size > 1000) {
-            this.square.height = 1000;
+            this.rect.height = 1000;
         }
         else {
-            this.square.height = size;
+            this.rect.height = size;
         }
     }
 

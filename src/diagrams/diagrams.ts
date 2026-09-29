@@ -1,24 +1,25 @@
 
 // [Core]
 import { Axis } from '@/diagrams/core/axis'
+import { Chain } from '@/diagrams/core/chain'
 import { Line } from '@/diagrams/core/line'
 import { Point } from '@/diagrams/core/point'
-import { Square } from '@/diagrams/core/square'
+import { Rect } from '@/diagrams/core/rect'
 
-// [Modules][Bottun]
-import { Action } from '@/diagrams/modules/button/action'
+// // [Modules][Bottun]
+// import { Action } from '@/diagrams/modules/button/action'
 
-// [Modules][Line]
-import { Link } from '@/diagrams/modules/line/link'
-import { Arrow } from '@/diagrams/modules/line/arrow'
+// // [Modules][Line]
+// import { Link } from '@/diagrams/modules/line/link'
+// import { Arrow } from '@/diagrams/modules/line/arrow'
 
-// [Modules][Point]
-import { Pin } from '@/diagrams/modules/point/pin'
+// // [Modules][Point]
+// import { Pin } from '@/diagrams/modules/point/pin'
 
-// [Modules][Square]
-import { Drawmap } from '@/diagrams/modules/square/drawmap'
-import { Group } from '@/diagrams/modules/square/group'
-import { Memo } from '@/diagrams/modules/square/memo'
+// // [Modules][Rect]
+// import { Drawmap } from '@/diagrams/modules/rect/drawmap'
+// import { Group } from '@/diagrams/modules/rect/group'
+// import { Memo } from '@/diagrams/modules/rect/memo'
 
 
 
@@ -26,18 +27,18 @@ import { Memo } from '@/diagrams/modules/square/memo'
 
 export const Class = {
     // [Core]
-    Axis, Line, Point, Square,
+    Axis, Chain, Line, Point, Rect,
 
-    // [Modules][Bottun]
-    Action,
+    // // [Modules][Bottun]
+    // Action,
 
-    // [Modules][Line]
-    Link, Arrow,
+    // // [Modules][Line]
+    // Link, Arrow,
 
-    // [Modules][Point]
-    Pin, 
+    // // [Modules][Point]
+    // Pin, 
     
-    // [Modules][Square]
-    Drawmap, Group, Memo,
+    // // [Modules][Rect]
+    // Drawmap, Group, Memo,
 
 } as const;

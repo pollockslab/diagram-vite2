@@ -1,5 +1,5 @@
 import { _METO , _STOR, _SETT } from '@/main'
-import * as MementoType from '@/memento/memento.type'
+import * as MementoType from '@/tab_memento/tab_memento.type'
 
 
 /**
@@ -10,15 +10,15 @@ import * as MementoType from '@/memento/memento.type'
  */
 
 
-export async function Load() {
-    const tab = await _STOR.Post('tab-select', _SETT.openTabId);
-    if(!tab || !tab.mementos) {return false;}
+// export async function Load() {
+//     const tab = await _STOR.Post('tab-select', _SETT.openTabId);
+//     if(!tab || !tab.mementos) {return false;}
 
-    _METO.InitLoad(tab.mementos);
-}
+//     _METO.InitLoad(tab.mementos);
+// }
 
-export async function Exec(command: MementoType.Command, list: MementoType.work[]) {
-    // console.log(command, list);
-    _METO.Exec(command, list);
-}
+// export async function Exec(command: MementoType.Command, list: MementoType.work[]) {
+//     // console.log(command, list);
+//     _METO.Exec(command, list);
+// }
 

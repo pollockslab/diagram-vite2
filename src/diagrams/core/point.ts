@@ -2,7 +2,7 @@ import { _DPR } from '@/main'
 import * as DiagramsType from '../diagrams.type'
 import { Axis } from './axis'
 
-export class Point extends Axis implements DiagramsType.serialize.core.Point {
+export class Point extends Axis {
     point = {
         x       : 0 as number,
         y       : 0 as number,
@@ -10,6 +10,15 @@ export class Point extends Axis implements DiagramsType.serialize.core.Point {
     
     constructor() {super();}
 
+    static get origin(): DiagramsType.serialize.core.Point {
+        return {
+            ...super.origin,
+            point: {
+                x: 0,
+                y: 0,
+            },
+        };
+    }
     get serialize(): DiagramsType.serialize.core.Point
     {
         return {
@@ -19,6 +28,14 @@ export class Point extends Axis implements DiagramsType.serialize.core.Point {
                 y: this.point.y,
             },
         };
+    }
+    set serialize(data: DiagramsType.serialize.core.Point) {
+        // [Axis]
+        super.serialize = data;
+
+        // [Point]
+        this.x = data.point.x;
+        this.y = data.point.y;
     }
 
     get x() {

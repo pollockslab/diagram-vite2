@@ -1,16 +1,12 @@
 
-
+export type ID = string | null;
 export interface Settings {
-    id: number,
-    openTabId: string | null,
+    settings: {
+        id: ID;
+    };
+    open: {
+        tab: {
+            id: ID;
+        };
+    };
 }
-export interface Tab {
-    id: string | null, // tabId
-    openDiagramId: string | null, //axis.id,
-    favorite: [],
-    mementos: {
-        history: [],
-        nowOrder : number, //-1
-    },
-}
-    

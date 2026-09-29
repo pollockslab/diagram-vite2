@@ -9,7 +9,7 @@ export function Action(id: string) {
         }
         case 'setting': {
             _CTRL.CursorStyle('pointer');
-            _SETT.popup.Open();
+            _SETT.ui.Open();
             break;
         }
         case 'imagedownload': {
