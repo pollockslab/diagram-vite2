@@ -29,9 +29,13 @@ export namespace serialize {
             chain: {
                 diagram1: {
                     id: ID,
+                    x : number,
+                    y : number,
                 },
                 diagram2: {
                     id: ID,
+                    x : number,
+                    y : number,
                 },
             },
         }
@@ -52,8 +56,8 @@ export namespace serialize {
         }
         export interface Rect extends serialize.core.Axis{
             rect: {
-                left    : number,
-                top     : number,
+                x       : number,
+                y       : number,
                 width   : number,
                 height  : number,
             },

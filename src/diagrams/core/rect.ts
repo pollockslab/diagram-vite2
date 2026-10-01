@@ -5,8 +5,8 @@ import { Axis } from '@/diagrams/core/axis'
 
 export class Rect extends Axis {
     rect = {
-        left    :   0 as number,
-        top     :   0 as number,
+        x       :   0 as number,
+        y       :   0 as number,
         width   : 100 as number,
         height  : 100 as number,
     };
@@ -18,8 +18,8 @@ export class Rect extends Axis {
         return {
             ...super.origin,
             rect: {
-                left    : 0,
-                top     : 0,
+                x       : 0,
+                y       : 0,
                 width   : 100,
                 height  : 100,
             },
@@ -29,8 +29,8 @@ export class Rect extends Axis {
         return {
             ...super.serialize,
             rect: {
-                left    : this.left,
-                top     : this.top,
+                x       : this.left,
+                y       : this.top,
                 width   : this.width,
                 height  : this.height,
             },
@@ -41,28 +41,32 @@ export class Rect extends Axis {
         super.serialize = data; 
 
         // [Rect]
-        this.left      = data.rect.left;
-        this.top       = data.rect.top;
+        this.x          = data.rect.x;
+        this.y          = data.rect.y;
         this.width     = data.rect.width;
         this.height    = data.rect.height;
     }
-
-    get left() {
-        return this.rect.left;
+    get x(): number {
+        return this.rect.x;
     }
-    set left(size: number) {
-        // [Validation] 비정상적인 숫자일 때 0으로 초기화 하여 화면이탈 방지
-        // 예: NaN, Infinity, 부동소수점 이슈
-        this.rect.left = (!Number.isFinite(size))? 0 : size;
+    set x(data: number) {
+        // [Validation] NaN, Infinity 등 비정상 숫자는 무시하고 이전 값 유지
+        if (!Number.isFinite(data)) {
+            console.warn('Invalid x:', data);
+            return;
+        }
+        this.rect.x = data;
     }
-
-    get top() {
-        return this.rect.top;
+    get y(): number {
+        return this.rect.y;
     }
-    set top(size) {
-        // [Validation] 비정상적인 숫자일 때 0으로 초기화 하여 화면이탈 방지
-        // 예: NaN, Infinity, 부동소수점 이슈
-        this.rect.top = (!Number.isFinite(size))? 0 : size;
+    set y(data: number) {
+        // [Validation] NaN, Infinity 등 비정상 숫자는 무시하고 이전 값 유지
+        if (!Number.isFinite(data)) {
+            console.warn('Invalid y:', data);
+            return;
+        }
+        this.rect.y = data;
     }
 
     get width() {
@@ -79,7 +83,6 @@ export class Rect extends Axis {
             this.rect.width = size;
         }
     }
-    
     get height() {
         return this.rect.height;
     }
@@ -95,8 +98,25 @@ export class Rect extends Axis {
         }
     }
 
+    get left    () {return this.rect.x - this.width /2;}
+    get top     () {return this.rect.y - this.height/2;}
+    get right   () {return this.rect.x + this.width /2;}
+    get bottom  () {return this.rect.y + this.height/2;}
+
     Init() {
         this.Snapshot();
+    }
+
+    GetRect(): {
+        left : number, top   : number, 
+        right: number, bottom: number, 
+        width: number, height: number, 
+    } {
+        return {
+            left : this.left , top   : this.top   ,
+            right: this.right, bottom: this.bottom, 
+            width: this.width, height: this.height, 
+        };
     }
     
     GetAnchorPoints(_width?: number, _height?: number): {x: number, y: number}[] {

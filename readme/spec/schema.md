@@ -83,16 +83,24 @@
 > | No.   | Directory                | DataType | Memo |
 > | :---: | :---                     | :---     | :--- | 
 > | 1     | chain.diagram1.id `(FK)` | String   | 연결 된 첫번째 다이어그램 ID |
-> | 2     | chain.diagram2.id `(FK)` | String   | 연결 된 두번째 다이어그램 ID |
+> | 2     | chain.diagram1.x         | number   | 첫번째 다이어그램 x |
+> | 3     | chain.diagram1.y         | number   | 첫번째 다이어그램 y |
+> | 4     | chain.diagram2.id `(FK)` | String   | 연결 된 두번째 다이어그램 ID |
+> | 5     | chain.diagram2.x         | number   | 두번째 다이어그램 x |
+> | 6     | chain.diagram2.y         | number   | 두번째 다이어그램 y |
 ```
     chain.serialize = {
         axis: {...},
         chain: {
             diagram1: {
                 id: String, // [Foreign Key]
+                x: number,
+                y: number,
             },
             diagram2: {
                 id: String, // [Foreign Key]
+                x: number,
+                y: number,
             },
         },
     };
@@ -136,18 +144,18 @@
 <br/>
 
 ## 1-5. [<span id="link-diagram-rect">Rect</span>](#)
-> | No.   | Directory        | DataType | Memo |
-> | :---: | :---             | :---     | :--- | 
-> | 1     | rect.left      | Number   | 좌측 위치 |
-> | 2     | rect.top       | Number   | 상단 위치 |
-> | 3     | rect.width     | Number   | 가로 길이 |
-> | 4     | rect.height    | Number   | 세로 길이 |
+> | No.   | Directory      | DataType | Memo |
+> | :---: | :---           | :---     | :--- | 
+> | 1     | rect.x         | number   | 중앙 x (left/right는 getter로 계산) |
+> | 2     | rect.y         | number   | 중앙 y (top/bottom은 getter로 계산) |
+> | 3     | rect.width     | number   | 가로 길이 |
+> | 4     | rect.height    | number   | 세로 길이 |
 ```
     rect.serialize = {
         axis: {...},
         rect: {
-            left  : Number,
-            top   : Number,
+            x     : Number,
+            y     : Number,
             width : Number,
             height: Number,
         },

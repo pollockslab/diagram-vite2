@@ -18,13 +18,13 @@ export async function LoadTX(cmd: IndexeddbType.StoreCommand): Promise<void> {
 
     // [Insert] 탭에서 오픈 스페이스 ID 확인. 없을 경우 생성.
     if(!_TAB.open.space.id) {
-        select = await InsertTX(cmd, 'Axis', null);
+        select = await InsertTX(cmd, null);
     }
     else {
         select = await cmd.Get('diagram', _TAB.open.space.id);
         // [Validation] 조회정보 없을 시, 새로생성.
         if(!select) {
-            select = await InsertTX(cmd, 'Axis', null);
+            select = await InsertTX(cmd, null);
         }
     }
     // [Update] Space 모듈에 값 반영.
@@ -34,25 +34,34 @@ export async function LoadTX(cmd: IndexeddbType.StoreCommand): Promise<void> {
     _TAB.open.space.id = select.id;
 }
 
-export async function InsertTX(
+/**
+ * [Function] InsertTX
+ * @description Space 모듈이 참조하는 Diagram 생성 (부모 X, 자기자신 O)
+ * @param cmd IDB.Transaction
+ * @param parentDiagramID 부모 Diagram ID
+ * @returns 생성된 Diagram (부모 X, 자기자신 O)
+ */
+async function InsertTX(
     cmd: IndexeddbType.StoreCommand,
-    diagramType: DiagramsType.ClassName,
     parentDiagramID: DiagramsType.ID,
 ): Promise<DiagramsType.Instance> {
     if(!_TAB.id) {throw new Error('tab.id is not found.');}
 
     // [Insert] 다이어그램 생성.
-    const diagram = await _MNGR.diagram.InsertTX(cmd, {
-        type: diagramType,
-        parent: {
-            diagram: {
-                id: parentDiagramID,
+    const diagram = await _MNGR.diagram.InsertTX(
+        cmd, 
+        {
+            type: 'Axis',
+            parent: {
+                diagram: {
+                    id: parentDiagramID,
+                },
+                tab: {
+                    id: _TAB.id,
+                },
             },
-            tab: {
-                id: _TAB.id,
-            },
-        },
-    });
+        }
+    );
     return diagram;
 }
 

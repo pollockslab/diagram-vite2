@@ -1,5 +1,4 @@
-
-import { _DPR } from '@/main'
+import { PatchObjectDeep } from '@/engines/common'
 import * as DiagramsType from '@/diagrams/diagrams.type'
 
 
@@ -47,16 +46,16 @@ export class Axis {
             type    : this.type,
             parent: {
                 diagram: {
-                    id: this.parentDiagramID,
+                    id: this.parent.diagram.id,
                 },
                 tab: {
-                    id: this.parentTabID,
+                    id: this.parent.tab.id,
                 },
             },
         };
     } 
     set serialize(data: DiagramsType.serialize.core.Axis) {
-        // [Axie]
+        // [Axis]
         this.id      = data.axis.id;
         this.zIndex  = data.axis.zIndex;
         this.version = data.axis.version;
@@ -65,48 +64,18 @@ export class Axis {
         this.type = data.type;
 
         // [Parent]
-        this.parentDiagramID = data.parent.diagram.id;
-        this.parentTabID     = data.parent.tab.id;
+        this.parent.diagram.id = data.parent.diagram.id;
+        this.parent.tab.id     = data.parent.tab.id;
     }
-
-    get parentDiagramID() {
-        return this.parent.diagram.id;
-    }
-    set parentDiagramID(data: DiagramsType.ID) {
-        this.parent.diagram.id = data;
-    }
-    get parentTabID() {
-        return this.parent.tab.id;
-    }
-    set parentTabID(data: DiagramsType.ID) {
-        this.parent.tab.id = data;
-    }
-
-    static create(args: Partial<any> = {}) {
-        const instance = new this();
-        instance.SetData(args);
-        instance.Init();
-        return instance;
+    
+    SetData<T extends Record<string, any>>(data: Partial<T>) {
+        this.serialize = PatchObjectDeep(this.serialize, data);
     }
 
     // NOTE: 자식 클래스에서 오버라이드 위한 더미함수.
     Init() {}
-
     GetAnchorPoints(_width?: number, _height?: number): {x: number, y: number}[] {
         return [];
     }
-    
-    SetData(args: Partial<any> = {}): void {  
-        for(const any in args) {
-            const anyList = (args as any)[any];
-            if(anyList && typeof anyList === 'object') {
-                for(const getter in anyList) {
-                    if(!(getter in this)) {continue;}
-                    (this as any)[getter] = anyList[getter];
-                }
-            }
-        }
-    }
-
     Draw(_ctx?: CanvasRenderingContext2D) {}
 }
