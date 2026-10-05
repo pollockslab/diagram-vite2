@@ -3,6 +3,7 @@ import { _CTRL, _DPR, _SPCE  } from '@/main'
 import { ViewBackground } from './view.background'
 import { ViewBoard } from './view.board'
 import { ViewEffect } from './view.effect'
+import * as ViewType from './view.type'
 import './view.css'
 
 
@@ -62,8 +63,8 @@ export class View {
             const width  = this.panel.offsetWidth;
             const height = this.panel.offsetHeight;
         
-            this.w = this.SpaceLine(width);
-            this.h = this.SpaceLine(height);
+            this.width = this.SpaceLine(width);
+            this.height = this.SpaceLine(height);
         }
     }
 
@@ -98,16 +99,16 @@ export class View {
         // 예: NaN, Infinity, 부동소수점 이슈
         this.pos.space.y = (!Number.isFinite(size))? 0 : size;
     }
-    get w() {
+    get width() {
         return this.pos.space.w;
     }
-    set w(size) {        
+    set width(size) {        
         this.pos.space.w = (!Number.isFinite(size))? 0 : size;
     }   
-    get h() {
+    get height() {
         return this.pos.space.h;
     }
-    set h(size) {
+    set height(size) {
         this.pos.space.h = (!Number.isFinite(size))? 0 : size;
     }
 
@@ -120,8 +121,8 @@ export class View {
         this.offsetW = width;   
         this.offsetH = height;
 
-        this.w = this.SpaceLine(width);
-        this.h = this.SpaceLine(height);
+        this.width = this.SpaceLine(width);
+        this.height = this.SpaceLine(height);
 
         const dpr = _DPR.value
         this.cav.width = width * dpr;
@@ -140,15 +141,13 @@ export class View {
         return Math.round(pixel/this.zoom);
     }
 
-    GetRect(): {
-        left : number, top   : number, 
-        right: number, bottom: number, 
-        width: number, height: number, 
-    } {
+    GetRect(): ViewType.GetRect {
+        const halfWidth  = this.width /2;
+        const halfHeight = this.height/2;
         return {
-            left : this.left , top   : this.top   ,
-            right: this.right, bottom: this.bottom, 
-            width: this.width, height: this.height, 
+            left : this.x - halfWidth, top   : this.y - halfHeight,
+            right: this.x + halfWidth, bottom: this.y + halfHeight, 
+            width: this.width        , height: this.height        , 
         };
     }
 

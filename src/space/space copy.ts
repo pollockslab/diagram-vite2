@@ -1,7 +1,7 @@
 import { _MNGR } from '@/main'
 import * as DiagramsType from '@/diagrams/diagrams.type'
 import { SpaceStore } from './space.store'
-import { SpaceGrid } from './space.grid/space.grid'
+import { SpaceGrid } from './space.grid/space.grid.cell'
 import * as SpaceCollision from './space.collision'
 import * as SpaceType from './space.type'
 

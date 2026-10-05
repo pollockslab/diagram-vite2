@@ -89,7 +89,14 @@ export class IndexeddbCommand implements IndexeddbType.StoreCommand {
     /**
      * [Find] GetByIndex
      * @description 인덱스로 단일 레코드를 조회합니다 (일치하는 첫 번째 값).
-     * @example cmd.GetByIndex('diagram', 'type', 'rect')
+     * 복합 키 인덱스(keyPath가 배열)는 key에 배열을 넘기며, 순서와 개수가 keyPath와 정확히 같아야 합니다.
+     * 일부 요소만 넘기면 매칭되지 않습니다 (부분 조회는 IDBKeyRange 범위 조회 필요).
+     * @example
+     * // 단일 키 인덱스
+     * cmd.GetByIndex('diagram', 'type', 'rect')
+     * @example
+     * // 복합 키 인덱스: keyPath ['grid.x1000', 'grid.y1000', 'self.diagram.id']
+     * cmd.GetByIndex('space_grid', 'grid', [-1000, 2000, 'diagram-1'])
      */
     GetByIndex<T = any>(storeName: string, indexName: string, key: IDBValidKey): Promise<T | undefined> {
         const index = this.tx.objectStore(storeName).index(indexName);

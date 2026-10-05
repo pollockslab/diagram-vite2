@@ -16,3 +16,12 @@ export interface EffectSquare {
     h: number;
     color: string;
 }
+
+export interface GetRect {
+    left    : number;
+    top     : number; 
+    right   : number;
+    bottom  : number; 
+    width   : number;
+    height  : number; 
+}

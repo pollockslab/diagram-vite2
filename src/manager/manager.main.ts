@@ -17,14 +17,11 @@ export async function Init() {
             await _MNGR.tab.LoadTX(cmd);
             await _MNGR.tab_memento.LoadTX(cmd);
             await _MNGR.space.LoadTX(cmd);
-
-            // [Grid] 화면에 보여줄 그리드 로딩
-            await _MNGR.space_grid.LoadTX(cmd);
             
             // [Update]
             await cmd.Put('settings', _SETT.serialize);
             await cmd.Put('tab', _TAB.serialize);
-            console.log(_TAB.serialize);
+           
         });
     }
     catch(error) {

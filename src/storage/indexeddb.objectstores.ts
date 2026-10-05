@@ -14,7 +14,7 @@ export const objectStores = [
         name: 'space_grid',
         keyPath: 'space_grid.id',
         indexList: [
-            { name: 'grid', keyPath: ['grid.x1000', 'grid.y1000', 'self.diagram.id'] },
+            { name: 'grid', keyPath: ['space_grid.x1000', 'space_grid.y1000', 'self.diagram.id'] },
         ],
     },
     {

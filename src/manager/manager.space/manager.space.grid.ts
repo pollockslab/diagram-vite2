@@ -1,39 +1,96 @@
 import { _VIEW, _TAB, _SPCE, _STOR, _MNGR } from '@/main'
+import { MultiKeyMap } from '@/engines/multikeymap/multikeymap'
 import * as IndexeddbType from '@/engines/indexeddb/indexeddb.type'
 import * as DiagramsType from '@/diagrams/diagrams.type'
+import { SpaceGridCell } from '@/space/space.grid/space.grid.cell'
+import * as ViewType from '@/view/view.type'
 
-export async function LoadTX(cmd: IndexeddbType.StoreCommand): Promise<void> {
-    // 1. view 화면 보여지는 크기 구해와(scope 포함)
-    const rect = _VIEW.GetRect();
-
-
-    // 2. 보여지는 크기에서 가져올 그리드 목록(x1000, y1000) 구하기
-    // 3. space.grid 목록추가
-    // 4. space.diagrams 에 목록추가
-    
+const GRID_WIDTH  = SpaceGridCell.GRID_WIDTH;
+const GRID_HEIGHT = SpaceGridCell.GRID_HEIGHT;
 
 
 
-    // 콜리전 체크를 해야되나? 여튼 현재 화면의 좌표
-            // 상, 하, 좌, 우 좌표 구해서 1000x1000 그리드 좌표 구해봐
-            // 그리고 목록으로 만들고 그리드 IDB 조회해오기
-            // 조회결과를 space.gridList 에도 넣고, 
-            // 전체 다이어그램 객체 space.diagrams 에도 넣고
-            // 넣은이후 루프에 draw 예약하기
-            // View 에서는 space.diagrams 들 다 그린다.
-            // 화면에 보이는것만 그리도록 하는게 맞나. 
-            // chain 만은 예외로 그리는게 맞을수도(매번 기울기 계산하는거보다 그리는게)
-            
-            // 컨트롤러든, 메인이든 루프든 특정 좌표를 기준으로 그리드 목록 생성해서
-            // 스페이스에 저장되게 하면 돼.
-            // 가지고 있고, 뷰어에서 그리고싶은 부분을 찾아서 그리면 되는거고
-            // 그럼 현재 위치는 뷰어에 물어보면 되겠네
-            // 뷰어에서 x, y 좌표, 돋보기 기능 포함 전체 보이는 넓이도 가지고 오고
-            // 1. manager.space 에 화면크기에서 그리드 몇개 들어가나 반환하는 함수
-            // 2. 이 함수 반환값으로 그리드 정보 idb에서 가져오기
-            // 3. 정보가 없으면 굳이 그리드 생성 안하기
-            // 4. space.diagrams 에 그리드 정보대로 다이어그램 객체 넣기
-            // 5. 뷰어에서 현재 화면 보이는곳을 그리기 위해 space 모듈에서 정보찾기
-            // 6. 찾은 정보로 그리면 됨.
+export function GetCellPoints(rect: ViewType.GetRect): [number, number][] {
+    const range = {
+        left    : Math.floor(rect.left/GRID_WIDTH)*GRID_WIDTH,
+        right   : Math.floor(rect.right/GRID_WIDTH)*GRID_WIDTH,
+        top     : Math.floor(rect.top/GRID_HEIGHT)*GRID_HEIGHT,
+        bottom  : Math.floor(rect.bottom/GRID_HEIGHT)*GRID_HEIGHT,
+    };
+    const points: [number, number][] = [];
+    for (let y = range.top; y <= range.bottom; y += GRID_HEIGHT) {
+        for (let x = range.left; x <= range.right; x += GRID_WIDTH) {
+            points.push([x, y]);
+        }
+    }
+    return points;
+}
 
+
+async function AddChildTX(
+    cmd: IndexeddbType.StoreCommand,
+    grid: MultiKeyMap, 
+    diagrams: Set<string>,
+    row: number, col: number,
+){
+    if(!_SPCE.id) {throw new Error('space.id is not found.')}
+
+    const diagram = await _MNGR.diagram.InsertTX(
+        cmd,
+        {
+            type: 'Rect',
+            rect: {
+                x: row, 
+                y: col,
+            },
+        },
+    );
+    if(!diagram.id) {return;}
+    // console.log(diagram)
+    // diagrams.add(id);
+    const origin = SpaceGridCell.origin;
+    origin.space_grid.id = crypto.randomUUID();
+    origin.space_grid.x1000 = row;
+    origin.space_grid.y1000 = col;
+    origin.children.diagram.list = [diagram.id];
+    origin.self.diagram.id = _SPCE.id;
+    // console.log(origin);
+
+    await cmd.Add('space_grid', origin);
+    console.log('여기 조회', await cmd.Get('space_grid', origin.space_grid.id));
+    const selectIndex = await cmd.GetByIndex('space_grid', 'grid', [row, col,  _SPCE.id]);
+    console.log('여기 조회222', selectIndex);
+}
+
+async function UpdateTX(
+    cmd: IndexeddbType.StoreCommand,
+    col: number, 
+    row: number,
+    serialize: DiagramsType.ID,
+){
+    if(!_SPCE.id) {throw new Error('space.id is not found.')}
+
+    // 1. 먼저 조회해보기. 
+    let select = await cmd.GetByIndex('space_grid', 'grid', [col, row, _SPCE.id]);
+
+    // 2. 없으면 새로 생성하기
+    if(!select) {
+        const origin = SpaceGridCell.origin;
+        origin.space_grid.id = crypto.randomUUID();
+        origin.self.diagram.id = _SPCE.id;
+        
+        await cmd.Add('space_grid', origin);
+        select = origin;
+    }
+
+    // 3. 있으면 정보 업데이트
+
+    // 근데 _SPCE 모듈에서도 있는지 확인해야되지 않나.
+    // 꼬였어. IDB 에서 먼저 찾을지, _SPCE 에서 먼저 찾을지,
+    // 생각1: 다이어그램 드래그 했을때 여기 호출되냐?
+    // manager.controller 에서 전체 총괄하며, 이 함수도 호출되려나
+    // 거기서 manager.diagram.update 도 호출하고?
+    // 여기서 해줄껀? before, after 정보를 그리드에 반영해줘야해
+    // 그럼 뭘 받아야되냐? 다이어그램? 목록?
+    // 여튼 하나의 다이어그램을 받던 뭔가 받아야되는데
 }
