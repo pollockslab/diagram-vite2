@@ -10,6 +10,7 @@ export class Space {
     id: SpaceType.ID = null;
     // NOTE: 체인 <- 그리드에 포함필요 (기울기로 구할까?)
     collision = SpaceCollision;
+    // NOTE: manager.space 에서 <[x1000,y1000], SpaceGridCell> 로 추가
     grid = new MultiKeyMap();
     diagrams: Map<string, DiagramsType.Instance> = new Map();
     

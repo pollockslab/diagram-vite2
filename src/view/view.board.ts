@@ -1,12 +1,14 @@
 
 import { _DPR, _SPCE } from '../main'
+import { View } from './view'
+import * as DiagramsType from '@/diagrams/diagrams.type'
 
 export class ViewBoard {
-    constructor() {}
+    constructor(public readonly parent: View) {}
     
-    Draw(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) {
-        const find = _SPCE.collision.Square(x-w/2, y-h/2, w, h);
-        for(const diagram of find) {
+    Draw(diagrams: DiagramsType.Instance[]) {
+        const {ctx} = this.parent;
+        for(const diagram of diagrams) {
             diagram.Draw(ctx);
         }
     }

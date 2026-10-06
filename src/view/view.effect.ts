@@ -1,11 +1,14 @@
 
 import * as ViewType from './view.type'
+import { View } from './view'
 
 export class ViewEffect {
     map = new Map<string, ViewType.EffectSquare>();
-    constructor() {}
+    constructor(public readonly parent: View) {}
 
-    Draw(ctx: CanvasRenderingContext2D): void  {
+    Draw(): void  {
+        const {ctx} = this.parent;
+
         for (const [key, item] of this.map) {
             switch(key) {
                 case 'drag-border': {

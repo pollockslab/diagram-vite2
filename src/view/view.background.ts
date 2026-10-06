@@ -1,5 +1,6 @@
 
 import { _DPR } from '../main'
+import { View } from './view'
 import * as ViewType from './view.type'
 
 /**
@@ -13,12 +14,12 @@ import * as ViewType from './view.type'
  */
 export class ViewBackground {
     private pattern: ViewType.Pattern.Class = null;
-
-    constructor() { 
+    constructor(public readonly parent: View) { 
+        
         // [Config] 기본패턴 설정.
         this.Pattern('grid');
         // this.Pattern('rhombus');
-        // this.Pattern('dot3');
+        // this.Pattern('dot3')
     }
 
     /**
@@ -44,11 +45,11 @@ export class ViewBackground {
         }
     }
 
-    Draw(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number): void {
-        if(!this.pattern) {return;}
-        this.pattern?.Draw(x, y, w, h, ctx);
+    Draw(): void {
+        const {ctx, x, y, width, height} = this.parent;
 
-        // 그냥 drawImage 같은걸로 못하는지 보자
+        if(!this.pattern) {return;}
+        this.pattern?.Draw(x, y, width, height, ctx);
     }
 }
 

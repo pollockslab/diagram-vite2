@@ -36,7 +36,7 @@ export const collision = {
 }
 export const render = {
     Draw: function(): void {
-        _VIEW.Draw();
+        _MNGR.view.Draw();
     },
     Resize: function(): void {
         _VIEW.Resize();
@@ -56,7 +56,7 @@ export const render = {
         _VIEW.effect.AddSquare(x, y, w, h, 'rgba(59, 130, 246, 0.15)');
         _VIEW.effect.AddBorder(x, y, w, h, 'rgba(59, 130, 246, 1)');
         
-        _VIEW.Draw();
+        _MNGR.view.Draw();
     },
     Snapshot_Controller: function(): void {
         const down = _MNGR.controller.down;
@@ -66,7 +66,7 @@ export const render = {
             }
             else if(diagram instanceof Diagrams.Class.Square) {
                diagram.Snapshot();
-               _VIEW.Draw();
+               _MNGR.view.Draw();
             }
             else if(diagram instanceof Diagrams.Class.Point) {
             }

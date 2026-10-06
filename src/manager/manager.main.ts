@@ -29,4 +29,7 @@ export async function Init() {
         // alert('[ERROR] 서비스를 이용하실 수 없습니다.');
         return;
     }
+
+    // [Draw]
+    _MNGR.render.Draw();
 }

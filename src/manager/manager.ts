@@ -9,6 +9,8 @@ import * as ManagerSpace        from './manager.space/manager.space'
 import * as ManagerSpaceGrid    from './manager.space/manager.space.grid'
 import * as ManagerTabMemento   from './manager.tab_memento'
 import * as ManagerTab          from './manager.tab'
+import * as ManagerCollision    from './manager.collision/manager.collision'
+import * as ManagerView         from './manager.view'
 
 
 // 실시간으로 프로그램 상태를 확인
@@ -24,6 +26,8 @@ export class Manager {
     space_grid  = ManagerSpaceGrid;
     tab_memento = ManagerTabMemento;
     tab         = ManagerTab;
+    collision   = ManagerCollision;
+    view        = ManagerView;
 
     constructor() {}
 }

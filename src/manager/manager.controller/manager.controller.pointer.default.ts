@@ -77,7 +77,7 @@ export async function Drag() {
 }
 
 export async function Hover() {
-    _LOOP.Command('collision', 'hover', _MNGR.loop.collision.Hover);
+    // _LOOP.Command('collision', 'hover', _MNGR.loop.collision.Hover);
     _MNGR.render.Draw();
 }
 

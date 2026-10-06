@@ -25,6 +25,7 @@ const edge = {
 // 같은 공간인 스페이스에서 콜리전 체크가 개념상 맞다
 
 export function Point(x: number, y: number): DiagramsType.Instance[] {
+    return [];
     // [Grid] 조회
     const grid = _SPCE.grid.SelectByPoint(x, y);
 
@@ -48,6 +49,7 @@ export function Point(x: number, y: number): DiagramsType.Instance[] {
 }
 
 export function PointFront(x: number, y: number): undefined | DiagramsType.Instance {
+    
     // [Grid] 조회
     const grid = _SPCE.grid.SelectByPoint(x, y);
 

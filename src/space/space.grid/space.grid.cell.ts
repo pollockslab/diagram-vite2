@@ -19,6 +19,7 @@ export class SpaceGridCell {
             id: null as SpaceType.ID,
         },
     };
+    list: string[] = [];
 
     constructor() {}
 
@@ -89,13 +90,13 @@ export class SpaceGridCell {
         this.self.diagram.id = data;
     }
     
-    get list(): string[] {
-        // FIXME: 그리드 맵 코딩 이후, 맵에서 배열목록으로 추출하도록 코딩필요
-        return [];
-    }
-    set list(data: string[]) {
-        // FIXME: 그리드 맵 코딩 이후, 맵에서 배열목록으로 추출하도록 코딩필요
-    }
+    // get list(): string[] {
+    //     // FIXME: 그리드 맵 코딩 이후, 맵에서 배열목록으로 추출하도록 코딩필요
+    //     return [];
+    // }
+    // set list(data: string[]) {
+    //     // FIXME: 그리드 맵 코딩 이후, 맵에서 배열목록으로 추출하도록 코딩필요
+    // }
 
     // get list(): SpaceType.GridList {
     //     const record: SpaceType.GridList = {};
@@ -112,7 +113,7 @@ export class SpaceGridCell {
     // }
 
     Init() {
-        this.serialize = SpaceGrid.origin;
+        this.serialize = SpaceGridCell.origin;
     }
 
     // [FIXME] 다이어그램 코어모듈에서 GetPos 함수를 제공하는게 맞아보이는데

@@ -18,6 +18,7 @@ export function Create(
 
     // [Sync] 다이어그램에 값 반영
     diagram.serialize = patch;
+    diagram.AfterCreate();
 
     return diagram;
 }

@@ -103,8 +103,8 @@ export class Rect extends Axis {
     get right   () {return this.rect.x + this.width /2;}
     get bottom  () {return this.rect.y + this.height/2;}
 
-    Init() {
-        this.Snapshot();
+    async AfterCreate() {
+        await this.Snapshot();
     }
 
     GetRect(): {

@@ -42,10 +42,10 @@ export class View {
         this.ctx = this.cav.getContext('2d') as CanvasRenderingContext2D;
         this.panel.appendChild(this.cav);
 
-        // [Create] 배경 순차적 생성. (1. Background, 2. Board, 3. Effect)
-        this.background = new ViewBackground();
-        this.board      = new ViewBoard     ();
-        this.effect     = new ViewEffect    ();
+        // [Draw] 그림 그리는 객체 (밑배경, 다이어그램, 효과)
+        this.background = new ViewBackground(this);
+        this.board      = new ViewBoard     (this);
+        this.effect     = new ViewEffect    (this);
 
         // [Resize] 배경 생성직후, 캔버스 초기화 위해 호출.
         this.Resize();
@@ -159,23 +159,6 @@ export class View {
         this.ctx.scale(this.zoom, this.zoom); // 줌 적용(space)
         this.ctx.translate(-this.x, -this.y); // space x, y 만큼 이동
 
-        this.ctx.clearRect(this.x-this.w/2, this.y-this.h/2, this.w, this.h);
+        this.ctx.clearRect(this.x-this.width/2, this.y-this.height/2, this.width, this.height);
     }
-
-    Draw() {
-        
-        this.ClearRect();
-        
-        // [Background]
-        this.background.Draw(this.ctx, this.x, this.y, this.w, this.h);
-
-        // [Board]
-        this.board.Draw(this.ctx, this.x, this.y, this.w, this.h);
-
-        // [Effect]
-        // this.effect.AddSquare(0, 0, 100, 100, 'skyblue');
-        this.effect.AddPoint(0, 0, 'green');
-        this.effect.Draw(this.ctx);
-    }
-
 }

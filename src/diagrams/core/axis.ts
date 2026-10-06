@@ -73,7 +73,7 @@ export class Axis {
     }
 
     // NOTE: 자식 클래스에서 오버라이드 위한 더미함수.
-    Init() {}
+    async AfterCreate() {}
     GetAnchorPoints(_width?: number, _height?: number): {x: number, y: number}[] {
         return [];
     }
